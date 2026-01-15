@@ -126,9 +126,163 @@ Rest der Welt - Aggregat fuer alle nicht einzeln erfassten Laender.
 
 ---
 
+## ESA 2010 Transaktionscodes (D-Codes)
+
+### Arbeitnehmerentgelt (D.1)
+
+**D.11 - Bruttoloehne und -gehaelter**
+Alle Bar- und Sachleistungen an Arbeitnehmer. Barleistungen: Grundgehaelter, Ueberstunden, Praemien, 13./14. Monatsgehalt. Sachleistungen: Firmenwagen, Dienstwohnungen, Mitarbeiteraktien.
+
+**D.12 - Sozialbeitraege der Arbeitgeber**
+Tatsaechliche Beitraege an Sozialversicherung (D.121) und unterstellte Sozialbeitraege fuer direkte Arbeitgeberleistungen (D.122), z.B. betriebliche Pensionszusagen.
+
+### Netto-Groessen
+
+**D.21X31 - Guetersteuern minus Guetersubventionen**
+Zentrale Uebergangsgroesse von Bruttowertschoepfung zum BIP. Enthaelt MwSt, Importzoelle, Verbrauchsteuern abzueglich Agrarsubventionen und Wohnungsbaufoerderung.
+
+**D.29X39 - Sonstige Produktionsabgaben minus sonstige Subventionen**
+Grundsteuern, Gewerberlaubnisgebuehren abzueglich Lohnkostenzuschüsse, Zinsvergünstigungen. Negative Werte: Subventionen > Abgaben.
+
+### Vermögenseinkommen (D.4)
+
+| Code | Bezeichnung |
+|------|-------------|
+| D.41 | Zinsen |
+| D.42 | Dividenden und Gewinnentnahmen |
+| D.43 | Reinvestierte Gewinne aus Direktinvestitionen |
+| D.44 | Kapitalertraege aus Versicherungsvertraegen |
+| D.45 | Pachten (Land, Bodenschaetze) |
+
+### Weitere D-Codes
+
+| Code | Bezeichnung |
+|------|-------------|
+| D.5 | Einkommen- und Vermoegensteuern |
+| D.61 | Nettosozialbeitraege |
+| D.62 | Monetaere Sozialleistungen (Renten, ALG, Kindergeld) |
+| D.7 | Sonstige laufende Transfers |
+| D.8 | Zunahme betrieblicher Versorgungsansprueche |
+| D.9 | Vermoegenstransfers |
+
+---
+
+## ESA 2010 Saldengroessen (B-Codes)
+
+**B.1g - Bruttowertschoepfung**
+Output minus Vorleistungen. Zentrale Groesse fuer Produktivitaetsmessung.
+
+**B.2 - Betriebsueberschuss (Operating Surplus)**
+Faellt bei Kapitalgesellschaften an. Berechnung: B.1g - D.1 - (D.29-D.39). Entspricht Gewinn vor Vermoegenseinkommen.
+
+**B.3 - Selbstaendigeneinkommen (Mixed Income)**
+Nur fuer Haushaltssektor (S.14). Untrennbare Mischung aus Arbeitsentgelt und Kapitalrendite bei Einzelunternehmen, Freiberuflern, Landwirten.
+
+**B.8 - Sparen nach Sektoren**
+
+| Sektor | Interpretation |
+|--------|----------------|
+| S.11 (Kapitalgesellschaften) | Einbehaltene Gewinne nach Dividenden |
+| S.13 (Staat) | Primaerueberschuss/-defizit |
+| S.14 (Haushalte) | Klassisches Sparen fuer Vermoegensbildung |
+
+**B.9 - Finanzierungssaldo (Net Lending/Borrowing)**
+Positiv: Sektor stellt Mittel bereit. Negativ: Sektor benoetigt Mittel.
+Formel: B.9 = B.8 + Vermoegenstransfers - Bruttoinvestitionen
+
+**B9FX9** - Statistische Diskrepanz zwischen realwirtschaftlichem B.9 und B.9F aus Finanzierungskonto.
+
+---
+
+## ESA 2010 Verwendungscodes (P-Codes)
+
+**P.3 - Konsumausgaben**
+
+| Sektor | Inhalt |
+|--------|--------|
+| P3_S13 | Staatskonsum (kollektiv + individuell zurechenbar) |
+| P3_S14 | Privater Haushaltskonsum |
+| P3_S15 | NPISH-Konsum (Kirchen, Vereine, Parteien) |
+
+**P.51G - Bruttoanlageinvestitionen (GFCF)**
+Zugaenge abzueglich Abgaenge von Anlageguetern: Bauten, Maschinen, Software, F&E, geistiges Eigentum.
+
+**P.6 - Exporte**
+Lieferungen von Waren und Dienstleistungen an Gebietsfremde.
+
+**P.7 - Importe**
+Bezuege von Waren und Dienstleistungen von Gebietsfremden.
+
+---
+
+## ESA 2010 Institutionelle Sektoren (S-Codes)
+
+**S.11 - Nichtfinanzielle Kapitalgesellschaften**
+Marktproduzenten von Waren und nichtfinanziellen Dienstleistungen.
+
+**S.12 - Finanzielle Kapitalgesellschaften**
+Finanzvermittlung: Banken (S.122), Versicherungen (S.128), Pensionsfonds (S.129).
+
+**S.13 - Staat**
+Bund (S.1311), Laender (S.1312), Gemeinden (S.1313), Sozialversicherung (S.1314).
+
+**S.14 - Private Haushalte**
+Konsumenten und Kleinproduzenten. Einziger Sektor mit B.3 (Mixed Income).
+
+**S.15 - NPISH**
+Non-Profit Institutions Serving Households. Kirchen, Parteien, Gewerkschaften, Vereine.
+
+**S.2 - Uebrige Welt (Rest of World)**
+Alle gebietsfremden Einheiten. In FIGARO nach Laendern disaggregiert.
+
+---
+
+## FIGARO Methodik
+
+### Vergleich mit anderen MRIO-Datenbanken
+
+| Merkmal | FIGARO | WIOD | EXIOBASE |
+|---------|--------|------|----------|
+| Herausgeber | Eurostat/JRC (offiziell) | Uni Groningen | Akademisch |
+| Zeitreihe | 2010-2022, jaehrlich | 2000-2014, eingestellt | 1995-aktuell |
+| Sektoren | 64 NACE Rev. 2 | 56 ISIC Rev. 4 | 163 Industrien |
+| VGR-Konsistenz | Vollstaendig (99.8% EU-BIP) | Benchmarked | Geschaetzt |
+
+### QDR-Methodik
+FIGAROs Alleinstellungsmerkmal: Bilaterale Handelsbalancierung auf HS-6-Digit-Ebene durch gewichtete Mittelwertbildung laenderspezifischer Asymmetrien.
+
+### Bekannte Limitationen
+- Sektorale Aggregation: 64 Industrien limitiert praezise Analysen
+- Rest-der-Welt: Nur Export/Import-Vektoren, keine vollstaendigen SUTs
+- Zeitliche Verzoegerung: T-2 Jahre
+- Validierungsabweichungen: WAPE zu OECD-ICIO ~34%, zu EXIOBASE ~83%
+
+---
+
+## Empirische Referenzwerte aus FIGARO-NAM
+
+### COVID-19 Strukturbruch (2019-2020)
+| Land | HH-Konsum YoY | Trend-Abweichung |
+|------|---------------|------------------|
+| ES | -17.0% | -18.1% |
+| GR | -16.1% | -11.2% |
+| IT | -12.3% | -13.8% |
+| DE | -7.1% | -9.7% |
+
+### Sektorale Gewinner/Verlierer (DE 2020)
+- Verlierer: N79 Travel (-56%), H51 Airlines (-46%), I Hotels (-32%)
+- Gewinner: Q86 Healthcare (+22%), K66 Financial (+14%)
+
+### Intersektorale Verflechtung (DE 2019)
+- Hoechste Rueckwaertsverflechtung: Motor vehicles, Construction, Machinery
+- Hoechste Vorwaertsverflechtung: Legal/Accounting, Real Estate, Wholesale
+
+---
+
 ## Referenzen
 
 - ESA 2010 Manual: Regulation EU No 549/2013
 - Miller & Blair: Input-Output Analysis, 3rd Edition 2022
 - OECD TiVA Database Documentation
 - Eurostat FIGARO Methodology Notes
+- Lokale Referenz: [ESA 2010 und FIGARO Referenzdokumentation](ESA%202010%20und%20FIGARO%20Referenzdokumentation.md)

@@ -16,46 +16,50 @@ This journal documents the collaboration between Christopher Pollin and Claude C
 
 **Actions:**
 - Created comprehensive glossary (`knowledge/glossary.md`) with IO analysis terms
-- Implemented 4 new exploration scripts:
-  - `05_baseline_trend.py` - CAGR analysis and trend deviation
-  - `06_export_analysis.py` - Export structure and trade balance
-  - `07_negative_values.py` - Negative values categorization
-  - `08_io_linkages.py` - Intersectoral linkages analysis
-- Updated `scripts/README.md` with Phase 2b documentation
-- Updated journal with session documentation
+- Implemented 4 new exploration scripts (05-08)
+- Executed all 4 scripts successfully
+- Fixed export analysis: FIGARO records exports in partner country data (m=exporter)
+- Extended glossary with ESA 2010 codes, FIGARO methodik, empirische Referenzwerte
+- Updated research.md with Phase 2a/2b structure
 
-**New Script Features:**
+**Script Execution Results:**
 
 05_baseline_trend.py:
-- Calculates CAGR 2010-2018 as pre-COVID baseline
-- Extrapolates trend to 2020
-- Quantifies deviation from trend (not just YoY change)
-- Outputs: baseline_trends_cagr.csv, trend_deviation_2020.csv, trend_deviation_chart.png
+- CAGR 2010-2018 calculated for 8 countries x 4 aggregates
+- Trend deviation quantified: ES worst at -18.1% below trend
+- Key insight: YoY understates impact; trend deviation shows full gap
 
 06_export_analysis.py:
-- Complements Script 02 (imports) with export perspective
-- Trade balance calculation by partner
-- Product category aggregation
-- Outputs: DE_exports_by_partner.csv, DE_trade_balance.csv, DE_trade_balance.png
+- Fixed: Exports found by loading partner countries (m=DE in FR data = DE exports to FR)
+- DE top export destinations: US (9.8%), CN (9.6%), FR (8.1%)
+- Export categories: Services 33%, Manufacturing 23%, Vehicles 11%
 
 07_negative_values.py:
-- Categorizes ~204k negative values by Set_i/Set_j type
-- Temporal and country distribution analysis
-- Documents that negatives are legitimate (subsidies, adjustments)
-- Outputs: 8 CSV tables with detailed breakdowns
+- Found 36,199 negative values in 8-country sample
+- Mainly B-Balances (adjustments) and CPA-Products
+- Germany accounts for most (6.5M EUR total negative)
+- Confirmed: legitimate ESA 2010 entries (subsidies > taxes, inventory changes)
 
 08_io_linkages.py:
-- Builds product-to-industry intermediate consumption matrix
-- Calculates backward/forward linkages
-- Identifies top intersectoral flows
-- Outputs: sector_linkages_matrix.csv, top_intersectoral_flows.csv, sector_linkages_heatmap.png
+- Built 62x61 product-industry matrix for DE 2019
+- Highest backward linkage: Motor vehicles, Construction
+- Highest forward linkage: Legal/Accounting (M69_70), Real estate (L)
+- Top flow: C29 (vehicles) to Motor vehicles industry (61.6 Bn)
 
-**Knowledge Files Created:**
-- `knowledge/glossary.md` - IO analysis and econometrics terminology
-- Includes FIGARO-specific mapping section
+**Knowledge Documentation Extended:**
+- glossary.md: Added D-Codes, B-Codes, P-Codes, S-Codes from ESA 2010
+- glossary.md: Added FIGARO vs WIOD vs EXIOBASE comparison
+- glossary.md: Added empirical reference values from our analysis
+- research.md: Split Phase 2 into 2a (Base) and 2b (Extended)
+
+**Output Summary:**
+- Tables: 32 CSV files in outputs/tables/
+- Figures: 7 PNG files in outputs/figures/
+- Commits: 2 (Phase 2a, Phase 2b)
 
 **Phase Status:**
-- Phase 2b (Extended Exploration): Scripts implemented, ready for execution
+- Phase 2 (Explore): Complete (both 2a and 2b)
+- Phase 3 (Human-in-the-Loop): Ready to begin
 
 ---
 
@@ -209,25 +213,27 @@ Identified that we (Christopher + Claude) lack deep macroeconomic expertise. Cat
 
 ---
 
-## Pending Deep Research Topics
+## Knowledge Status
 
-The following questions require external research (ESA 2010 Manual, Eurostat documentation):
+### Resolved Topics (documented in glossary.md)
 
-1. **ESA 2010 Transaction Codes**
-   - D11 vs D12 (wages vs employer contributions)
-   - D21X31 (taxes minus subsidies on products)
-   - B2 vs B3 (operating surplus vs mixed income)
-   - B8_S* (saving by institutional sector)
-   - B9FX9 (net lending/borrowing)
+| Topic | Status | Location |
+|-------|--------|----------|
+| ESA 2010 D-Codes (D.11, D.12, D.21X31, etc.) | Documented | glossary.md |
+| ESA 2010 B-Codes (B.2, B.3, B.8, B.9) | Documented | glossary.md |
+| ESA 2010 P-Codes (P.3, P.51G, P.6, P.7) | Documented | glossary.md |
+| ESA 2010 S-Codes (Institutional Sectors) | Documented | glossary.md |
+| Import dependency metrics (IPR, VS, FVASH) | Documented | glossary.md |
+| FIGARO vs WIOD vs EXIOBASE | Documented | glossary.md |
+| Structural break definition | Documented | glossary.md |
 
-2. **Methodological Standards**
-   - How is import dependency typically measured?
-   - What defines a "structural break" in national accounts?
-   - Standard approaches for country clustering by economic structure
+### Open Topics
 
-3. **Context Knowledge**
-   - FIGARO vs WIOD vs EXIOBASE - differences?
-   - Core vs periphery EU countries - standard definition?
+| Topic | Status | Notes |
+|-------|--------|-------|
+| Core vs Periphery EU | Open | Political/economic definition needed |
+| Deflators for real values | Open | External Eurostat data required |
+| Country clustering methodology | Open | For Phase 4/5 if selected |
 
 ---
 

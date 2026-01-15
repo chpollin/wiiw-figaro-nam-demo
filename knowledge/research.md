@@ -22,7 +22,8 @@ graph TB
 | Phase | Status | Output |
 |-------|--------|--------|
 | 1. Inspect/Understand | Complete | `data.md` with schema, codes |
-| 2. Explore | Complete | `scripts/01-04*.py`, `outputs/tables/`, `outputs/figures/` |
+| 2a. Explore (Base) | Complete | `scripts/01-04*.py`, base outputs |
+| 2b. Explore (Extended) | Complete | `scripts/05-08*.py`, extended outputs |
 | 3. Human-in-the-Loop | Pending | Selected questions |
 | 4. Plan | Pending | Notebook outline |
 | 5. Execute | Pending | Analysis outputs |
@@ -47,7 +48,7 @@ graph TB
 
 ---
 
-### Phase 2: Explore [Complete]
+### Phase 2a: Explore - Base [Complete]
 
 **Objective:** Assess data quality and identify analysis opportunities.
 
@@ -85,9 +86,57 @@ Energy Crisis (2021-2022):
 - Nominale HH-Konsumanstiege 10-19% (Inflationseffekt)
 - Interpretation erfordert externe Deflator-Daten
 
-**Outputs:**
-- `outputs/tables/` - 14 CSV data files
+**Outputs Phase 2a:**
+- `outputs/tables/` - 15 CSV data files
 - `outputs/figures/` - 4 PNG visualizations
+
+---
+
+### Phase 2b: Explore - Extended [Complete]
+
+**Objective:** Deeper analysis with baseline trends, export structure, and IO linkages.
+
+**Scripts created:**
+
+| Script | Purpose | Status |
+|--------|---------|--------|
+| `scripts/05_baseline_trend.py` | CAGR 2010-2018, trend deviation analysis | Executed |
+| `scripts/06_export_analysis.py` | Export structure, trade balance by partner | Executed |
+| `scripts/07_negative_values.py` | Categorize negative values in dataset | Executed |
+| `scripts/08_io_linkages.py` | Intersectoral linkages, backward/forward | Executed |
+
+**Key Findings Phase 2b:**
+
+Trend Deviation Analysis (COVID vs. CAGR 2010-2018):
+| Country | HH Cons Deviation from Trend |
+|---------|------------------------------|
+| ES | -18.1% |
+| IT | -13.8% |
+| AT | -12.3% |
+| GR | -11.2% |
+| DE | -9.7% |
+
+Intersectoral Linkages (Germany 2019):
+- Highest backward linkage: Motor vehicles, Construction, Machinery
+- Highest forward linkage: Legal/Accounting (M69_70), Real estate (L), Wholesale (G46)
+- Total intermediate consumption: 2.5 billion EUR (domestic flows)
+
+Export Structure (Germany 2019):
+- Top destinations: US (9.8%), CN (9.6%), FR (8.1%), NL (7.6%)
+- Top categories: Services (33%), Manufacturing other (23%), Vehicles (11%)
+
+Negative Values Analysis:
+- ~36k negative values in 8-country sample (14 years)
+- Mainly B-Balances (adjustments) and D-Transactions (subsidies > taxes)
+- Legitimate ESA 2010 accounting entries, not errors
+
+**Outputs Phase 2b:**
+- `outputs/tables/` - 17 additional CSV files (32 total)
+- `outputs/figures/` - 3 additional PNG visualizations (7 total)
+
+**Knowledge Documentation:**
+- `knowledge/glossary.md` - IO analysis and econometrics terminology
+- `knowledge/exploration_plan.md` - Planning document for Phase 2b
 
 ---
 
