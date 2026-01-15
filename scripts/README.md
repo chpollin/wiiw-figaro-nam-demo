@@ -4,6 +4,8 @@ Phase 2 exploration scripts for FIGARO-NAM data analysis.
 
 ## Scripts
 
+### Phase 2a: Base Exploration
+
 | Script | Purpose | Output |
 |--------|---------|--------|
 | `01_data_quality.py` | Coverage, missing values, distributions | `outputs/tables/*.csv` |
@@ -11,17 +13,32 @@ Phase 2 exploration scripts for FIGARO-NAM data analysis.
 | `03_temporal_analysis.py` | Time series, structural breaks | `outputs/tables/*.csv` |
 | `04_visualizations.py` | Heatmaps, bar charts, time series | `outputs/figures/*.png` |
 
+### Phase 2b: Extended Exploration
+
+| Script | Purpose | Output |
+|--------|---------|--------|
+| `05_baseline_trend.py` | CAGR 2010-2018, trend deviation 2020 | `outputs/tables/*.csv`, `outputs/figures/*.png` |
+| `06_export_analysis.py` | Export structure, trade balance by partner | `outputs/tables/*.csv`, `outputs/figures/*.png` |
+| `07_negative_values.py` | Categorize 204k negative values | `outputs/tables/*.csv` |
+| `08_io_linkages.py` | Intersectoral linkages, backward/forward | `outputs/tables/*.csv`, `outputs/figures/*.png` |
+
 ## Usage
 
 ```bash
 # From project root
 cd wiiw-figaro-nam-demo
 
-# Run all scripts
+# Run Phase 2a scripts
 python scripts/01_data_quality.py
 python scripts/02_top_flows.py
 python scripts/03_temporal_analysis.py
 python scripts/04_visualizations.py
+
+# Run Phase 2b scripts
+python scripts/05_baseline_trend.py
+python scripts/06_export_analysis.py
+python scripts/07_negative_values.py
+python scripts/08_io_linkages.py
 ```
 
 ## Requirements
@@ -75,6 +92,39 @@ Generates publication-ready figures:
 - Diverging bar chart of sectoral winners/losers
 - Time series with crisis period markers
 - Country comparison bar chart
+
+### 05_baseline_trend.py
+
+Calculates long-term trends as COVID reference:
+- CAGR (Compound Annual Growth Rate) 2010-2018 per country/aggregate
+- Trend extrapolation to 2020
+- Deviation of actual 2020 values from trend
+- Key insight: quantifies COVID impact beyond simple YoY changes
+
+### 06_export_analysis.py
+
+Analyzes export structure (complement to import analysis):
+- Top export destinations per country
+- Exported products by category
+- Export/Import balance by partner
+- Trade balance visualization
+
+### 07_negative_values.py
+
+Categorizes and explains ~204k negative values:
+- Distribution by Set_i/Set_j categories
+- Temporal development
+- Country differences
+- Interpretation: taxes minus subsidies, adjustments, inventory changes
+
+### 08_io_linkages.py
+
+Analyzes intersectoral economic linkages:
+- Product-to-industry intermediate consumption matrix
+- Backward linkages (how much each industry buys)
+- Forward linkages (how much each product supplies)
+- Top intersectoral flows
+- Heatmap visualization
 
 ## Notes
 

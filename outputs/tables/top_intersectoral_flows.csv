@@ -1,0 +1,51 @@
+From_Product,To_Industry,Value,From_Label,To_Label
+CPA_C29,C29,61581.15,C29,Motor vehicles
+CPA_M69_70,M69_M70,49496.325,M69_70,Legal & accounting
+CPA_J62_63,J62_J63,48179.938,J62_63,IT services
+CPA_F,L,40199.47,F,L
+CPA_H52,G46,34590.578,H52,Wholesale trade
+CPA_C28,C28,32699.51,C28,Machinery
+CPA_F,F,30698.767,F,Construction
+CPA_A01,C10-C12,28975.222,A01,Food products
+CPA_H52,H52,28601.759,H52,Warehousing
+CPA_G45,C29,27534.109,G45,Motor vehicles
+CPA_K66,K65,23920.561,K66,Insurance
+CPA_L,F,23039.259,L,Construction
+CPA_K64,L,22258.827,K64,L
+CPA_C10-12,C10-C12,21629.752,C10-12,Food products
+CPA_C25,C25,21347.887,C25,Metal products
+CPA_G46,F,21086.643,G46,Construction
+CPA_C23,F,20976.456,C23,Construction
+CPA_L,G47,19794.17,L,Retail trade
+CPA_K64,K64,18183.026,K64,Financial services
+CPA_C24,C24,18173.923,C24,Basic metals
+CPA_H52,H49,16651.544,H52,Land transport
+CPA_M69_70,M71,16615.641,M69_70,Architecture & engineering
+CPA_J61,J61,15862.747,J61,Telecommunications
+CPA_L,L,15593.086,L,L
+CPA_H49,H52,15117.169,H49,Warehousing
+CPA_P85,P85,14862.071,P85,Education
+CPA_C25,C29,14689.78,C25,Motor vehicles
+CPA_M69_70,N80-N82,14077.392,M69_70,Security & admin
+CPA_N77,N77,13958.843,N77,Rental & leasing
+CPA_H49,G46,13828.096,H49,Wholesale trade
+CPA_H53,G47,13109.775,H53,Retail trade
+CPA_C25,C28,12763.777,C25,Machinery
+CPA_C24,C29,12677.876,C24,Motor vehicles
+CPA_M69_70,L,12475.227,M69_70,L
+CPA_G46,C10-C12,11932.543,G46,Food products
+CPA_C25,F,11463.355,C25,Construction
+CPA_C22,F,9990.629,C22,Construction
+CPA_C10-12,I,9903.211,C10-12,Accommodation & food
+CPA_Q86,Q86,9639.022,Q86,Healthcare
+CPA_C30,C30,9438.291,C30,Other transport
+CPA_N80-82,G46,9423.495,N80-82,Wholesale trade
+CPA_C22,C29,9420.006,C22,Motor vehicles
+CPA_G47,Q86,9199.38,G47,Healthcare
+CPA_E37-39,E37-E39,9075.626,E37-39,Waste management
+CPA_G46,C29,8852.482,G46,Motor vehicles
+CPA_S96,S96,8700.025,S96,Other personal services
+CPA_H52,H53,8694.946,H52,Postal services
+CPA_G46,C28,8582.835,G46,Machinery
+CPA_N77,F,8578.533,N77,Construction
+CPA_F,O84,8525.52,F,Public administration
