@@ -25,7 +25,7 @@ DATA_PATH = Path('data/parquet/')
 OUTPUT_PATH = Path('outputs/')
 OUTPUT_PATH.mkdir(exist_ok=True)
 
-YEARS = [str(y) for y in range(2010, 2024)]
+YEARS = list(range(2010, 2024))
 SAMPLE_COUNTRIES = ['DE', 'FR', 'IT', 'AT', 'PL', 'GR', 'ES', 'NL']
 
 
@@ -33,7 +33,7 @@ def load_country_year(ctr, year):
     """Load data for specific country and year."""
     return pq.read_table(
         DATA_PATH,
-        filters=[('base', '=', year), ('ctr', '=', ctr)]
+        filters=[('base', '=', int(year)), ('ctr', '=', ctr)]
     ).to_pandas()
 
 
@@ -109,7 +109,7 @@ def analyze_sector_dynamics(ctr):
     print("="*60)
 
     # Compare 2019, 2020, 2021, 2022
-    years_compare = ['2019', '2020', '2021', '2022']
+    years_compare = [2019, 2020, 2021, 2022]
     sector_data = {}
 
     for year in years_compare:
@@ -127,9 +127,9 @@ def analyze_sector_dynamics(ctr):
     sectors = pd.DataFrame(sector_data)
 
     # Calculate changes
-    sectors['change_2019_2020'] = (sectors['2020'] - sectors['2019']) / sectors['2019'] * 100
-    sectors['change_2020_2021'] = (sectors['2021'] - sectors['2020']) / sectors['2020'] * 100
-    sectors['change_2021_2022'] = (sectors['2022'] - sectors['2021']) / sectors['2021'] * 100
+    sectors['change_2019_2020'] = (sectors[2020] - sectors[2019]) / sectors[2019] * 100
+    sectors['change_2020_2021'] = (sectors[2021] - sectors[2020]) / sectors[2020] * 100
+    sectors['change_2021_2022'] = (sectors[2022] - sectors[2021]) / sectors[2021] * 100
 
     # Most affected by COVID (2019-2020)
     print("\nMost affected sectors (2019-2020, COVID shock):")

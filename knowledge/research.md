@@ -22,7 +22,7 @@ graph TB
 | Phase | Status | Output |
 |-------|--------|--------|
 | 1. Inspect/Understand | Complete | `data.md` with schema, codes |
-| 2. Explore | In Progress | `scripts/01-03*.py`, `outputs/` |
+| 2. Explore | Complete | `scripts/01-04*.py`, `outputs/tables/`, `outputs/figures/` |
 | 3. Human-in-the-Loop | Pending | Selected questions |
 | 4. Plan | Pending | Notebook outline |
 | 5. Execute | Pending | Analysis outputs |
@@ -47,7 +47,7 @@ graph TB
 
 ---
 
-### Phase 2: Explore [In Progress]
+### Phase 2: Explore [Complete]
 
 **Objective:** Assess data quality and identify analysis opportunities.
 
@@ -55,29 +55,39 @@ graph TB
 
 | Script | Purpose | Status |
 |--------|---------|--------|
-| `scripts/01_data_quality.py` | Coverage, missing values, distributions | Ready |
-| `scripts/02_top_flows.py` | Top flows, sectors, trade partners | Ready |
-| `scripts/03_temporal_analysis.py` | Time series, structural breaks | Ready |
+| `scripts/01_data_quality.py` | Coverage, missing values, distributions | Executed |
+| `scripts/02_top_flows.py` | Top flows, sectors, trade partners | Executed |
+| `scripts/03_temporal_analysis.py` | Time series, structural breaks | Executed |
+| `scripts/04_visualizations.py` | Heatmaps, bar charts, time series | Executed |
 
-**Tasks:**
-| Task | Method | Script |
-|------|--------|--------|
-| Coverage analysis | Check all 700 country-year combinations | 01 |
-| Outlier detection | IQR method on value distributions | 01 |
-| Pattern discovery | Top flows by magnitude, dominant sectors | 02 |
-| Temporal trends | Year-over-year changes, structural breaks | 03 |
+**Data Quality Results:**
+- 69.8 million rows total across 700 country-year files
+- Complete coverage: all 50 countries x 14 years present
+- 204,488 negative values (adjustments/balancing items)
+- No missing values
 
-**Preliminary findings (from ad-hoc analysis):**
+**Key Empirical Findings:**
 
-COVID Impact (Germany 2019-2020):
-- Household consumption: -7.1%
-- Government consumption: +7.2%
-- Most affected: Travel agencies (N79) -56%, Airlines (H51) -46%
-- Growth: Healthcare (Q86) +22%
+COVID-19 Impact (2019-2020):
+| Country | HH Consumption | Gov Consumption |
+|---------|----------------|-----------------|
+| ES | -17.0% | +4.9% |
+| GR | -16.1% | +3.0% |
+| IT | -12.3% | +2.7% |
+| DE | -7.1% | +7.2% |
+| PL | -4.7% | +4.4% |
 
-**Expected outputs:**
-- `outputs/` folder with CSV files
-- Candidate research questions based on patterns
+Sektorale Asymmetrie (Germany):
+- Verlierer: N79 Travel -56%, H51 Airlines -46%, I Hotels -32%
+- Gewinner: Q86 Healthcare +22%, K66 Financial +14%, H53 Postal +11%
+
+Energy Crisis (2021-2022):
+- Nominale HH-Konsumanstiege 10-19% (Inflationseffekt)
+- Interpretation erfordert externe Deflator-Daten
+
+**Outputs:**
+- `outputs/tables/` - 14 CSV data files
+- `outputs/figures/` - 4 PNG visualizations
 
 ---
 
@@ -197,3 +207,4 @@ COVID Impact (Germany 2019-2020):
 - [Eurostat FIGARO](https://ec.europa.eu/eurostat/web/esa-supply-use-input-tables/figaro)
 - [NACE Rev. 2 Classification](https://ec.europa.eu/eurostat/web/nace-rev2)
 - [CPA 2.1 Classification](https://ec.europa.eu/eurostat/web/cpa)
+- [ESA 2010 und FIGARO Referenzdokumentation](ESA%202010%20und%20FIGARO%20Referenzdokumentation.md) - Local domain knowledge

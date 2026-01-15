@@ -27,14 +27,14 @@ OUTPUT_PATH.mkdir(exist_ok=True)
 
 # Sample countries for detailed analysis
 SAMPLE_COUNTRIES = ['DE', 'FR', 'IT', 'AT', 'PL', 'GR']
-SAMPLE_YEAR = '2020'
+SAMPLE_YEAR = 2020
 
 
 def load_country_year(ctr, year):
     """Load data for specific country and year."""
     return pq.read_table(
         DATA_PATH,
-        filters=[('base', '=', year), ('ctr', '=', ctr)]
+        filters=[('base', '=', int(year)), ('ctr', '=', ctr)]
     ).to_pandas()
 
 

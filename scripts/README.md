@@ -6,9 +6,10 @@ Phase 2 exploration scripts for FIGARO-NAM data analysis.
 
 | Script | Purpose | Output |
 |--------|---------|--------|
-| `01_data_quality.py` | Coverage, missing values, distributions | `outputs/coverage_matrix.csv`, `outputs/country_statistics.csv`, `outputs/block_structure.csv` |
-| `02_top_flows.py` | Top flows, dominant sectors, trade partners | `outputs/country_summary.csv`, `outputs/DE_*.csv` |
-| `03_temporal_analysis.py` | Time series, structural breaks | `outputs/DE_time_series.csv`, `outputs/structural_breaks_comparison.csv` |
+| `01_data_quality.py` | Coverage, missing values, distributions | `outputs/tables/*.csv` |
+| `02_top_flows.py` | Top flows, dominant sectors, trade partners | `outputs/tables/*.csv` |
+| `03_temporal_analysis.py` | Time series, structural breaks | `outputs/tables/*.csv` |
+| `04_visualizations.py` | Heatmaps, bar charts, time series | `outputs/figures/*.png` |
 
 ## Usage
 
@@ -20,17 +21,22 @@ cd wiiw-figaro-nam-demo
 python scripts/01_data_quality.py
 python scripts/02_top_flows.py
 python scripts/03_temporal_analysis.py
+python scripts/04_visualizations.py
 ```
 
 ## Requirements
 
 ```bash
-pip install pyarrow pandas numpy
+pip install pyarrow pandas numpy matplotlib seaborn
 ```
 
 ## Output Directory
 
-All outputs are saved to `outputs/` (created automatically).
+```
+outputs/
+  tables/     # CSV data files
+  figures/    # PNG visualizations
+```
 
 ## Script Details
 
@@ -61,6 +67,14 @@ Analyzes changes over time:
 - Energy crisis impact (2021-2022)
 - Sectoral dynamics comparison
 - Cross-country comparison
+
+### 04_visualizations.py
+
+Generates publication-ready figures:
+- Heatmap of structural breaks across countries
+- Diverging bar chart of sectoral winners/losers
+- Time series with crisis period markers
+- Country comparison bar chart
 
 ## Notes
 
