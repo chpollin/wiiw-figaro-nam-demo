@@ -140,23 +140,44 @@ Negative Values Analysis:
 
 ---
 
-### Phase 3: Human-in-the-Loop
+### Phase 3: Human-in-the-Loop [Ready]
 
-**Objective:** Collaborative selection of research questions.
+**Objective:** Workshop participants collaboratively select 2-3 research questions.
 
-**Selection matrix:**
+**David's 4 Analysis Types:**
+1. **Sankey/Flow** - Circular flow visualization (Production → Income → Use)
+2. **Structural Breaks** - COVID 2020, Energy 2022 quantification
+3. **Clustering** - Country/sector typologies by structure
+4. **Import Dependency** - External exposure indicators
+
+**Selection Criteria:**
 
 | Criterion | Weight | Description |
 |-----------|--------|-------------|
-| Feasibility | High | Can be answered with available data |
-| Interpretability | High | Results are meaningful to stakeholders |
+| Feasibility | High | Achievable within workshop time with available data |
+| Interpretability | High | Results tell a clear economic story |
 | Relevance | Medium | Policy or academic significance |
-| Novelty | Low | Adds to existing knowledge |
+| Visual Impact | Medium | Suitable for presentation/publication |
+
+**Pre-scored Candidates:**
+
+| ID | Question | Type | Effort | Score |
+|----|----------|------|--------|-------|
+| B3 | Energy crisis vs COVID recovery | Breaks | Low | Recommended |
+| D1 | Sectoral import dependency DE | Import | Low | Recommended |
+| A1 | Circular flow visualization DE | Sankey | Medium | Recommended |
+| C3 | Southern vs Northern EU response | Cluster | Medium | Alternative |
+| B4 | Sectoral volatility across crises | Breaks | Medium | Alternative |
+
+**Known Limitations (to discuss):**
+- All values nominal - energy crisis interpretation requires external deflators
+- Vertical specialization (VS) requires Leontief inverse - complex
+- Country clustering needs pre-defined groups or unsupervised algorithm
 
 **Process:**
-1. Review Phase 2 candidates
-2. Score against criteria
-3. Select 2–3 questions for implementation
+1. Present 4 analysis types with examples from Phase 2
+2. Discuss feasibility and interest
+3. Vote on 2-3 questions for Phase 4/5 implementation
 
 ---
 
@@ -221,15 +242,117 @@ Negative Values Analysis:
 
 ## Candidate Research Questions
 
-*To be refined during Phase 2/3*
+*Based on David Zenz's 4 analysis types for Phase 3 selection*
 
-| # | Question | Feasibility | Data Requirements |
-|---|----------|-------------|-------------------|
-| 1 | How has sectoral GDP composition changed across EU since 2010? | High | Set_i industries, value by year |
-| 2 | Which sectors show highest import dependency? | High | m (partner), Set_i products |
-| 3 | What structural breaks occurred 2020–2022? | Medium | Time series, change detection |
-| 4 | Can countries be clustered by economic structure? | Medium | Cross-country comparison |
-| 5 | How do core vs. peripheral EU economies differ? | Medium | Pre-defined country groups |
+---
+
+### Type A: Sankey/Flow - Circular Flow Visualization
+
+**Objective:** Show income generation → distribution → use as clean story from production to final demand.
+
+| # | Question | Feasibility | Data Available | Gap/Challenge |
+|---|----------|-------------|----------------|---------------|
+| A1 | How does value flow from production through income to final use in Germany? | High | D11 (wages), B2 (surplus), P3 (consumption), P51G (investment) | Need to map Set_i/Set_j to flow stages |
+| A2 | How do income sources differ between manufacturing and services? | High | Industry codes x D-codes | Aggregation logic needed |
+| A3 | What share of household income comes from wages vs. transfers? | Medium | D11, D62 in data | Sector attribution (S.14) |
+
+**Data Check:**
+- [x] Production side: CPA products, NACE industries
+- [x] Income generation: D11 (wages), D12 (employer contributions), B2 (operating surplus), B3 (mixed income)
+- [x] Distribution: D4 (property income), D5 (taxes), D61/D62 (social transfers)
+- [x] Final use: P3_S13 (gov), P3_S14 (HH), P51G (investment), P6 (exports)
+
+---
+
+### Type B: Structural Breaks / Regime Shifts
+
+**Objective:** Identify periods where flows change sharply, quantify biggest changes, visualize.
+
+| # | Question | Feasibility | Data Available | Gap/Challenge |
+|---|----------|-------------|----------------|---------------|
+| B1 | Which countries experienced the largest COVID shock (2020) relative to trend? | High | CAGR + deviation analysis done | Completed in Script 05 |
+| B2 | How did sectoral composition shift during COVID (winners vs. losers)? | High | Sector dynamics done | Completed in Script 03 |
+| B3 | Did the 2022 energy crisis reverse COVID recovery patterns? | High | Time series 2021-2023 | Need 2021/2022/2023 comparison |
+| B4 | Which sectors show highest volatility across crises? | Medium | YoY changes by sector | Standard deviation analysis |
+
+**Data Check:**
+- [x] COVID impact: HH consumption -7% to -17% across countries (documented)
+- [x] Sectoral asymmetry: Travel -56%, Healthcare +22% (documented)
+- [x] Trend deviation: ES -18.1%, IT -13.8% below trend (documented)
+- [ ] Recovery analysis: 2021 vs 2019 not yet computed
+- [ ] Energy crisis detail: 2022 nominal increases, need real interpretation caveat
+
+**Limitation:** All values nominal. Energy crisis 2022 shows +10-19% HH consumption but this is inflation effect, not real growth. External deflators needed for real interpretation.
+
+---
+
+### Type C: Clustering / Typologies
+
+**Objective:** Cluster countries and/or sectors by structural fingerprints, explain drivers.
+
+| # | Question | Feasibility | Data Available | Gap/Challenge |
+|---|----------|-------------|----------------|---------------|
+| C1 | Can EU countries be grouped by economic structure similarity? | Medium | All 50 countries, all years | Need feature engineering |
+| C2 | Which sectors have similar input structures (backward linkage profile)? | Medium | Linkage matrix done | Clustering algorithm needed |
+| C3 | Do Southern EU economies show different COVID response patterns? | High | Country comparison done | Pre-define country groups |
+
+**Data Check:**
+- [x] Cross-country data: 50 countries, 14 years
+- [x] Structural features possible: HH share, Gov share, Investment share, Export orientation
+- [x] Sectoral features: Backward/forward linkages computed
+- [ ] Clustering algorithm: Not implemented (scikit-learn available)
+
+**Proposed Features for Country Clustering:**
+1. HH consumption / total domestic use
+2. Government consumption / total domestic use
+3. Investment (P51G) / total domestic use
+4. Export orientation (P6 / total output)
+5. Import dependency (foreign flows / total flows)
+6. Manufacturing share of value added
+7. Services share of value added
+
+---
+
+### Type D: Import Dependency / External Exposure
+
+**Objective:** Construct indicators of import reliance, compare across countries/sectors.
+
+| # | Question | Feasibility | Data Available | Gap/Challenge |
+|---|----------|-------------|----------------|---------------|
+| D1 | Which sectors show highest import dependency in Germany? | High | Imports by product done | Need IPR formula |
+| D2 | How does import structure differ between DE, FR, IT? | High | Can load multiple countries | Multi-country comparison script |
+| D3 | Which trading partners are most critical for key sectors? | High | Partner x product data | Concentration index (HHI) |
+| D4 | Has import dependency changed 2010-2023? | Medium | Time series available | Longitudinal analysis |
+
+**Data Check:**
+- [x] Import flows: m != ctr filters work
+- [x] Import by partner: Top partners identified (WRL_REST, US, CN, FR)
+- [x] Import by product: Product breakdown available
+- [ ] IPR calculation: Formula documented but not implemented
+- [ ] Vertical specialization: Requires Leontief inverse (complex)
+
+**Import Penetration Ratio (IPR) Formula:**
+```
+IPR = Imports / (Domestic Production - Exports + Imports)
+```
+
+**Limitation:** Full Leontief-based indicators (VS, FVASH) require matrix inversion. Simpler flow-based IPR is feasible.
+
+---
+
+## Feasibility Summary for Phase 3 Selection
+
+| Type | Recommended Question | Effort | Workshop Suitability |
+|------|---------------------|--------|---------------------|
+| A. Sankey | A1: Circular flow for Germany | Medium | Good - visual, educational |
+| B. Breaks | B3: Energy crisis vs COVID recovery | Low | Excellent - extends existing |
+| C. Cluster | C3: Southern vs Northern EU response | Medium | Good - interpretable |
+| D. Import | D1: Sectoral import dependency DE | Low | Excellent - policy relevant |
+
+**Recommended Selection (2-3 for workshop):**
+1. **B3** - Low effort, builds on existing analysis
+2. **D1** - Low effort, clear policy relevance
+3. **A1** - Medium effort, best for visual storytelling
 
 ---
 
