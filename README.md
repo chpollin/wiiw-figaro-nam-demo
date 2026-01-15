@@ -48,14 +48,14 @@ graph LR
     E --> F[6. Summary]
 ```
 
-| Phase | Description |
-|-------|-------------|
-| **Inspect/Understand** | Load data, infer structure, generate data dictionary |
-| **Explore** | Assess coverage, identify outliers, suggest analysis perspectives |
-| **Human-in-the-Loop** | Select research questions based on feasibility and relevance |
-| **Plan** | Transform questions into reproducible notebook workflows |
-| **Execute** | Implement analysis pipeline and generate outputs |
-| **Summary** | Synthesize findings, distinguish facts from interpretation |
+| Phase | Status | Description |
+|-------|--------|-------------|
+| **1. Inspect/Understand** | Complete | Load data, infer structure, generate data dictionary |
+| **2. Explore** | Complete | Assess coverage, identify outliers, 8 analysis scripts |
+| **3. Human-in-the-Loop** | In Progress | Interactive dashboard for research question selection |
+| **4. Plan** | Pending | Transform questions into reproducible workflows |
+| **5. Execute** | Pending | Implement analysis pipeline and generate outputs |
+| **6. Summary** | Pending | Synthesize findings, distinguish facts from interpretation |
 
 ## Knowledge Base
 
@@ -67,6 +67,32 @@ The `knowledge/` directory provides structured context for LLM-assisted work:
 | [research.md](knowledge/research.md) | Research questions and workflow phases |
 | [requirements.md](knowledge/requirements.md) | Technical dependencies and setup |
 | [journal.md](knowledge/journal.md) | Working journal for iterative development |
+| [glossary.md](knowledge/glossary.md) | IO analysis terminology and ESA 2010 codes |
+
+## Interactive Dashboard
+
+A static web dashboard is available for exploring the data interactively:
+
+**Live Demo:** [GitHub Pages](https://digitalhumanitiecraft.github.io/wiiw-figaro-nam-demo/) (after deployment)
+
+**Local Preview:**
+```bash
+cd docs && python -m http.server 8000
+# Open: http://localhost:8000
+```
+
+**Dashboard Features:**
+
+| Tab | Visualization | Description |
+|-----|--------------|-------------|
+| Zeitreihen | Multi-Line Chart | Macro aggregates 2010-2023 with crisis markers |
+| Handelspartner | Bar Chart | Export/Import/Balance by trading partner |
+| Sektoren | Diverging Bars | Sectoral YoY changes (COVID, Energy Crisis) |
+| IO-Verflechtung | Bar Chart | Backward/Forward linkages, intersectoral flows |
+
+**Technology:** D3.js v7, vanilla JavaScript, static JSON data (~47 KB)
+
+---
 
 ## Quick Start
 

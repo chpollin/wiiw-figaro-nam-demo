@@ -24,7 +24,7 @@ graph TB
 | 1. Inspect/Understand | Complete | `data.md` with schema, codes |
 | 2a. Explore (Base) | Complete | `scripts/01-04*.py`, base outputs |
 | 2b. Explore (Extended) | Complete | `scripts/05-08*.py`, extended outputs |
-| 3. Human-in-the-Loop | Pending | Selected questions |
+| 3. Human-in-the-Loop | In Progress | Interactive dashboard (`docs/`) |
 | 4. Plan | Pending | Notebook outline |
 | 5. Execute | Pending | Analysis outputs |
 | 6. Summary | Pending | Final report |
@@ -140,9 +140,41 @@ Negative Values Analysis:
 
 ---
 
-### Phase 3: Human-in-the-Loop [Ready]
+### Phase 3: Human-in-the-Loop [In Progress]
 
 **Objective:** Workshop participants collaboratively select 2-3 research questions.
+
+**Implementation:** Interactive Web Dashboard
+
+An interactive D3.js dashboard has been created to support the selection process:
+
+| Component | Description |
+|-----------|-------------|
+| **URL** | `docs/index.html` (GitHub Pages deployable) |
+| **Technology** | D3.js v7, vanilla JS, static JSON |
+| **Data Size** | ~47 KB (5 JSON files) |
+
+**Dashboard Tabs:**
+
+| Tab | Visualization | Research Questions Addressed |
+|-----|--------------|------------------------------|
+| Zeitreihen | Multi-line chart | B3 (Energy vs COVID), country comparison |
+| Handelspartner | Bar chart | D1-D3 (Import dependency, trade structure) |
+| Sektoren | Diverging bars | B2, B4 (Sectoral dynamics, volatility) |
+| IO-Verflechtung | Bar chart | A1-A2 (Circular flow, linkages) |
+
+**Data Availability:**
+
+| Country | Time Series | Trade | Sectors | Linkages |
+|---------|-------------|-------|---------|----------|
+| DE | Yes | Yes | Yes | Yes |
+| FR | Yes | - | - | - |
+| IT | Yes | - | - | - |
+| ES | Yes | - | - | - |
+| AT | Yes | - | - | - |
+| PL | Yes | - | - | - |
+| GR | Yes | - | - | - |
+| NL | Yes | - | - | - |
 
 **David's 4 Analysis Types:**
 1. **Sankey/Flow** - Circular flow visualization (Production → Income → Use)
@@ -176,8 +208,9 @@ Negative Values Analysis:
 
 **Process:**
 1. Present 4 analysis types with examples from Phase 2
-2. Discuss feasibility and interest
-3. Vote on 2-3 questions for Phase 4/5 implementation
+2. Use interactive dashboard to explore data patterns
+3. Discuss feasibility and interest
+4. Vote on 2-3 questions for Phase 4/5 implementation
 
 ---
 

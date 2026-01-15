@@ -1,0 +1,363 @@
+/* FIGARO-NAM Explorer - Stylesheet */
+
+:root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --positive: #27ae60;
+    --negative: #e74c3c;
+    --neutral: #95a5a6;
+    --bg-light: #ecf0f1;
+    --bg-white: #ffffff;
+    --text-dark: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #bdc3c7;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    background: var(--primary);
+    color: white;
+    padding: 1.5rem 2rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+header .subtitle {
+    font-size: 0.95rem;
+    opacity: 0.85;
+}
+
+/* Navigation Tabs */
+.tabs {
+    display: flex;
+    justify-content: center;
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    background: transparent;
+    color: var(--text-light);
+    font-size: 0.95rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.tab-btn.active {
+    background: var(--secondary);
+    color: white;
+}
+
+/* Main Content */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    background: var(--bg-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.control-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.control-group select,
+.control-group input[type="range"] {
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    min-width: 180px;
+}
+
+.control-group select:focus {
+    outline: none;
+    border-color: var(--secondary);
+}
+
+/* Checkbox Group */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-transform: none;
+    font-weight: normal;
+    color: var(--text-dark);
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.year-btn {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--border);
+    background: var(--bg-white);
+    color: var(--text-dark);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.year-btn:hover {
+    background: var(--bg-light);
+}
+
+.year-btn.active {
+    background: var(--secondary);
+    color: white;
+    border-color: var(--secondary);
+}
+
+/* Chart Container */
+.chart-container {
+    width: 100%;
+    height: 400px;
+    position: relative;
+}
+
+.chart-container.chart-tall {
+    height: 600px;
+}
+
+.chart-container svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Chart Info */
+.chart-info {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.chart-info p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.chart-info strong {
+    color: var(--text-dark);
+}
+
+/* D3 Chart Styles */
+.axis text {
+    font-size: 11px;
+    fill: var(--text-light);
+}
+
+.axis path,
+.axis line {
+    stroke: var(--border);
+}
+
+.line {
+    fill: none;
+    stroke-width: 2;
+}
+
+.line-DE { stroke: #3498db; }
+.line-FR { stroke: #e74c3c; }
+.line-IT { stroke: #27ae60; }
+.line-ES { stroke: #f39c12; }
+.line-AT { stroke: #9b59b6; }
+.line-PL { stroke: #1abc9c; }
+.line-GR { stroke: #e67e22; }
+.line-NL { stroke: #34495e; }
+
+.bar-positive {
+    fill: var(--positive);
+}
+
+.bar-negative {
+    fill: var(--negative);
+}
+
+.bar-export {
+    fill: var(--positive);
+}
+
+.bar-import {
+    fill: var(--negative);
+}
+
+.bar-neutral {
+    fill: var(--secondary);
+}
+
+.crisis-marker {
+    stroke: var(--negative);
+    stroke-width: 1;
+    stroke-dasharray: 4,4;
+}
+
+.crisis-label {
+    font-size: 10px;
+    fill: var(--negative);
+}
+
+.tooltip {
+    position: absolute;
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    justify-content: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+}
+
+.legend-color {
+    width: 16px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+/* Footer */
+footer {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.disclaimer {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.disclaimer strong {
+    color: var(--negative);
+}
+
+.credits {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.credits a {
+    color: var(--secondary);
+    text-decoration: none;
+}
+
+.credits a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.4rem;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .control-group select {
+        width: 100%;
+    }
+
+    .chart-container {
+        height: 300px;
+    }
+
+    .chart-container.chart-tall {
+        height: 450px;
+    }
+}

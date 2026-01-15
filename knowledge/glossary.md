@@ -279,10 +279,74 @@ FIGAROs Alleinstellungsmerkmal: Bilaterale Handelsbalancierung auf HS-6-Digit-Eb
 
 ---
 
+## Web Dashboard Architektur
+
+### Technologie-Stack
+
+| Komponente | Technologie | Begruendung |
+|------------|-------------|-------------|
+| Visualisierung | D3.js v7 | Maximale Flexibilitaet, professionelle Charts |
+| Styling | Vanilla CSS | Keine Dependencies, einfach |
+| Datenformat | JSON | Browser-nativ, kompakt |
+| Hosting | GitHub Pages | Statisch, kostenlos |
+
+### Dashboard-Struktur
+
+```
+docs/
+├── index.html          # Haupt-HTML mit Tab-Navigation
+├── css/style.css       # Responsive Styling
+├── js/
+│   ├── app.js          # Datenladung, Hilfsfunktionen
+│   ├── timeseries.js   # Multi-Line Chart
+│   ├── trade.js        # Balkendiagramm
+│   ├── sectors.js      # Divergierendes Balkendiagramm
+│   └── linkages.js     # IO-Verflechtung
+└── data/
+    ├── time_series.json
+    ├── trade_partners.json
+    ├── sectors.json
+    ├── linkages.json
+    └── metadata.json
+```
+
+### JSON-Datenaggregation
+
+**Quelle:** CSV-Dateien aus `outputs/tables/` (Phase 2 Exploration)
+**Generator:** `scripts/09_generate_json.py`
+**Ziel:** `docs/data/*.json` (~47 KB gesamt)
+
+### D3.js Visualisierungstypen
+
+| Chart | D3-Methode | Daten |
+|-------|------------|-------|
+| Zeitreihen | `d3.line()` + `d3.curveMonotoneX` | time_series.json |
+| Handel | `d3.scaleBand()` + `rect` | trade_partners.json |
+| Sektoren | Diverging bars (pos/neg um 0) | sectors.json |
+| Linkages | `d3.scaleSequential()` + `d3.interpolateBlues` | linkages.json |
+
+### Interaktive Elemente
+
+- **Tooltips:** `d3.select('body').append('div').attr('class', 'tooltip')`
+- **Checkboxen:** Laender-Auswahl fuer Multi-Line-Vergleich
+- **Dropdowns:** Aggregat-Wahl, Modus-Wahl
+- **Slider:** Top-N-Auswahl fuer Rankings
+- **Buttons:** Jahr-Auswahl fuer Strukturbrueche
+
+### Krisenmarker
+
+| Jahr | Bezeichnung | Visualisierung |
+|------|-------------|----------------|
+| 2020 | COVID-19 | Vertikale gestrichelte Linie |
+| 2022 | Energiekrise | Vertikale gestrichelte Linie |
+
+---
+
 ## Referenzen
 
 - ESA 2010 Manual: Regulation EU No 549/2013
 - Miller & Blair: Input-Output Analysis, 3rd Edition 2022
 - OECD TiVA Database Documentation
 - Eurostat FIGARO Methodology Notes
+- D3.js Documentation: https://d3js.org/
 - Lokale Referenz: [ESA 2010 und FIGARO Referenzdokumentation](ESA%202010%20und%20FIGARO%20Referenzdokumentation.md)

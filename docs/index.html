@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIGARO-NAM Explorer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>FIGARO-NAM Explorer</h1>
+        <p class="subtitle">Interaktive Analyse der EU-Volkswirtschaftlichen Gesamtrechnungen</p>
+    </header>
+
+    <nav class="tabs">
+        <button class="tab-btn active" data-tab="zeitreihen">Zeitreihen</button>
+        <button class="tab-btn" data-tab="handel">Handelspartner</button>
+        <button class="tab-btn" data-tab="sektoren">Sektoren</button>
+        <button class="tab-btn" data-tab="verflechtung">IO-Verflechtung</button>
+    </nav>
+
+    <main>
+        <!-- Zeitreihen-Tab -->
+        <section id="zeitreihen" class="tab-content active">
+            <div class="controls">
+                <div class="control-group">
+                    <label>Aggregat:</label>
+                    <select id="ts-aggregat">
+                        <option value="hh_konsum">Privater Konsum</option>
+                        <option value="staat_konsum">Staatskonsum</option>
+                        <option value="investitionen">Investitionen</option>
+                        <option value="importe">Importe</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Laender:</label>
+                    <div id="ts-laender" class="checkbox-group"></div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <svg id="chart-zeitreihen"></svg>
+            </div>
+            <div class="chart-info">
+                <p><strong>Forschungsfrage B3:</strong> Wie unterscheiden sich die Auswirkungen der COVID-19 Pandemie (2020) und der Energiekrise (2022)?</p>
+            </div>
+        </section>
+
+        <!-- Handelspartner-Tab -->
+        <section id="handel" class="tab-content">
+            <div class="controls">
+                <div class="control-group">
+                    <label>Ansicht:</label>
+                    <select id="trade-mode">
+                        <option value="exporte">Exporte</option>
+                        <option value="importe">Importe</option>
+                        <option value="bilanz">Handelsbilanz</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Anzahl Partner:</label>
+                    <input type="range" id="trade-topn" min="5" max="20" value="15">
+                    <span id="trade-topn-value">15</span>
+                </div>
+            </div>
+            <div class="chart-container">
+                <svg id="chart-handel"></svg>
+            </div>
+            <div class="chart-info">
+                <p><strong>Forschungsfrage D1:</strong> Welche Sektoren zeigen die hoechste Importabhaengigkeit in Deutschland?</p>
+            </div>
+        </section>
+
+        <!-- Sektoren-Tab -->
+        <section id="sektoren" class="tab-content">
+            <div class="controls">
+                <div class="control-group">
+                    <label>Jahr (YoY-Veraenderung):</label>
+                    <div class="button-group">
+                        <button class="year-btn active" data-year="2020">2020</button>
+                        <button class="year-btn" data-year="2021">2021</button>
+                        <button class="year-btn" data-year="2022">2022</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Sortierung:</label>
+                    <select id="sector-sort">
+                        <option value="change">Nach Veraenderung</option>
+                        <option value="alpha">Alphabetisch</option>
+                    </select>
+                </div>
+            </div>
+            <div class="chart-container chart-tall">
+                <svg id="chart-sektoren"></svg>
+            </div>
+            <div class="chart-info">
+                <p><strong>Forschungsfrage B2:</strong> Welche Sektoren waren Gewinner und Verlierer waehrend COVID?</p>
+            </div>
+        </section>
+
+        <!-- IO-Verflechtung-Tab -->
+        <section id="verflechtung" class="tab-content">
+            <div class="controls">
+                <div class="control-group">
+                    <label>Verflechtungsart:</label>
+                    <select id="linkage-mode">
+                        <option value="rueckwaerts">Rueckwaertsverflechtung (Inputs)</option>
+                        <option value="vorwaerts">Vorwaertsverflechtung (Outputs)</option>
+                        <option value="fluesse">Top Intersektorale Fluesse</option>
+                    </select>
+                </div>
+            </div>
+            <div class="chart-container chart-tall">
+                <svg id="chart-verflechtung"></svg>
+            </div>
+            <div class="chart-info">
+                <p><strong>Forschungsfrage A1:</strong> Wie sind die Sektoren in Deutschland miteinander verflochten?</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="disclaimer">
+            <strong>Hinweis:</strong> Alle Werte in Mio. EUR, nominal (nicht inflationsbereinigt).
+            Quelle: FIGARO-NAM (Eurostat).
+        </p>
+        <p class="credits">
+            wiiw Workshop: AI for Data Analysis &amp; Visualisation |
+            <a href="https://github.com/wiiw-research/wiiw-figaro-nam-demo" target="_blank">GitHub Repository</a>
+        </p>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/timeseries.js"></script>
+    <script src="js/trade.js"></script>
+    <script src="js/sectors.js"></script>
+    <script src="js/linkages.js"></script>
+</body>
+</html>
