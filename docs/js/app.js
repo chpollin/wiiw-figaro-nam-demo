@@ -9,8 +9,12 @@ let DATA = {
     trade: null,
     sectors: null,
     linkages: null,
+    sankey: null,
     metadata: null
 };
+
+// Export for other modules
+window.APP_DATA = DATA;
 
 // Farben fuer Laender
 const COUNTRY_COLORS = {
@@ -29,11 +33,12 @@ const COUNTRY_COLORS = {
  */
 async function loadData() {
     try {
-        const [timeSeries, trade, sectors, linkages, metadata] = await Promise.all([
+        const [timeSeries, trade, sectors, linkages, sankey, metadata] = await Promise.all([
             d3.json('data/time_series.json'),
             d3.json('data/trade_partners.json'),
             d3.json('data/sectors.json'),
             d3.json('data/linkages.json'),
+            d3.json('data/sankey.json').catch(() => null),
             d3.json('data/metadata.json')
         ]);
 
@@ -41,7 +46,11 @@ async function loadData() {
         DATA.trade = trade;
         DATA.sectors = sectors;
         DATA.linkages = linkages;
+        DATA.sankey = sankey;
         DATA.metadata = metadata;
+
+        // Update global reference
+        window.APP_DATA = DATA;
 
         console.log('Daten geladen:', DATA);
         return true;
@@ -73,6 +82,12 @@ function initTabs() {
             switch(tabId) {
                 case 'zeitreihen':
                     if (typeof updateTimeSeriesChart === 'function') updateTimeSeriesChart();
+                    break;
+                case 'erholung':
+                    if (typeof updateRecoveryChart === 'function') updateRecoveryChart();
+                    break;
+                case 'kreislauf':
+                    if (typeof updateSankeyChart === 'function') updateSankeyChart();
                     break;
                 case 'handel':
                     if (typeof updateTradeChart === 'function') updateTradeChart();
@@ -161,12 +176,30 @@ async function init() {
 
     // Visualisierungen initialisieren
     if (typeof initTimeSeriesChart === 'function') initTimeSeriesChart();
+    if (typeof initRecoveryChart === 'function') initRecoveryChart();
+    if (typeof initSankeyChart === 'function') initSankeyChart();
     if (typeof initTradeChart === 'function') initTradeChart();
     if (typeof initSectorsChart === 'function') initSectorsChart();
     if (typeof initLinkagesChart === 'function') initLinkagesChart();
 
     console.log('Initialisierung abgeschlossen.');
 }
+
+/**
+ * Format value in millions
+ */
+function formatMio(value) {
+    if (value === null || value === undefined || isNaN(value)) return '-';
+    if (Math.abs(value) >= 1e6) {
+        return (value / 1e6).toFixed(1) + ' Bio. EUR';
+    } else if (Math.abs(value) >= 1e3) {
+        return (value / 1e3).toFixed(1) + ' Mrd. EUR';
+    }
+    return value.toFixed(1) + ' Mio. EUR';
+}
+
+// Export formatting function
+window.formatMio = formatMio;
 
 // Start
 document.addEventListener('DOMContentLoaded', init);

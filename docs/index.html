@@ -3,29 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIGARO-NAM Explorer</title>
+    <meta name="description" content="Interaktive Visualisierung der EU-Volkswirtschaftlichen Gesamtrechnungen aus FIGARO-NAM Daten">
+    <meta name="author" content="wiiw - Wiener Institut fuer Internationale Wirtschaftsvergleiche">
+    <title>FIGARO-NAM Explorer | EU-Volkswirtschaftliche Gesamtrechnungen</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
 </head>
 <body>
-    <header>
+    <header role="banner">
         <h1>FIGARO-NAM Explorer</h1>
         <p class="subtitle">Interaktive Analyse der EU-Volkswirtschaftlichen Gesamtrechnungen</p>
+        <p class="data-notice" aria-label="Datenhinweis">
+            Alle Werte nominal (nicht inflationsbereinigt) | 8 Laender | 2010-2023
+        </p>
     </header>
 
-    <nav class="tabs">
-        <button class="tab-btn active" data-tab="zeitreihen">Zeitreihen</button>
-        <button class="tab-btn" data-tab="handel">Handelspartner</button>
-        <button class="tab-btn" data-tab="sektoren">Sektoren</button>
-        <button class="tab-btn" data-tab="verflechtung">IO-Verflechtung</button>
+    <nav class="tabs" role="tablist" aria-label="Visualisierungstypen">
+        <button class="tab-btn active" data-tab="zeitreihen" role="tab" aria-selected="true" aria-controls="zeitreihen">
+            Zeitreihen
+        </button>
+        <button class="tab-btn" data-tab="erholung" role="tab" aria-selected="false" aria-controls="erholung">
+            Erholung
+        </button>
+        <button class="tab-btn" data-tab="kreislauf" role="tab" aria-selected="false" aria-controls="kreislauf">
+            Kreislauf
+        </button>
+        <button class="tab-btn" data-tab="handel" role="tab" aria-selected="false" aria-controls="handel">
+            Handel
+        </button>
+        <button class="tab-btn" data-tab="sektoren" role="tab" aria-selected="false" aria-controls="sektoren">
+            Sektoren
+        </button>
+        <button class="tab-btn" data-tab="verflechtung" role="tab" aria-selected="false" aria-controls="verflechtung">
+            IO-Verflechtung
+        </button>
     </nav>
 
     <main>
         <!-- Zeitreihen-Tab -->
-        <section id="zeitreihen" class="tab-content active">
+        <article id="zeitreihen" class="tab-content active" role="tabpanel" aria-labelledby="tab-zeitreihen">
             <div class="controls">
                 <div class="control-group">
-                    <label>Aggregat:</label>
+                    <label for="ts-aggregat">Aggregat</label>
                     <select id="ts-aggregat">
                         <option value="hh_konsum">Privater Konsum</option>
                         <option value="staat_konsum">Staatskonsum</option>
@@ -34,75 +54,130 @@
                     </select>
                 </div>
                 <div class="control-group">
-                    <label>Laender:</label>
-                    <div id="ts-laender" class="checkbox-group"></div>
+                    <label id="ts-laender-label">Laender</label>
+                    <div id="ts-laender" class="checkbox-group" role="group" aria-labelledby="ts-laender-label"></div>
                 </div>
             </div>
-            <div class="chart-container">
+            <figure class="chart-container" role="img" aria-label="Zeitreihen-Diagramm">
                 <svg id="chart-zeitreihen"></svg>
-            </div>
-            <div class="chart-info">
+            </figure>
+            <aside class="chart-info">
                 <p><strong>Forschungsfrage B3:</strong> Wie unterscheiden sich die Auswirkungen der COVID-19 Pandemie (2020) und der Energiekrise (2022)?</p>
-            </div>
-        </section>
+            </aside>
+        </article>
 
-        <!-- Handelspartner-Tab -->
-        <section id="handel" class="tab-content">
+        <!-- Erholung-Tab -->
+        <article id="erholung" class="tab-content" role="tabpanel" aria-labelledby="tab-erholung">
             <div class="controls">
                 <div class="control-group">
-                    <label>Ansicht:</label>
-                    <select id="trade-mode">
-                        <option value="exporte">Exporte</option>
-                        <option value="importe">Importe</option>
-                        <option value="bilanz">Handelsbilanz</option>
+                    <label for="recovery-period">Vergleichszeitraum</label>
+                    <select id="recovery-period">
+                        <option value="2021vs2019">2021 vs 2019 (COVID-Erholung)</option>
+                        <option value="2022vs2019">2022 vs 2019 (Post-COVID)</option>
+                        <option value="2023vs2019">2023 vs 2019 (Langfristig)</option>
                     </select>
                 </div>
                 <div class="control-group">
-                    <label>Anzahl Partner:</label>
-                    <input type="range" id="trade-topn" min="5" max="20" value="15">
-                    <span id="trade-topn-value">15</span>
+                    <label for="recovery-aggregat">Aggregat</label>
+                    <select id="recovery-aggregat">
+                        <option value="hh_konsum">Privater Konsum</option>
+                        <option value="staat_konsum">Staatskonsum</option>
+                        <option value="investitionen">Investitionen</option>
+                    </select>
                 </div>
             </div>
-            <div class="chart-container">
-                <svg id="chart-handel"></svg>
-            </div>
-            <div class="chart-info">
-                <p><strong>Forschungsfrage D1:</strong> Welche Sektoren zeigen die hoechste Importabhaengigkeit in Deutschland?</p>
-            </div>
-        </section>
+            <figure class="chart-container" role="img" aria-label="Erholungs-Indikator">
+                <svg id="chart-erholung"></svg>
+            </figure>
+            <aside class="chart-info">
+                <p><strong>Forschungsfrage B3:</strong> Hat die Energiekrise 2022 die COVID-Erholung gebremst? Vergleich mit Pre-COVID Niveau (2019).</p>
+            </aside>
+        </article>
 
-        <!-- Sektoren-Tab -->
-        <section id="sektoren" class="tab-content">
+        <!-- Kreislauf-Tab (Sankey) -->
+        <article id="kreislauf" class="tab-content" role="tabpanel" aria-labelledby="tab-kreislauf">
             <div class="controls">
                 <div class="control-group">
-                    <label>Jahr (YoY-Veraenderung):</label>
-                    <div class="button-group">
-                        <button class="year-btn active" data-year="2020">2020</button>
-                        <button class="year-btn" data-year="2021">2021</button>
-                        <button class="year-btn" data-year="2022">2022</button>
+                    <label for="sankey-country">Land</label>
+                    <select id="sankey-country">
+                        <option value="DE">Deutschland</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="sankey-year">Jahr</label>
+                    <select id="sankey-year">
+                        <option value="2019">2019 (Pre-COVID)</option>
+                        <option value="2020">2020 (COVID)</option>
+                        <option value="2022">2022 (Energiekrise)</option>
+                    </select>
+                </div>
+            </div>
+            <figure class="chart-container chart-tall" role="img" aria-label="Wirtschaftskreislauf Sankey-Diagramm">
+                <svg id="chart-kreislauf"></svg>
+            </figure>
+            <aside class="chart-info">
+                <p><strong>Forschungsfrage A1:</strong> Wie fliesst Wertschoepfung von Produktion ueber Einkommen zur Verwendung?</p>
+            </aside>
+        </article>
+
+        <!-- Handel-Tab -->
+        <article id="handel" class="tab-content" role="tabpanel" aria-labelledby="tab-handel">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="trade-mode">Ansicht</label>
+                    <select id="trade-mode">
+                        <option value="exporte">Exporte nach Partner</option>
+                        <option value="importe">Importe nach Partner</option>
+                        <option value="bilanz">Handelsbilanz</option>
+                        <option value="sektoren">Importe nach Sektor (IPR)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="trade-topn" id="trade-topn-label">Anzahl Partner</label>
+                    <input type="range" id="trade-topn" min="5" max="20" value="15" aria-valuemin="5" aria-valuemax="20" aria-valuenow="15">
+                    <output id="trade-topn-value" for="trade-topn">15</output>
+                </div>
+            </div>
+            <figure class="chart-container" role="img" aria-label="Handelspartner-Diagramm">
+                <svg id="chart-handel"></svg>
+            </figure>
+            <aside class="chart-info">
+                <p><strong>Forschungsfrage D1:</strong> Welche Sektoren zeigen die hoechste Importabhaengigkeit in Deutschland?</p>
+            </aside>
+        </article>
+
+        <!-- Sektoren-Tab -->
+        <article id="sektoren" class="tab-content" role="tabpanel" aria-labelledby="tab-sektoren">
+            <div class="controls">
+                <div class="control-group">
+                    <label id="year-buttons-label">Jahr (YoY-Veraenderung)</label>
+                    <div class="button-group" role="group" aria-labelledby="year-buttons-label">
+                        <button class="year-btn active" data-year="2020" aria-pressed="true">2020</button>
+                        <button class="year-btn" data-year="2021" aria-pressed="false">2021</button>
+                        <button class="year-btn" data-year="2022" aria-pressed="false">2022</button>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label>Sortierung:</label>
+                    <label for="sector-sort">Sortierung</label>
                     <select id="sector-sort">
                         <option value="change">Nach Veraenderung</option>
                         <option value="alpha">Alphabetisch</option>
                     </select>
                 </div>
             </div>
-            <div class="chart-container chart-tall">
+            <figure class="chart-container chart-tall" role="img" aria-label="Sektoren-Dynamik">
                 <svg id="chart-sektoren"></svg>
-            </div>
-            <div class="chart-info">
+            </figure>
+            <aside class="chart-info">
                 <p><strong>Forschungsfrage B2:</strong> Welche Sektoren waren Gewinner und Verlierer waehrend COVID?</p>
-            </div>
-        </section>
+            </aside>
+        </article>
 
         <!-- IO-Verflechtung-Tab -->
-        <section id="verflechtung" class="tab-content">
+        <article id="verflechtung" class="tab-content" role="tabpanel" aria-labelledby="tab-verflechtung">
             <div class="controls">
                 <div class="control-group">
-                    <label>Verflechtungsart:</label>
+                    <label for="linkage-mode">Verflechtungsart</label>
                     <select id="linkage-mode">
                         <option value="rueckwaerts">Rueckwaertsverflechtung (Inputs)</option>
                         <option value="vorwaerts">Vorwaertsverflechtung (Outputs)</option>
@@ -110,28 +185,30 @@
                     </select>
                 </div>
             </div>
-            <div class="chart-container chart-tall">
+            <figure class="chart-container chart-tall" role="img" aria-label="IO-Verflechtungs-Diagramm">
                 <svg id="chart-verflechtung"></svg>
-            </div>
-            <div class="chart-info">
+            </figure>
+            <aside class="chart-info">
                 <p><strong>Forschungsfrage A1:</strong> Wie sind die Sektoren in Deutschland miteinander verflochten?</p>
-            </div>
-        </section>
+            </aside>
+        </article>
     </main>
 
-    <footer>
+    <footer role="contentinfo">
         <p class="disclaimer">
             <strong>Hinweis:</strong> Alle Werte in Mio. EUR, nominal (nicht inflationsbereinigt).
-            Quelle: FIGARO-NAM (Eurostat).
+            Quelle: <a href="https://ec.europa.eu/eurostat/web/esa-supply-use-input-tables/figaro" target="_blank" rel="noopener">FIGARO-NAM (Eurostat)</a>.
         </p>
         <p class="credits">
             wiiw Workshop: AI for Data Analysis &amp; Visualisation |
-            <a href="https://github.com/wiiw-research/wiiw-figaro-nam-demo" target="_blank">GitHub Repository</a>
+            <a href="https://github.com/wiiw-research/wiiw-figaro-nam-demo" target="_blank" rel="noopener">GitHub Repository</a>
         </p>
     </footer>
 
     <script src="js/app.js"></script>
     <script src="js/timeseries.js"></script>
+    <script src="js/recovery.js"></script>
+    <script src="js/sankey.js"></script>
     <script src="js/trade.js"></script>
     <script src="js/sectors.js"></script>
     <script src="js/linkages.js"></script>

@@ -21,6 +21,7 @@ function initTradeChart() {
     if (modeSelect) {
         modeSelect.addEventListener('change', () => {
             tradeMode = modeSelect.value;
+            updateTopNLabel();
             updateTradeChart();
         });
     }
@@ -73,6 +74,9 @@ function updateTradeChart() {
     } else if (tradeMode === 'bilanz') {
         data = DATA.trade.bilanz.slice(0, tradeTopN);
         title = 'Handelsbilanz nach Partner (Deutschland 2019)';
+    } else if (tradeMode === 'sektoren') {
+        data = DATA.trade.importe_nach_sektor ? DATA.trade.importe_nach_sektor.slice(0, tradeTopN) : [];
+        title = 'Importe nach Produktgruppe - Import-Intensitaet (Deutschland 2019)';
     }
 
     if (data.length === 0) {
@@ -95,6 +99,8 @@ function updateTradeChart() {
 
     if (tradeMode === 'bilanz') {
         drawBalanceChart(g, data, width, height);
+    } else if (tradeMode === 'sektoren') {
+        drawSectorImportsChart(g, data, width, height);
     } else {
         drawBarChart(g, data, width, height, tradeMode);
     }
@@ -274,6 +280,90 @@ function drawBalanceChart(g, data, width, height) {
         .attr('y', 10)
         .style('font-size', '11px')
         .text('Importe');
+}
+
+/**
+ * Sektor-Importe Chart (Import-Intensitaet)
+ */
+function drawSectorImportsChart(g, data, width, height) {
+    // Skalen
+    const yScale = d3.scaleBand()
+        .domain(data.map(d => d.bezeichnung || d.code))
+        .range([0, height])
+        .padding(0.2);
+
+    const xScale = d3.scaleLinear()
+        .domain([0, d3.max(data, d => d.wert) * 1.1])
+        .range([0, width]);
+
+    // Achsen
+    g.append('g')
+        .attr('class', 'axis y-axis')
+        .call(d3.axisLeft(yScale));
+
+    g.append('g')
+        .attr('class', 'axis x-axis')
+        .attr('transform', `translate(0,${height})`)
+        .call(d3.axisBottom(xScale).tickFormat(d => formatNumber(d, 0)));
+
+    // X-Achsen-Label
+    g.append('text')
+        .attr('x', width / 2)
+        .attr('y', height + 40)
+        .attr('text-anchor', 'middle')
+        .style('font-size', '12px')
+        .style('fill', '#7f8c8d')
+        .text('Mio. EUR (Importe)');
+
+    // Balken
+    g.selectAll('.bar')
+        .data(data)
+        .enter()
+        .append('rect')
+        .attr('class', 'bar-import')
+        .attr('y', d => yScale(d.bezeichnung || d.code))
+        .attr('x', 0)
+        .attr('height', yScale.bandwidth())
+        .attr('width', d => xScale(d.wert))
+        .on('mouseover', function(event, d) {
+            d3.select(this).style('opacity', 0.8);
+            showTooltip(tradeTooltip,
+                `<strong>${d.bezeichnung || d.code}</strong><br/>
+                 Code: ${d.code}<br/>
+                 Importe: ${formatNumber(d.wert)} EUR<br/>
+                 Anteil: ${d.anteil ? d.anteil.toFixed(1) + '%' : '-'}`,
+                event);
+        })
+        .on('mouseout', function() {
+            d3.select(this).style('opacity', 1);
+            hideTooltip(tradeTooltip);
+        });
+
+    // Werte an Balken
+    g.selectAll('.bar-label')
+        .data(data)
+        .enter()
+        .append('text')
+        .attr('class', 'bar-label')
+        .attr('y', d => yScale(d.bezeichnung || d.code) + yScale.bandwidth() / 2 + 4)
+        .attr('x', d => xScale(d.wert) + 5)
+        .style('font-size', '10px')
+        .style('fill', '#7f8c8d')
+        .text(d => d.anteil ? d.anteil.toFixed(1) + '%' : '');
+}
+
+/**
+ * Label fuer TopN-Slider basierend auf Modus aktualisieren
+ */
+function updateTopNLabel() {
+    const label = document.getElementById('trade-topn-label');
+    if (label) {
+        if (tradeMode === 'sektoren') {
+            label.textContent = 'Anzahl Sektoren';
+        } else {
+            label.textContent = 'Anzahl Partner';
+        }
+    }
 }
 
 // Fenster-Resize

@@ -283,6 +283,21 @@ def generate_trade_partners():
                     'saldo': float(row.get('Balance', 0))
                 })
 
+    # Lade Importe nach Produkt/Sektor (fuer IPR-Ansicht)
+    result['importe_nach_sektor'] = []
+    imports_product_file = OUTPUT_TABLES / 'DE_imports_by_product.csv'
+    if imports_product_file.exists():
+        imports_df = pd.read_csv(imports_product_file)
+        total_imports = imports_df['value'].sum()
+        for _, row in imports_df.head(20).iterrows():
+            code = str(row.get('Set_i', ''))
+            result['importe_nach_sektor'].append({
+                'code': code,
+                'bezeichnung': get_branche_name(code),
+                'wert': float(row.get('value', 0)),
+                'anteil': float(row.get('value', 0)) / total_imports * 100 if total_imports > 0 else 0
+            })
+
     return result
 
 
@@ -398,6 +413,51 @@ def generate_linkages():
     return result
 
 
+def generate_sankey():
+    """Generiere sankey.json fuer Kreislauf-Visualisierung."""
+    print("Generiere sankey.json...")
+
+    # Versuche zuerst, aus der kombinierten Zeitreihen-Datei zu laden
+    all_ts_file = OUTPUT_TABLES / 'all_countries_time_series.csv'
+    de_ts_file = OUTPUT_TABLES / 'DE_time_series.csv'
+
+    result = {}
+    years = [2019, 2020, 2022]
+
+    if de_ts_file.exists():
+        df = pd.read_csv(de_ts_file)
+
+        for year in years:
+            year_data = df[df['year'] == year]
+            if len(year_data) > 0:
+                row = year_data.iloc[0]
+                result[str(year)] = {
+                    'D11': float(row.get('wages_D11', 0)),
+                    'B2': float(row.get('surplus_B2', 0)),
+                    'B3': 0,  # Nicht separat in time_series
+                    'P3_S14': float(row.get('hh_consumption', 0)),
+                    'P3_S13': float(row.get('gov_consumption', 0)),
+                    'P51G': float(row.get('investment', 0)),
+                    'Saldo': 0  # Aussenbeitrag nicht in time_series
+                }
+
+    # Falls keine Daten, erstelle Platzhalter
+    if not result:
+        for year in years:
+            result[str(year)] = {
+                'D11': 1500000,
+                'B2': 800000,
+                'B3': 200000,
+                'P3_S14': 1600000,
+                'P3_S13': 500000,
+                'P51G': 450000,
+                'Saldo': 50000
+            }
+            print(f"  - {year}: Platzhalter-Daten verwendet")
+
+    return result
+
+
 def generate_metadata():
     """Generiere metadata.json mit Beschreibungen und Hinweisen."""
     print("Generiere metadata.json...")
@@ -436,6 +496,7 @@ def main():
         'trade_partners.json': generate_trade_partners,
         'sectors.json': generate_sectors,
         'linkages.json': generate_linkages,
+        'sankey.json': generate_sankey,
         'metadata.json': generate_metadata
     }
 
