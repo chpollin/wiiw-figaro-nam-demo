@@ -1,0 +1,142 @@
+# Working Journal: FIGARO-NAM Analysis
+
+This journal documents the collaboration between Christopher Pollin and Claude Code (Opus 4.5) during the development of an agentic workflow for macroeconomic data analysis.
+
+**Project:** wiiw-figaro-nam-demo
+**Workshop:** AI for Data Analysis & Visualisation (wiiw, 10 February 2026)
+**Data Provider:** David Zenz (wiiw)
+
+---
+
+## Session Log
+
+### 2026-01-15 (Session 2) - Use Case Analysis & Exploration Setup
+
+**Objective:** Analyze David's use case requirements and prepare Phase 2 exploration
+
+**Context:**
+David Zenz provided the FIGARO-NAM data with a detailed 6-phase workflow specification for demonstrating agentic AI research capabilities.
+
+**Key Discussion: Two Approaches**
+
+We discussed two options for the workshop demo:
+1. **Claude Code as Agent** - Use Claude Code directly for interactive analysis
+2. **Custom Agent System** - Build a programmatic agent via API
+
+Decision: **Option 1** - Claude Code is already an agent system. Building a custom system would add complexity, cost (API fees), and time without clear benefit for a demo.
+
+**Domain Knowledge Gap Analysis**
+
+Identified that we (Christopher + Claude) lack deep macroeconomic expertise. Categorized knowledge needs:
+
+| Category | Can Answer from Data | Needs External Research |
+|----------|---------------------|------------------------|
+| Code meanings (D11, B2, etc.) | Partial - see values | Full definitions needed |
+| Structural breaks | Yes - visible in data | Interpretation context |
+| Import dependency | Yes - calculable | Standard metrics |
+| Country clustering | Yes - technically | Economic interpretation |
+
+**Actions:**
+- Analyzed David's email specifying 6-phase workflow
+- Mapped FIGARO-NAM data to circular flow concept (Production -> Income -> Distribution -> Use)
+- Identified matrix block structure (Products x Industries, Transactions x Sectors)
+- Tested COVID structural break: DE household consumption -7% (2019-2020)
+- Created `scripts/` folder for Phase 2 exploration
+- Started `01_data_quality.py`
+
+**Technical Findings (Germany 2020):**
+- Domestic flows: 40.3 trillion EUR (97%)
+- Foreign flows: 1.1 trillion EUR (3%)
+- Top import partners: WRL_REST, USA, China, France
+- COVID impact visible: Travel agencies -56%, Airlines -46%, Hotels -32%
+- Growth sectors: Healthcare +22%, Logistics +11%
+
+**Files Created:**
+- `scripts/01_data_quality.py` - Coverage, missing values, distributions
+
+**Next Steps:**
+- Complete exploration scripts (02, 03)
+- Run scripts and save outputs
+- Formulate Deep Research prompt for ESA 2010 / FIGARO methodology
+- Prepare candidate research questions for Phase 3
+
+---
+
+### 2026-01-15 (Session 1) - Initial Data Inspection & Setup
+
+**Objective:** Understand data structure, set up repository, document in knowledge base
+
+**Actions:**
+- Analyzed all 700 parquet files in `data/parquet/`
+- Extracted schema: 6 columns (Set_i, m, Set_j, value, base, ctr)
+- Documented 181 unique codes for Set_i/Set_j
+- Categorized codes: CPA products (64), NACE industries (64), National Accounts (D, B, P, F, S, N codes)
+- Identified 50 countries/regions including WRL_REST aggregate
+- Created `.gitignore` to exclude data folder (191 MB)
+- Created `CLAUDE.md` for AI assistant instructions
+- Optimized all markdown files (README, research, requirements, journal, data)
+- Removed emojis per user preference
+
+**Observations:**
+- Data is complete: 14 years x 50 countries = 700 files
+- ~120,000 rows per file representing bilateral economic flows
+- Values range from -9,750 to 151,292 (billion EUR)
+- Negative values (283 in sample) represent adjustments/balancing items
+- Hive-style partitioning optimal for filtered queries
+
+**Files Created/Modified:**
+- `CLAUDE.md` - AI assistant instructions
+- `knowledge/data.md` - Complete schema and code documentation
+- `knowledge/research.md` - Workflow phases with status tracking
+- `knowledge/requirements.md` - Technical setup guide
+- `knowledge/journal.md` - This file
+- `README.md` - Project overview with Quick Start
+- `.gitignore` - Exclude data folder
+
+**Phase Status:**
+- Phase 1 (Inspect/Understand): Complete
+
+---
+
+## Pending Deep Research Topics
+
+The following questions require external research (ESA 2010 Manual, Eurostat documentation):
+
+1. **ESA 2010 Transaction Codes**
+   - D11 vs D12 (wages vs employer contributions)
+   - D21X31 (taxes minus subsidies on products)
+   - B2 vs B3 (operating surplus vs mixed income)
+   - B8_S* (saving by institutional sector)
+   - B9FX9 (net lending/borrowing)
+
+2. **Methodological Standards**
+   - How is import dependency typically measured?
+   - What defines a "structural break" in national accounts?
+   - Standard approaches for country clustering by economic structure
+
+3. **Context Knowledge**
+   - FIGARO vs WIOD vs EXIOBASE - differences?
+   - Core vs periphery EU countries - standard definition?
+
+---
+
+## Template for New Entries
+
+### [YYYY-MM-DD] - Session Title
+
+**Objective:**
+*What we set out to accomplish*
+
+**Actions:**
+*What was done (bullet points)*
+
+**Observations:**
+*What we learned or discovered*
+
+**Files Created/Modified:**
+*List of files with brief description*
+
+**Next Steps:**
+*What remains to be done*
+
+---
