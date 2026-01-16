@@ -1,0 +1,6 @@
+# Versionierte Forschungsdurchlaeufe
+# Struktur: runs/run-YYYY-MM-DD-HHmm/
+#   - meta.md (Run-Metadaten)
+#   - log.md (Prozessprotokoll)
+#   - paper/paper.md (Finales Paper)
+#   - paper/figures/ (Abbildungen)

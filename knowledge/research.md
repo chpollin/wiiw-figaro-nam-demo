@@ -144,6 +144,26 @@ Negative Values Analysis:
 
 **Objective:** Workshop participants collaboratively select 2-3 research questions.
 
+**Completed Research Run: run-2026-01-16-1430**
+
+| Aspekt | Details |
+|--------|---------|
+| Forschungsfrage | Hat die Energiekrise 2022 die COVID-Erholung in Suedeuropa gebremst? |
+| Hypothese | H_int (integriert aus H1+H4+H5) |
+| Laender | ES, IT, GR, PT (Sued) vs. DE, AT, NL (Nord) |
+| Methodik | FIGARO-NAM + HICP-Deflation |
+| Ergebnis | Hypothese 1/3 bestaetigt |
+
+**Kernbefunde:**
+- Basis-Effekt bestaetigt (r = -0.52): Tieferer COVID-Einbruch erklaert hoehere Erholungsraten
+- Nominale Ueberlegenheit Suedeuropas widerlegt: Nord 113.1 vs. Sued 110.0
+- Fiskalische Abfederung widerlegt: Nord +19.7% vs. Sued +14.3% Staatskonsum-Wachstum
+- Ueberraschung: Deutschland fuehrt bei Staatskonsum-Expansion (+21.2%)
+
+**Outputs:** `runs/run-2026-01-16-1430/paper/paper.md`
+
+---
+
 **Implementation:** Interactive Web Dashboard
 
 An interactive D3.js dashboard has been created to support the selection process:

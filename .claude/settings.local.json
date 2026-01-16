@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "Bash(move outputs*.csv outputstables)",
+      "Bash(file:*)",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "Bash(ls:*)",
+      "Bash(findstr:*)",
+      "Bash(copy:*)"
+    ]
+  }
+}
