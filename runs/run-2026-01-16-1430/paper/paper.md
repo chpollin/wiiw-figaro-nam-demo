@@ -1,64 +1,64 @@
-# Energiekrise und COVID-Erholung: Ein Vergleich zwischen Sued- und Nordeuropa
+# Energy Crisis and COVID Recovery: A Comparison between Southern and Northern Europe
 
 **Run:** run-2026-01-16-1430
-**Datum:** 2026-01-16
+**Date:** 2026-01-16
 
 ---
 
-## 1. Fragestellung
+## 1. Research Question
 
-### Was wurde untersucht?
+### What was investigated?
 
-Diese Analyse untersucht, ob die Energiekrise 2022 die COVID-Erholung im Haushaltskonsum suedeuropaeischer Laender (Spanien, Italien, Griechenland, Portugal) im Vergleich zu nordeuropaeischen Laendern (Deutschland, Oesterreich, Niederlande) gebremst hat.
+This analysis examines whether the 2022 energy crisis slowed COVID recovery in household consumption of Southern European countries (Spain, Italy, Greece, Portugal) compared to Northern European countries (Germany, Austria, Netherlands).
 
-Die zentrale Hypothese (H_int) lautete:
+The central hypothesis (H_int) was:
 
-> Suedeuropaeische Laender zeigen 2022 eine staerkere nominale, aber schwaeachere reale Erholung als Nordeuropa, wobei der Unterschied teilweise durch hoehere Staatskonsum-Expansion abgefedert wird. Der scheinbar staerkere nominale Rebound ist primaer ein Basis-Effekt des tieferen COVID-Einbruchs 2020.
+> Southern European countries show stronger nominal but weaker real recovery in 2022 than Northern Europe, with the difference partially cushioned by higher government consumption expansion. The apparently stronger nominal rebound is primarily a base effect of the deeper COVID drop in 2020.
 
-### Warum ist das relevant?
+### Why is this relevant?
 
-Die COVID-19-Pandemie und die anschliessende Energiekrise 2022 trafen europaeische Volkswirtschaften unterschiedlich stark. Suedeuropa, mit seiner Tourismusabhaengigkeit und strukturellen Unterschieden, erlebte tiefere Einbrueche waehrend der Pandemie. Die Frage, ob die Erholung nachhaltig war oder durch Inflationseffekte ueberzeichnet wird, ist fuer die wirtschaftspolitische Bewertung von zentraler Bedeutung.
+The COVID-19 pandemic and the subsequent 2022 energy crisis affected European economies to varying degrees. Southern Europe, with its tourism dependency and structural differences, experienced deeper drops during the pandemic. The question of whether the recovery was sustainable or overstated by inflation effects is of central importance for economic policy assessment.
 
 ---
 
-## 2. Datengrundlage
+## 2. Data Basis
 
-### Primaerquelle
+### Primary Source
 
-[FAKT] Die Analyse basiert auf dem FIGARO-NAM-Datensatz (Eurostat), bereitgestellt via wiiw. [Quelle: validation.md:17-27]
+[FACT] The analysis is based on the FIGARO-NAM dataset (Eurostat), provided via wiiw. [Source: validation.md:17-27]
 
-| Merkmal | Beschreibung |
-|---------|--------------|
-| Quelle | Eurostat FIGARO-NAM (Full International and Global Accounts for Research in Input-Output Analysis - National Accounts Matrix) |
-| Format | Apache Parquet, Hive-partitioniert |
-| Zeitraum | 2010-2023 |
-| Einheit | Millionen EUR (nominal) |
+| Feature | Description |
+|---------|-------------|
+| Source | Eurostat FIGARO-NAM (Full International and Global Accounts for Research in Input-Output Analysis - National Accounts Matrix) |
+| Format | Apache Parquet, Hive-partitioned |
+| Period | 2010-2023 |
+| Unit | Million EUR (nominal) |
 
-### Laenderauswahl
+### Country Selection
 
-| Region | Laender | Auswahl-Rationale |
-|--------|---------|-------------------|
-| Suedeuropa | ES, IT, GR, PT | Tourismus-affine Volkswirtschaften, hoehere COVID-Betroffenheit |
-| Nordeuropa | DE, AT, NL | Industrielaender mit geringerer Tourismus-Abhaengigkeit |
-| Referenz | FR, PL | Zusaetzliche Vergleichspunkte |
+| Region | Countries | Selection Rationale |
+|--------|-----------|---------------------|
+| Southern Europe | ES, IT, GR, PT | Tourism-dependent economies, higher COVID impact |
+| Northern Europe | DE, AT, NL | Industrial countries with lower tourism dependency |
+| Reference | FR, PL | Additional comparison points |
 
-### Variablen
+### Variables
 
-| Variable | Code | Beschreibung |
-|----------|------|--------------|
-| Haushaltskonsum | P3_S14 | Konsumausgaben der privaten Haushalte |
-| Staatskonsum | P3_S13 | Konsumausgaben des Staates |
+| Variable | Code | Description |
+|----------|------|-------------|
+| Household consumption | P3_S14 | Consumption expenditure of private households |
+| Government consumption | P3_S13 | Government consumption expenditure |
 
-### Deflationsmethodik
+### Deflation Methodology
 
-[FAKT] Die Realwerte wurden mit HICP-Deflatoren berechnet, rebasiert auf 2019=100.
+[FACT] Real values were calculated using HICP deflators, rebased to 2019=100.
 
-**Datenquelle:** Eurostat prc_hicp_aind (Harmonised Index of Consumer Prices - annual data)
-**URL:** https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind/default/table
-**Abruf:** 2026-01-16
+**Data source:** Eurostat prc_hicp_aind (Harmonised Index of Consumer Prices - annual data)
+**URL:** https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind
+**Retrieved:** 2026-01-16
 
-| Land | HICP 2022 (2015=100) | HICP 2022 (2019=100) |
-|------|----------------------|----------------------|
+| Country | HICP 2022 (2015=100) | HICP 2022 (2019=100) |
+|---------|----------------------|----------------------|
 | DE | 120.3 | 112.0 |
 | AT | 122.5 | 113.0 |
 | NL | 126.4 | 116.1 |
@@ -67,68 +67,68 @@ Die COVID-19-Pandemie und die anschliessende Energiekrise 2022 trafen europaeisc
 | GR | 114.4 | 110.1 |
 | PT | 116.6 | 109.7 |
 
-### Einschraenkungen
+### Limitations
 
-| Einschraenkung | Auswirkung |
-|----------------|------------|
-| Nominale FIGARO-Daten | Inflationseffekte erfordern externe Deflation |
-| Aggregierte Konsumvariable | Keine Unterscheidung nach Guetern (Energie vs. andere) |
-| Kleine Stichprobe (n=9) | Statistische Signifikanz eingeschraenkt |
-| HICP als Deflator | Nicht perfekt fuer Konsum-Deflation, aber Standard-Methodik |
+| Limitation | Impact |
+|------------|--------|
+| Nominal FIGARO data | Inflation effects require external deflation |
+| Aggregated consumption variable | No distinction by goods (energy vs. other) |
+| Small sample (n=9) | Limited statistical significance |
+| HICP as deflator | Not perfect for consumption deflation, but standard methodology |
 
 ---
 
 ## 3. Exploration
 
-### Bestehende COVID-Analysen
+### Existing COVID Analyses
 
-Die Vorerkundung identifizierte deutliche Muster im COVID-Einbruch 2020:
+Preliminary exploration identified clear patterns in the 2020 COVID drop:
 
-[FAKT] Suedeuropa erlitt staerkere COVID-Einbrueche (-12% bis -17%) als die Vergleichsgruppe (-6% bis -10%). [Quelle: exploration-report.md:69]
+[FACT] Southern Europe suffered stronger COVID drops (-12% to -17%) than the comparison group (-6% to -10%). [Source: exploration-report.md:69]
 
-| Land | Gruppe | COVID-Einbruch 2020 |
-|------|--------|---------------------|
-| ES | Suedeuropa | -17.0% |
-| GR | Suedeuropa | -16.1% |
-| IT | Suedeuropa | -12.3% |
-| PT | Suedeuropa | -12.3% |
-| AT | Nordeuropa | -10.1% |
-| DE | Nordeuropa | -7.1% |
-| NL | Nordeuropa | -6.4% |
+| Country | Group | COVID Drop 2020 |
+|---------|-------|-----------------|
+| ES | Southern Europe | -17.0% |
+| GR | Southern Europe | -16.1% |
+| IT | Southern Europe | -12.3% |
+| PT | Southern Europe | -12.3% |
+| AT | Northern Europe | -10.1% |
+| DE | Northern Europe | -7.1% |
+| NL | Northern Europe | -6.4% |
 
-### Datenqualitaet
+### Data Quality
 
-[FAKT] Alle analysierten Laender haben vollstaendige Zeitreihen 2019-2023. Portugal wurde ergaenzend aus dem Parquet-Datensatz extrahiert. [Quelle: validation.md:134-140]
+[FACT] All analyzed countries have complete time series 2019-2023. Portugal was additionally extracted from the Parquet dataset. [Source: validation.md:134-140]
 
-### Hypothesenbildung
+### Hypothesis Formation
 
-Basierend auf der Exploration wurden fuenf Hypothesen formuliert:
+Based on the exploration, five hypotheses were formulated:
 
-1. **H1:** Differentielle Erholungsgeschwindigkeit (nominal vs. real)
-2. **H2:** Tourismusabhaengigkeit als Treiber
-3. **H3:** Energieintensitaet des Konsums
-4. **H4:** Fiskalische Abfederung
-5. **H5:** Basis-Effekt der COVID-Tiefe
+1. **H1:** Differential recovery speed (nominal vs. real)
+2. **H2:** Tourism dependency as driver
+3. **H3:** Energy intensity of consumption
+4. **H4:** Fiscal cushioning
+5. **H5:** Base effect of COVID depth
 
-Die integrierte Hypothese H_int kombiniert H1, H4 und H5 als methodisch vorrangig. [Quelle: hypotheses.md:186-244]
+The integrated hypothesis H_int combines H1, H4, and H5 as methodologically prioritized. [Source: hypotheses.md:186-244]
 
 ---
 
-## 4. Befunde
+## 4. Findings
 
-### 4.1 Basis-Effekt (H5) - BESTAETIGT
+### 4.1 Base Effect (H5) - CONFIRMED
 
-[FAKT] Die Korrelation zwischen COVID-Einbruch 2020 und nominaler Erholung 2020-2022 betraegt r = -0.523 (p = 0.1486). [Quelle: validation.md:91-94]
+[FACT] The correlation between COVID drop 2020 and nominal recovery 2020-2022 is r = -0.523 (p = 0.1486). [Source: validation.md:91-94]
 
-| Region | COVID-Einbruch 2020 | Nominale Erholung 2020-2022 |
-|--------|---------------------|------------------------------|
-| Suedeuropa (Durchschnitt) | -14.4% | +28.6% |
-| Nordeuropa (Durchschnitt) | -7.9% | +22.7% |
+| Region | COVID Drop 2020 | Nominal Recovery 2020-2022 |
+|--------|-----------------|----------------------------|
+| Southern Europe (Average) | -14.4% | +28.6% |
+| Northern Europe (Average) | -7.9% | +22.7% |
 
-[Quelle: basis_effect_analysis.csv]
+[Source: basis_effect_analysis.csv]
 
-| Land | COVID-Einbruch (%) | Erholung 2020-2022 (%) | Netto-Veraenderung 2019-2022 (%) |
-|------|--------------------|-----------------------|----------------------------------|
+| Country | COVID Drop (%) | Recovery 2020-2022 (%) | Net Change 2019-2022 (%) |
+|---------|----------------|------------------------|--------------------------|
 | ES | -17.0 | +28.7 | +6.8 |
 | IT | -12.3 | +23.2 | +8.0 |
 | GR | -16.1 | +32.5 | +11.2 |
@@ -137,182 +137,182 @@ Die integrierte Hypothese H_int kombiniert H1, H4 und H5 als methodisch vorrangi
 | AT | -10.1 | +22.4 | +10.0 |
 | NL | -6.4 | +26.2 | +18.2 |
 
-[INFERENZ] Der moderate negative Zusammenhang (r = -0.52) zeigt, dass Laender mit tieferem COVID-Einbruch tendenziell hoehere prozentuale Erholungsraten aufweisen. Dies ist ein statistisch-mathematischer Basis-Effekt, keine echte "Outperformance".
+[INFERENCE] The moderate negative relationship (r = -0.52) shows that countries with deeper COVID drops tend to have higher percentage recovery rates. This is a statistical-mathematical base effect, not genuine "outperformance".
 
-![Basis-Effekt: COVID-Einbruch vs. Erholung](figures/basis_effect_scatter.png)
+![Base Effect: COVID Drop vs. Recovery](figures/basis_effect_scatter.png)
 
-**Abbildung 1: Der Basis-Effekt erklaert vermeintliche Erholungsdifferenzen.** Das Streudiagramm zeigt den systematischen negativen Zusammenhang (r = -0.52) zwischen COVID-Einbruch 2020 und prozentualer Erholung 2020-2022. Spanien (ES) mit dem tiefsten Einbruch (-17%) zeigt die optisch staerkste Erholung, doch dieser Effekt ist primaer mathematisch bedingt: Wer tiefer faellt, hat prozentual mehr aufzuholen. Die Regressionsgerade verdeutlicht, dass etwa die Haelfte der Varianz in den Erholungsraten durch die Einbruchstiefe erklaerbar ist. Suedeuropaeische Laender (rot) clustern im Bereich hoher Einbrueche und hoher Erholungsraten, waehrend nordeuropaeische Laender (blau) moderatere Werte zeigen.
-
----
-
-### 4.2 Nominale vs. Reale Erholung (H1) - NICHT BESTAETIGT
-
-[FAKT] Die nominalen und realen Erholungsindizes (2019=100) fuer 2022 zeigen ein unerwartetes Muster. [Quelle: recovery_comparison.csv, validation.md:101-108]
-
-| Region | Nominaler Index 2022 | Realer Index 2022 | Differenz |
-|--------|----------------------|-------------------|-----------|
-| Suedeuropa (Durchschnitt) | 110.0 | 99.6 | +10.4 |
-| Nordeuropa (Durchschnitt) | 113.1 | 99.5 | +13.6 |
-
-**Detaillierte Laenderwerte 2022:**
-
-| Land | Region | Nominaler Index | HICP-Deflator | Realer Index |
-|------|--------|-----------------|---------------|--------------|
-| ES | Sued | 106.8 | 111.6 | 95.8 |
-| IT | Sued | 108.0 | 110.3 | 97.9 |
-| GR | Sued | 111.2 | 110.1 | 101.0 |
-| PT | Sued | 113.9 | 109.7 | 103.8 |
-| DE | Nord | 111.1 | 112.0 | 99.2 |
-| AT | Nord | 110.0 | 113.0 | 97.4 |
-| NL | Nord | 118.2 | 116.1 | 101.8 |
-
-[Quelle: recovery_comparison.csv:1-47]
-
-[INFERENZ] Entgegen der Hypothese zeigt Nordeuropa eine staerkere nominale Erholung (113.1 vs. 110.0). Real konvergieren beide Regionen auf praktisch identisches Niveau (ca. 99.5). Die hoehere Nominal-Real-Differenz im Norden (+13.6 vs. +10.4) reflektiert die staerkere Energiepreisinflation in DE, AT und NL im Jahr 2022.
-
-![Nominale vs. Reale Erholung](figures/recovery_nominal_vs_real.png)
-
-**Abbildung 2: Nordeuropa zeigt nominal staerkere Erholung - das Gegenteil der Hypothese.** Der Balkenvergleich enthuellt den zentralen Befund dieser Analyse: Entgegen der Erwartung liegt der nominale Erholungsindex 2022 in Nordeuropa (113.1) ueber dem suedeuropaeischen Wert (110.0). Die Niederlande fuehren mit 118.2, waehrend Spanien mit 106.8 den niedrigsten Wert aufweist. Die realen Indizes (deflationiert mit HICP 2019=100) zeigen hingegen eine bemerkenswerte Konvergenz: Beide Regionen erreichen praktisch identische Niveaus um 99.5 - also knapp unter dem Vorkrisenniveau von 2019. Die groessere Nominal-Real-Luecke in Nordeuropa (+13.6 vs. +10.4 Prozentpunkte) reflektiert die staerkere Energiepreisinflation durch Gas-Abhaengigkeit von Russland.
+**Figure 1: The base effect explains apparent recovery differentials.** The scatter plot shows the systematic negative relationship (r = -0.52) between COVID drop 2020 and percentage recovery 2020-2022. Spain (ES) with the deepest drop (-17%) shows the visually strongest recovery, but this effect is primarily mathematically driven: those who fall deeper have more to catch up in percentage terms. The regression line illustrates that about half of the variance in recovery rates can be explained by drop depth. Southern European countries (red) cluster in the area of high drops and high recovery rates, while Northern European countries (blue) show more moderate values.
 
 ---
 
-### 4.3 Fiskalische Abfederung (H4) - GEGENTEIL BESTAETIGT
+### 4.2 Nominal vs. Real Recovery (H1) - NOT CONFIRMED
 
-[FAKT] Die Staatskonsum-Entwicklung 2019-2022 zeigt ein gegenteiliges Muster zur Hypothese. [Quelle: fiscal_response.csv, validation.md:110-119]
+[FACT] The nominal and real recovery indices (2019=100) for 2022 show an unexpected pattern. [Source: recovery_comparison.csv, validation.md:101-108]
 
-| Region | Gov-Wachstum 2019-2022 |
-|--------|------------------------|
-| Suedeuropa (Durchschnitt) | +14.3% |
-| Nordeuropa (Durchschnitt) | +19.7% |
+| Region | Nominal Index 2022 | Real Index 2022 | Difference |
+|--------|--------------------|-----------------|-----------|
+| Southern Europe (Average) | 110.0 | 99.6 | +10.4 |
+| Northern Europe (Average) | 113.1 | 99.5 | +13.6 |
 
-**Detaillierte Laenderwerte:**
+**Detailed country values 2022:**
 
-| Land | Region | Gov 2019 (Mio EUR) | Gov 2022 (Mio EUR) | Wachstum (%) |
-|------|--------|--------------------|--------------------|--------------|
-| DE | Nord | 717.506 | 869.815 | +21.2% |
-| NL | Nord | 202.262 | 241.898 | +19.6% |
-| AT | Nord | 78.029 | 92.347 | +18.3% |
-| ES | Sued | 234.127 | 275.811 | +17.8% |
-| PT | Sued | 36.348 | 42.456 | +16.8% |
-| IT | Sued | 337.134 | 376.408 | +11.6% |
-| GR | Sued | 37.086 | 41.132 | +10.9% |
+| Country | Region | Nominal Index | HICP Deflator | Real Index |
+|---------|--------|---------------|---------------|------------|
+| ES | South | 106.8 | 111.6 | 95.8 |
+| IT | South | 108.0 | 110.3 | 97.9 |
+| GR | South | 111.2 | 110.1 | 101.0 |
+| PT | South | 113.9 | 109.7 | 103.8 |
+| DE | North | 111.1 | 112.0 | 99.2 |
+| AT | North | 110.0 | 113.0 | 97.4 |
+| NL | North | 118.2 | 116.1 | 101.8 |
 
-[Quelle: fiscal_response.csv:1-10]
+[Source: recovery_comparison.csv:1-47]
 
-[INFERENZ] Die Annahme, Suedeuropa habe mit hoeherer Fiskalexpansion den Privatkonsum abgefedert, trifft nicht zu. Deutschland zeigt mit +21.2% die hoechste Staatskonsum-Expansion aller untersuchten Laender. Die schwache positive Korrelation zwischen Gov-Wachstum und HH-Stabilitaet (r = 0.201) deutet auf einen begrenzten Abfederungseffekt hin.
+[INFERENCE] Contrary to the hypothesis, Northern Europe shows stronger nominal recovery (113.1 vs. 110.0). In real terms, both regions converge to practically identical levels (ca. 99.5). The higher nominal-real difference in the North (+13.6 vs. +10.4) reflects the stronger energy price inflation in DE, AT, and NL in 2022.
 
-![Fiskalische Abfederung](figures/fiscal_cushion.png)
+![Nominal vs. Real Recovery](figures/recovery_nominal_vs_real.png)
 
-**Abbildung 3: Deutschland fuehrt bei der fiskalischen Expansion - Nordeuropa investierte mehr.** Die linke Grafik zeigt die Staatskonsum-Entwicklung 2019-2022: Deutschland (+21.2%), die Niederlande (+19.6%) und Oesterreich (+18.3%) expandierten den Staatskonsum staerker als alle suedeuropaeischen Laender. Dies widerspricht der Annahme, Suedeuropa habe den Privatkonsum durch hoehere Staatsausgaben kompensiert. Die rechte Grafik prueft den Zusammenhang zwischen fiskalischer Expansion und Haushaltskonsumstabilitaet ueber die gesamte Krisenperiode 2019-2022: Die schwache positive Korrelation (r = 0.20) deutet auf einen begrenzten Abfederungseffekt hin. Bemerkenswert: Deutschlands umfangreiche Entlastungspakete 2022 (Tankrabatt, Energiepauschale, 9-Euro-Ticket) spiegeln sich in der hohen Staatskonsum-Expansion wider.
+**Figure 2: Northern Europe shows nominally stronger recovery - the opposite of the hypothesis.** The bar comparison reveals the central finding of this analysis: contrary to expectations, the nominal recovery index 2022 in Northern Europe (113.1) exceeds the Southern European value (110.0). The Netherlands leads with 118.2, while Spain shows the lowest value at 106.8. The real indices (deflated with HICP 2019=100) show remarkable convergence: both regions reach practically identical levels around 99.5 - just below the 2019 pre-crisis level. The larger nominal-real gap in Northern Europe (+13.6 vs. +10.4 percentage points) reflects the stronger energy price inflation due to gas dependency on Russia.
+
+---
+
+### 4.3 Fiscal Cushioning (H4) - OPPOSITE CONFIRMED
+
+[FACT] Government consumption development 2019-2022 shows a pattern opposite to the hypothesis. [Source: fiscal_response.csv, validation.md:110-119]
+
+| Region | Gov Growth 2019-2022 |
+|--------|----------------------|
+| Southern Europe (Average) | +14.3% |
+| Northern Europe (Average) | +19.7% |
+
+**Detailed country values:**
+
+| Country | Region | Gov 2019 (M EUR) | Gov 2022 (M EUR) | Growth (%) |
+|---------|--------|------------------|------------------|------------|
+| DE | North | 717,506 | 869,815 | +21.2% |
+| NL | North | 202,262 | 241,898 | +19.6% |
+| AT | North | 78,029 | 92,347 | +18.3% |
+| ES | South | 234,127 | 275,811 | +17.8% |
+| PT | South | 36,348 | 42,456 | +16.8% |
+| IT | South | 337,134 | 376,408 | +11.6% |
+| GR | South | 37,086 | 41,132 | +10.9% |
+
+[Source: fiscal_response.csv:1-10]
+
+[INFERENCE] The assumption that Southern Europe cushioned private consumption with higher fiscal expansion does not hold true. Germany shows the highest government consumption expansion of all examined countries at +21.2%. The weak positive correlation between Gov growth and HH stability (r = 0.201) indicates a limited cushioning effect.
+
+![Fiscal Cushioning](figures/fiscal_cushion.png)
+
+**Figure 3: Germany leads in fiscal expansion - Northern Europe invested more.** The left chart shows government consumption development 2019-2022: Germany (+21.2%), the Netherlands (+19.6%), and Austria (+18.3%) expanded government consumption more than all Southern European countries. This contradicts the assumption that Southern Europe compensated private consumption through higher government spending. The right chart examines the relationship between fiscal expansion and household consumption stability over the entire crisis period 2019-2022: the weak positive correlation (r = 0.20) indicates a limited cushioning effect. Notably: Germany's extensive relief packages in 2022 (fuel discount, energy bonus, 9-euro ticket) are reflected in the high government consumption expansion.
 
 ---
 
 ## 5. Interpretation
 
-### Zusammenfassung der Hypothesentests
+### Summary of Hypothesis Tests
 
-| Teilhypothese | Status | Kernbefund |
-|---------------|--------|------------|
-| H5: Basis-Effekt | BESTAETIGT | r = -0.52, Sued tieferer Einbruch erklaert hoehere Erholungsraten |
-| H1a: Sued nominal staerker | WIDERLEGT | Nord 113.1 vs. Sued 110.0 |
-| H1b: Sued real schwaecher | NICHT BESTAETIGT | Praktisch gleich (99.6 vs. 99.5) |
-| H4: Sued hoehere Fiskalexpansion | WIDERLEGT | Nord +19.7% vs. Sued +14.3% |
+| Sub-hypothesis | Status | Key Finding |
+|----------------|--------|-------------|
+| H5: Base effect | CONFIRMED | r = -0.52, South deeper drop explains higher recovery rates |
+| H1a: South nominally stronger | REFUTED | North 113.1 vs. South 110.0 |
+| H1b: South real weaker | NOT CONFIRMED | Practically equal (99.6 vs. 99.5) |
+| H4: South higher fiscal expansion | REFUTED | North +19.7% vs. South +14.3% |
 
-### Warum wurde H_int nur teilweise bestaetigt?
+### Why was H_int only partially confirmed?
 
-[INFERENZ] Die integrierte Hypothese beruhte auf drei Annahmen, von denen nur eine zutrifft:
+[INFERENCE] The integrated hypothesis was based on three assumptions, of which only one holds true:
 
-1. **Basis-Effekt (bestaetigt):** Der tiefere COVID-Einbruch in Suedeuropa erklaert die hoeheren prozentualen Erholungsraten. Dies ist ein methodisch wichtiger Befund, der vor Fehlinterpretationen schuetzt. Abbildung 1 visualisiert diesen Zusammenhang eindrucksvoll.
+1. **Base effect (confirmed):** The deeper COVID drop in Southern Europe explains the higher percentage recovery rates. This is a methodologically important finding that protects against misinterpretation. Figure 1 impressively visualizes this relationship.
 
-2. **Nominale Illusion (widerlegt):** Die Annahme, Suedeuropa zeige nominal staerkere Erholung, trifft nicht zu. Tatsaechlich zeigt Nordeuropa hoehere nominale Indizes (Abbildung 2). Dies liegt vermutlich an der staerkeren Energiepreisinflation in Nordeuropa (hoeherer Gasverbrauch fuer Heizung) und dem robusten Arbeitsmarkt.
+2. **Nominal illusion (refuted):** The assumption that Southern Europe shows nominally stronger recovery does not hold. In fact, Northern Europe shows higher nominal indices (Figure 2). This is likely due to the stronger energy price inflation in Northern Europe (higher gas consumption for heating) and the robust labor market.
 
-3. **Fiskalische Abfederung (widerlegt):** Entgegen der Erwartung expandierte Nordeuropa - insbesondere Deutschland - den Staatskonsum staerker (Abbildung 3). Dies koennte die umfangreichen Energiepreis-Entlastungspakete 2022 widerspiegeln (Tankrabatt, Energiepauschale, 9-Euro-Ticket).
+3. **Fiscal cushioning (refuted):** Contrary to expectations, Northern Europe - especially Germany - expanded government consumption more (Figure 3). This could reflect the extensive energy price relief packages in 2022 (fuel discount, energy bonus, 9-euro ticket).
 
-### Alternative Erklaerungen
+### Alternative Explanations
 
-[HYPOTHESE] Folgende Faktoren koennten die Ergebnisse erklaeren:
+[HYPOTHESIS] The following factors could explain the results:
 
-1. **Unterschiedliche Inflationsursachen:** Nordeuropa hatte 2022 staerkere Energiepreisinflation (Gas-Abhaengigkeit von Russland), waehrend Suedeuropa breitere aber moderatere Preissteigerungen erlebte. Die HICP-Deflatoren in Tabelle 2.4 zeigen dies deutlich: NL 116.1, AT 113.0, DE 112.0 vs. ES 111.6, GR 110.1, PT 109.7.
+1. **Different inflation causes:** Northern Europe had stronger energy price inflation in 2022 (gas dependency on Russia), while Southern Europe experienced broader but more moderate price increases. The HICP deflators in Table 2.4 clearly show this: NL 116.1, AT 113.0, DE 112.0 vs. ES 111.6, GR 110.1, PT 109.7.
 
-2. **Tourismus-Rebound:** Die starke Erholung in GR und PT (reale Indizes von 101.0 und 103.8) koennte durch den Tourismus-Rebound 2022 getrieben sein, der reale Wirtschaftsaktivitaet generierte.
+2. **Tourism rebound:** The strong recovery in GR and PT (real indices of 101.0 and 103.8) could be driven by the tourism rebound in 2022, which generated real economic activity.
 
-3. **Fiskal-Timing:** Deutschlands hohe Staatskonsum-Expansion 2022 reflektiert moeglicherweise spaetere, aber umfangreichere Entlastungspakete im Vergleich zu frueheren, kleineren Massnahmen in Suedeuropa.
+3. **Fiscal timing:** Germany's high government consumption expansion in 2022 may reflect later but more extensive relief packages compared to earlier, smaller measures in Southern Europe.
 
-4. **Strukturelle Anpassung:** Die reale Konvergenz beider Regionen auf ca. 99.5 (2019=100) deutet auf aehnliche Anpassungsmechanismen trotz unterschiedlicher nominaler Pfade hin - ein bemerkenswertes Ergebnis, das in Abbildung 2 sichtbar wird.
-
----
-
-## 6. Fazit
-
-### Kernaussagen
-
-Diese Analyse liefert drei zentrale Erkenntnisse:
-
-1. **Der Basis-Effekt ist real und quantifizierbar.** Laender mit tieferem COVID-Einbruch zeigen mechanisch hoehere prozentuale Erholungsraten. Dies erklaert etwa die Haelfte der Varianz (r = -0.52) und mahnt zur Vorsicht bei der Interpretation von Erholungsstatistiken.
-
-2. **Die Energiekrise traf Nordeuropa staerker als erwartet.** Die hoehere nominale Erholung Nordeuropas bei gleichzeitig groesserer Nominal-Real-Luecke zeigt, dass die Gas-Abhaengigkeit von Russland in DE, AT und NL zu staerkerer Preisinflation fuehrte als in Suedeuropa.
-
-3. **Fiskalische Reaktionen waren asymmetrisch.** Deutschlands Rolle als fiskalischer Spitzenreiter (+21.2% Staatskonsum-Wachstum) widerspricht dem Narrativ eines zurueckhaltenden nordeuropaeischen Fiskalkurses waehrend der Energiekrise.
-
-### Methodische Implikationen
-
-Die teilweise Widerlegung von H_int demonstriert den Wert quantitativer Ueberpruefung narrativer Annahmen. Ohne die HICP-Deflation waere die nominale Ueberlegenheit Nordeuropas nicht sichtbar geworden; ohne den Basis-Effekt-Test waeren die hohen Erholungsraten Suedeuropas falsch interpretiert worden.
+4. **Structural adjustment:** The real convergence of both regions to ca. 99.5 (2019=100) indicates similar adjustment mechanisms despite different nominal paths - a remarkable result visible in Figure 2.
 
 ---
 
-## 7. Offene Fragen
+## 6. Conclusion
 
-### Methodische Luecken
+### Key Messages
 
-| Frage | Typ | Naechster Schritt |
-|-------|-----|-------------------|
-| Wie unterschied sich die sektorale Konsumstruktur? | [HYPOTHESE] | Aufschluesselung nach CPA-Kategorien |
-| Welche Rolle spielte der Tourismus in GR, ES, PT? | [HYPOTHESE] | Extraktion CPA_I (Gastgewerbe) aus Parquet |
-| Waren die Fiskal-Interventionen zeitlich unterschiedlich? | [HYPOTHESE] | Quartalsweise Analyse 2020-2022 |
+This analysis provides three central insights:
 
-### Unerwartete Befunde fuer weitere Forschung
+1. **The base effect is real and quantifiable.** Countries with deeper COVID drops mechanically show higher percentage recovery rates. This explains about half of the variance (r = -0.52) and urges caution in interpreting recovery statistics.
 
-[HYPOTHESE] Warum konvergieren beide Regionen real auf dasselbe Niveau trotz unterschiedlicher nominaler Pfade?
+2. **The energy crisis hit Northern Europe harder than expected.** Northern Europe's higher nominal recovery combined with a larger nominal-real gap shows that gas dependency on Russia in DE, AT, and NL led to stronger price inflation than in Southern Europe.
 
-[HYPOTHESE] Warum zeigt Deutschland (+21.2%) die hoechste Staatskonsum-Expansion, obwohl oft als fiskalisch konservativ charakterisiert?
+3. **Fiscal responses were asymmetric.** Germany's role as the fiscal front-runner (+21.2% government consumption growth) contradicts the narrative of a restrained Northern European fiscal course during the energy crisis.
 
-[HYPOTHESE] Erklaert Polens Outperformance (+21.9% Netto-Veraenderung) ein alternatives Erholungsmodell ausserhalb der West-Ost-Divergenz?
+### Methodological Implications
 
-### Datenbeduerfnisse
-
-| Datenbedarf | Zweck |
-|-------------|-------|
-| Quartalsweise Daten 2020-2022 | Timing-Analyse der Erholung |
-| Sektorale FIGARO-Aufschluesselung | Tourismus vs. Energie-Konsum |
-| Energiepreisindizes nach Land | Spezifischere Deflation |
+The partial refutation of H_int demonstrates the value of quantitative verification of narrative assumptions. Without HICP deflation, Northern Europe's nominal superiority would not have been visible; without the base effect test, Southern Europe's high recovery rates would have been misinterpreted.
 
 ---
 
-## Anhang: Datenquellen
+## 7. Open Questions
 
-### Abbildungsverzeichnis
+### Methodological Gaps
 
-| Abbildung | Datei | Beschreibung |
-|-----------|-------|--------------|
-| 1 | `figures/basis_effect_scatter.png` | Streudiagramm: COVID-Einbruch vs. Erholungsrate mit Regression |
-| 2 | `figures/recovery_nominal_vs_real.png` | Balkenvergleich: Nominale und reale Erholungsindizes |
-| 3 | `figures/fiscal_cushion.png` | Doppelgrafik: Staatskonsum-Wachstum und Korrelation |
+| Question | Type | Next Step |
+|----------|------|-----------|
+| How did sectoral consumption structure differ? | [HYPOTHESIS] | Breakdown by CPA categories |
+| What role did tourism play in GR, ES, PT? | [HYPOTHESIS] | Extract CPA_I (accommodation) from Parquet |
+| Were fiscal interventions temporally different? | [HYPOTHESIS] | Quarterly analysis 2020-2022 |
 
-### Tabellenquellen
+### Unexpected Findings for Further Research
 
-| Datei | Beschreibung |
-|-------|--------------|
-| `outputs/tables/recovery_comparison.csv` | Nominale und reale Erholungsindizes |
-| `outputs/tables/basis_effect_analysis.csv` | Korrelation Einbruch vs. Erholung |
-| `outputs/tables/fiscal_response.csv` | Staatskonsum-Entwicklung |
+[HYPOTHESIS] Why do both regions converge to the same real level despite different nominal paths?
 
-### Externe Datenquellen
+[HYPOTHESIS] Why does Germany (+21.2%) show the highest government consumption expansion, despite often being characterized as fiscally conservative?
 
-| Quelle | URL | Verwendung |
-|--------|-----|------------|
-| Eurostat HICP | https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind | Deflation nominal zu real |
-| FIGARO-NAM | via wiiw | Konsumzeitreihen |
+[HYPOTHESIS] Does Poland's outperformance (+21.9% net change) explain an alternative recovery model outside the West-East divergence?
+
+### Data Needs
+
+| Data Need | Purpose |
+|-----------|---------|
+| Quarterly data 2020-2022 | Timing analysis of recovery |
+| Sectoral FIGARO breakdown | Tourism vs. energy consumption |
+| Energy price indices by country | More specific deflation |
 
 ---
 
-*Erstellt: 2026-01-16 | Run: run-2026-01-16-1430 | Methodik: FIGARO-NAM + HICP-Deflation*
+## Appendix: Data Sources
+
+### Figure Index
+
+| Figure | File | Description |
+|--------|------|-------------|
+| 1 | `figures/basis_effect_scatter.png` | Scatter plot: COVID drop vs. recovery rate with regression |
+| 2 | `figures/recovery_nominal_vs_real.png` | Bar comparison: Nominal and real recovery indices |
+| 3 | `figures/fiscal_cushion.png` | Dual chart: Government consumption growth and correlation |
+
+### Table Sources
+
+| File | Description |
+|------|-------------|
+| `outputs/tables/recovery_comparison.csv` | Nominal and real recovery indices |
+| `outputs/tables/basis_effect_analysis.csv` | Correlation drop vs. recovery |
+| `outputs/tables/fiscal_response.csv` | Government consumption development |
+
+### External Data Sources
+
+| Source | URL | Usage |
+|--------|-----|-------|
+| Eurostat HICP | https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_aind | Deflation nominal to real |
+| FIGARO-NAM | via wiiw | Consumption time series |
+
+---
+
+*Created: 2026-01-16 | Run: run-2026-01-16-1430 | Methodology: FIGARO-NAM + HICP Deflation*

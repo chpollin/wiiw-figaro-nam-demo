@@ -1,18 +1,18 @@
 """
 12_hypothesis_h_int.py - Integrated Hypothesis Analysis
 
-Hypothese H_int:
-Suedeuropaeische Laender (ES, IT, GR, PT) zeigen 2022 eine staerkere nominale,
-aber schwaeachere reale Erholung als Nordeuropa (DE, AT, NL), wobei der
-Unterschied teilweise durch hoehere Staatskonsum-Expansion abgefedert wird.
-Der scheinbar staerkere nominale Rebound ist primaer ein Basis-Effekt des
-tieferen COVID-Einbruchs 2020.
+Hypothesis H_int:
+Southern European countries (ES, IT, GR, PT) show stronger nominal but weaker
+real recovery in 2022 than Northern Europe (DE, AT, NL), with the difference
+partially cushioned by higher government consumption expansion. The apparently
+stronger nominal rebound is primarily a base effect of the deeper COVID drop
+in 2020.
 
-Analysen:
-1. Basis-Effekt (H5): Korrelation COVID-Einbruch vs. Erholung
-2. Nominaler Erholungsindex (H1a): Index 2019=100
-3. Realer Erholungsindex (H1b): HICP-bereinigt
-4. Fiskalische Abfederung (H4): Gov-Konsum Wachstum
+Analyses:
+1. Base effect (H5): Correlation COVID drop vs. recovery
+2. Nominal recovery index (H1a): Index 2019=100
+3. Real recovery index (H1b): HICP-adjusted
+4. Fiscal cushioning (H4): Gov consumption growth
 
 Output:
 - outputs/tables/recovery_comparison.csv
@@ -69,7 +69,7 @@ HICP_YEARS = [2019, 2020, 2021, 2022, 2023]
 
 def load_all_timeseries():
     """Load time series for all countries."""
-    print("Lade Zeitreihen-Daten...")
+    print("Loading time series data...")
 
     data = []
     for ctr in ALL_COUNTRIES:
@@ -77,12 +77,12 @@ def load_all_timeseries():
         if file_path.exists():
             df = pd.read_csv(file_path)
             data.append(df)
-            print(f"  {ctr}: {len(df)} Jahre")
+            print(f"  {ctr}: {len(df)} years")
         else:
-            print(f"  {ctr}: FEHLT - {file_path}")
+            print(f"  {ctr}: MISSING - {file_path}")
 
     combined = pd.concat(data, ignore_index=True)
-    print(f"\nGesamt: {len(combined)} Datenpunkte\n")
+    print(f"\nTotal: {len(combined)} data points\n")
     return combined
 
 
@@ -99,7 +99,7 @@ def get_hicp_deflator(country, year):
 def analyze_basis_effect(df):
     """Analyze base effect: correlation between COVID drop and recovery."""
     print("=" * 60)
-    print("ANALYSE 1: BASIS-EFFEKT (H5)")
+    print("ANALYSIS 1: BASE EFFECT (H5)")
     print("=" * 60)
 
     results = []
@@ -115,7 +115,7 @@ def analyze_basis_effect(df):
         recovery_rate = (hh_2022 - hh_2020) / hh_2020 * 100
         net_change_2019_2022 = (hh_2022 - hh_2019) / hh_2019 * 100
 
-        region = 'Sued' if ctr in SOUTH else ('Nord' if ctr in NORTH else 'Andere')
+        region = 'South' if ctr in SOUTH else ('North' if ctr in NORTH else 'Other')
 
         results.append({
             'country': ctr,
@@ -135,49 +135,49 @@ def analyze_basis_effect(df):
     y = result_df['recovery_2020_2022_pct'].values
     correlation, p_value = stats.pearsonr(x, y)
 
-    print(f"\nKorrelation COVID-Einbruch vs. Erholung:")
+    print(f"\nCorrelation COVID drop vs. recovery:")
     print(f"  r = {correlation:.3f}")
     print(f"  p = {p_value:.4f}")
 
     if correlation < -0.5 and p_value < 0.1:
-        print("  -> STAERKER negativer Zusammenhang: Tieferer Einbruch = staerkere Erholung")
-        print("  -> BESTAETIGT Basis-Effekt-Hypothese")
+        print("  -> STRONGER negative relationship: Deeper drop = stronger recovery")
+        print("  -> CONFIRMS base effect hypothesis")
 
-    print(f"\nLaendervergleich:")
+    print(f"\nCountry comparison:")
     print("-" * 80)
-    print(f"{'Land':<6} {'Region':<8} {'Einbruch 2020':<15} {'Erholung 2020-22':<18} {'Netto 2019-22'}")
+    print(f"{'Country':<8} {'Region':<8} {'Drop 2020':<15} {'Recovery 2020-22':<18} {'Net 2019-22'}")
     print("-" * 80)
     for _, row in result_df.iterrows():
-        print(f"{row['country']:<6} {row['region']:<8} {row['covid_drop_pct']:>+10.1f}% "
+        print(f"{row['country']:<8} {row['region']:<8} {row['covid_drop_pct']:>+10.1f}% "
               f"{row['recovery_2020_2022_pct']:>+14.1f}% {row['net_change_2019_2022_pct']:>+12.1f}%")
 
     # Regional averages
     print("\n" + "-" * 80)
-    print("Regionale Durchschnitte:")
-    for region in ['Sued', 'Nord']:
+    print("Regional averages:")
+    for region in ['South', 'North']:
         reg_data = result_df[result_df['region'] == region]
         avg_drop = reg_data['covid_drop_pct'].mean()
         avg_recovery = reg_data['recovery_2020_2022_pct'].mean()
         avg_net = reg_data['net_change_2019_2022_pct'].mean()
-        print(f"  {region}: Einbruch {avg_drop:+.1f}%, Erholung {avg_recovery:+.1f}%, Netto {avg_net:+.1f}%")
+        print(f"  {region}: Drop {avg_drop:+.1f}%, Recovery {avg_recovery:+.1f}%, Net {avg_net:+.1f}%")
 
     # Save results
     result_df.to_csv(OUTPUT_TABLES / 'basis_effect_analysis.csv', index=False)
-    print(f"\nGespeichert: {OUTPUT_TABLES / 'basis_effect_analysis.csv'}")
+    print(f"\nSaved: {OUTPUT_TABLES / 'basis_effect_analysis.csv'}")
 
     return result_df, correlation, p_value
 
 
 def create_basis_effect_scatter(basis_df, correlation, p_value):
     """Create scatter plot of base effect."""
-    print("\nErstelle Streudiagramm Basis-Effekt...")
+    print("\nCreating base effect scatter plot...")
 
     fig, ax = plt.subplots(figsize=(10, 7))
 
-    colors = {'Sued': '#E74C3C', 'Nord': '#3498DB', 'Andere': '#95A5A6'}
-    markers = {'Sued': 'o', 'Nord': 's', 'Andere': '^'}
+    colors = {'South': '#E74C3C', 'North': '#3498DB', 'Other': '#95A5A6'}
+    markers = {'South': 'o', 'North': 's', 'Other': '^'}
 
-    for region in ['Sued', 'Nord', 'Andere']:
+    for region in ['South', 'North', 'Other']:
         reg_data = basis_df[basis_df['region'] == region]
         ax.scatter(
             reg_data['covid_drop_pct'],
@@ -185,7 +185,7 @@ def create_basis_effect_scatter(basis_df, correlation, p_value):
             c=colors[region],
             marker=markers[region],
             s=150,
-            label=f'{region}europa' if region != 'Andere' else 'Andere',
+            label=f'{region}ern Europe' if region != 'Other' else 'Other',
             edgecolors='black',
             linewidths=1,
             alpha=0.8
@@ -211,10 +211,10 @@ def create_basis_effect_scatter(basis_df, correlation, p_value):
     ax.plot(x_line, p(x_line), 'k--', alpha=0.5, linewidth=2,
             label=f'Regression (r={correlation:.2f})')
 
-    ax.set_xlabel('COVID-Einbruch 2019-2020 (%)', fontsize=12)
-    ax.set_ylabel('Nominale Erholung 2020-2022 (%)', fontsize=12)
-    ax.set_title('Basis-Effekt: Tieferer Einbruch fuehrt zu staerkerer Erholung\n'
-                 f'Korrelation r = {correlation:.3f}, p = {p_value:.4f} (n={len(basis_df)})',
+    ax.set_xlabel('COVID Drop 2019-2020 (%)', fontsize=12)
+    ax.set_ylabel('Nominal Recovery 2020-2022 (%)', fontsize=12)
+    ax.set_title('Base Effect: Deeper Drop Leads to Stronger Recovery\n'
+                 f'Correlation r = {correlation:.3f}, p = {p_value:.4f} (n={len(basis_df)})',
                  fontsize=13, fontweight='bold')
 
     ax.axhline(y=0, color='gray', linestyle='-', alpha=0.3)
@@ -227,13 +227,13 @@ def create_basis_effect_scatter(basis_df, correlation, p_value):
     plt.savefig(OUTPUT_FIGURES / 'basis_effect_scatter.png', dpi=150)
     plt.close()
 
-    print(f"Gespeichert: {OUTPUT_FIGURES / 'basis_effect_scatter.png'}")
+    print(f"Saved: {OUTPUT_FIGURES / 'basis_effect_scatter.png'}")
 
 
 def analyze_recovery_indices(df):
     """Analyze nominal and real recovery indices (2019=100)."""
     print("\n" + "=" * 60)
-    print("ANALYSE 2: NOMINALER UND REALER ERHOLUNGSINDEX (H1a, H1b)")
+    print("ANALYSIS 2: NOMINAL AND REAL RECOVERY INDEX (H1a, H1b)")
     print("=" * 60)
 
     results = []
@@ -242,7 +242,7 @@ def analyze_recovery_indices(df):
         ctr_data = df[df['country'] == ctr]
         hh_2019 = ctr_data[ctr_data['year'] == 2019]['hh_consumption'].values[0]
 
-        region = 'Sued' if ctr in SOUTH else ('Nord' if ctr in NORTH else 'Andere')
+        region = 'South' if ctr in SOUTH else ('North' if ctr in NORTH else 'Other')
 
         for year in [2019, 2020, 2021, 2022, 2023]:
             hh = ctr_data[ctr_data['year'] == year]['hh_consumption'].values[0]
@@ -268,20 +268,20 @@ def analyze_recovery_indices(df):
     result_df = pd.DataFrame(results)
 
     # Pivot for display
-    print("\nNominaler HH-Konsum Index (2019=100):")
+    print("\nNominal HH Consumption Index (2019=100):")
     print("-" * 70)
     nominal_pivot = result_df.pivot(index='country', columns='year', values='nominal_index')
     print(nominal_pivot.round(1).to_string())
 
-    print("\n\nRealer HH-Konsum Index (2019=100, HICP-bereinigt):")
+    print("\n\nReal HH Consumption Index (2019=100, HICP-adjusted):")
     print("-" * 70)
     real_pivot = result_df.pivot(index='country', columns='year', values='real_index')
     print(real_pivot.round(1).to_string())
 
     # Compare 2022 nominal vs real
-    print("\n\nVergleich 2022: Nominal vs. Real:")
+    print("\n\nComparison 2022: Nominal vs. Real:")
     print("-" * 60)
-    print(f"{'Land':<8} {'Region':<8} {'Nominal':<12} {'Real':<12} {'Differenz'}")
+    print(f"{'Country':<10} {'Region':<8} {'Nominal':<12} {'Real':<12} {'Difference'}")
     print("-" * 60)
 
     data_2022 = result_df[result_df['year'] == 2022]
@@ -289,62 +289,62 @@ def analyze_recovery_indices(df):
         diff = row['nominal_index'] - row['real_index'] if row['real_index'] else None
         real_str = f"{row['real_index']:.1f}" if row['real_index'] else "n/a"
         diff_str = f"{diff:+.1f}" if diff else "n/a"
-        print(f"{row['country']:<8} {row['region']:<8} {row['nominal_index']:>8.1f}    {real_str:>8}    {diff_str:>8}")
+        print(f"{row['country']:<10} {row['region']:<8} {row['nominal_index']:>8.1f}    {real_str:>8}    {diff_str:>8}")
 
     # Regional comparison
-    print("\n\nRegionale Durchschnitte 2022:")
-    for region in ['Sued', 'Nord']:
+    print("\n\nRegional averages 2022:")
+    for region in ['South', 'North']:
         reg_data = data_2022[data_2022['region'] == region]
         avg_nominal = reg_data['nominal_index'].mean()
         avg_real = reg_data['real_index'].mean()
         print(f"  {region}: Nominal {avg_nominal:.1f}, Real {avg_real:.1f}, "
-              f"Differenz {avg_nominal - avg_real:+.1f}")
+              f"Difference {avg_nominal - avg_real:+.1f}")
 
     # Save
     result_df.to_csv(OUTPUT_TABLES / 'recovery_comparison.csv', index=False)
-    print(f"\nGespeichert: {OUTPUT_TABLES / 'recovery_comparison.csv'}")
+    print(f"\nSaved: {OUTPUT_TABLES / 'recovery_comparison.csv'}")
 
     return result_df
 
 
 def create_recovery_comparison_chart(recovery_df):
     """Create bar chart comparing nominal vs real recovery."""
-    print("\nErstelle Balkendiagramm Nominal vs. Real...")
+    print("\nCreating nominal vs. real bar chart...")
 
     data_2022 = recovery_df[recovery_df['year'] == 2022].copy()
-    data_2022 = data_2022.sort_values('region', ascending=False)  # Sued first
+    data_2022 = data_2022.sort_values('region', ascending=False)  # South first
 
     fig, ax = plt.subplots(figsize=(12, 7))
 
     x = np.arange(len(data_2022))
     width = 0.35
 
-    colors_nominal = ['#E74C3C' if r == 'Sued' else '#3498DB' if r == 'Nord' else '#95A5A6'
+    colors_nominal = ['#E74C3C' if r == 'South' else '#3498DB' if r == 'North' else '#95A5A6'
                       for r in data_2022['region']]
-    colors_real = ['#C0392B' if r == 'Sued' else '#2980B9' if r == 'Nord' else '#7F8C8D'
+    colors_real = ['#C0392B' if r == 'South' else '#2980B9' if r == 'North' else '#7F8C8D'
                    for r in data_2022['region']]
 
     bars1 = ax.bar(x - width/2, data_2022['nominal_index'], width,
                    color=colors_nominal, label='Nominal', edgecolor='black', alpha=0.8)
     bars2 = ax.bar(x + width/2, data_2022['real_index'], width,
-                   color=colors_real, label='Real (HICP-bereinigt)', edgecolor='black', alpha=0.8)
+                   color=colors_real, label='Real (HICP-adjusted)', edgecolor='black', alpha=0.8)
 
-    ax.axhline(y=100, color='black', linestyle='--', linewidth=2, alpha=0.7, label='2019 Niveau')
+    ax.axhline(y=100, color='black', linestyle='--', linewidth=2, alpha=0.7, label='2019 Level')
 
     ax.set_ylabel('Index (2019 = 100)', fontsize=12)
     # Calculate regional averages for dynamic title
-    south_nom = data_2022[data_2022['region'] == 'Sued']['nominal_index'].mean()
-    north_nom = data_2022[data_2022['region'] == 'Nord']['nominal_index'].mean()
-    south_real = data_2022[data_2022['region'] == 'Sued']['real_index'].mean()
-    north_real = data_2022[data_2022['region'] == 'Nord']['real_index'].mean()
+    south_nom = data_2022[data_2022['region'] == 'South']['nominal_index'].mean()
+    north_nom = data_2022[data_2022['region'] == 'North']['nominal_index'].mean()
+    south_real = data_2022[data_2022['region'] == 'South']['real_index'].mean()
+    north_real = data_2022[data_2022['region'] == 'North']['real_index'].mean()
 
     # Dynamic title based on actual data
     if north_nom > south_nom:
-        subtitle = f'Nordeuropa nominal staerker ({north_nom:.0f} vs {south_nom:.0f}), real aehnlich ({north_real:.0f} vs {south_real:.0f})'
+        subtitle = f'Northern Europe nominally stronger ({north_nom:.0f} vs {south_nom:.0f}), real similar ({north_real:.0f} vs {south_real:.0f})'
     else:
-        subtitle = f'Suedeuropa nominal staerker ({south_nom:.0f} vs {north_nom:.0f}), real schwaecher ({south_real:.0f} vs {north_real:.0f})'
+        subtitle = f'Southern Europe nominally stronger ({south_nom:.0f} vs {north_nom:.0f}), real weaker ({south_real:.0f} vs {north_real:.0f})'
 
-    ax.set_title(f'HH-Konsum 2022: Nominale vs. Reale Erholung\n{subtitle}',
+    ax.set_title(f'HH Consumption 2022: Nominal vs. Real Recovery\n{subtitle}',
                  fontsize=13, fontweight='bold')
     ax.set_xticks(x)
     ax.set_xticklabels(data_2022['country'], fontsize=11)
@@ -369,11 +369,11 @@ def create_recovery_comparison_chart(recovery_df):
     # Legend
     from matplotlib.patches import Patch
     legend_elements = [
-        Patch(facecolor='#E74C3C', edgecolor='black', label='Suedeuropa Nominal'),
-        Patch(facecolor='#C0392B', edgecolor='black', label='Suedeuropa Real'),
-        Patch(facecolor='#3498DB', edgecolor='black', label='Nordeuropa Nominal'),
-        Patch(facecolor='#2980B9', edgecolor='black', label='Nordeuropa Real'),
-        plt.Line2D([0], [0], color='black', linestyle='--', linewidth=2, label='2019 Niveau'),
+        Patch(facecolor='#E74C3C', edgecolor='black', label='Southern Europe Nominal'),
+        Patch(facecolor='#C0392B', edgecolor='black', label='Southern Europe Real'),
+        Patch(facecolor='#3498DB', edgecolor='black', label='Northern Europe Nominal'),
+        Patch(facecolor='#2980B9', edgecolor='black', label='Northern Europe Real'),
+        plt.Line2D([0], [0], color='black', linestyle='--', linewidth=2, label='2019 Level'),
     ]
     ax.legend(handles=legend_elements, loc='upper right', fontsize=9)
 
@@ -384,13 +384,13 @@ def create_recovery_comparison_chart(recovery_df):
     plt.savefig(OUTPUT_FIGURES / 'recovery_nominal_vs_real.png', dpi=150)
     plt.close()
 
-    print(f"Gespeichert: {OUTPUT_FIGURES / 'recovery_nominal_vs_real.png'}")
+    print(f"Saved: {OUTPUT_FIGURES / 'recovery_nominal_vs_real.png'}")
 
 
 def analyze_fiscal_cushion(df):
     """Analyze fiscal cushioning: Gov consumption growth vs HH stability."""
     print("\n" + "=" * 60)
-    print("ANALYSE 3: FISKALISCHE ABFEDERUNG (H4)")
+    print("ANALYSIS 3: FISCAL CUSHIONING (H4)")
     print("=" * 60)
 
     results = []
@@ -418,7 +418,7 @@ def analyze_fiscal_cushion(df):
         # Net HH change 2019-2022
         hh_net_change = (hh_2022 - hh_2019) / hh_2019 * 100
 
-        region = 'Sued' if ctr in SOUTH else ('Nord' if ctr in NORTH else 'Andere')
+        region = 'South' if ctr in SOUTH else ('North' if ctr in NORTH else 'Other')
 
         results.append({
             'country': ctr,
@@ -438,48 +438,48 @@ def analyze_fiscal_cushion(df):
     y = result_df['hh_drop_2020_pct'].values  # HH drop (less negative = better)
     corr_immediate, p_immediate = stats.pearsonr(x, y)
 
-    print(f"\nKorrelation Sofortige fiskalische Reaktion (Gov 2019-2020) vs. HH-Einbruch 2020:")
+    print(f"\nCorrelation immediate fiscal response (Gov 2019-2020) vs. HH drop 2020:")
     print(f"  r = {corr_immediate:.3f}")
     print(f"  p = {p_immediate:.4f}")
 
     if corr_immediate > 0:
-        print("  -> Positiver Zusammenhang: Hoeherer Staatskonsum mildert HH-Einbruch")
+        print("  -> Positive relationship: Higher gov consumption mitigates HH drop")
 
-    print(f"\nLaendervergleich:")
+    print(f"\nCountry comparison:")
     print("-" * 90)
-    print(f"{'Land':<6} {'Region':<8} {'Gov 2019-2020':<15} {'Gov 2019-2022':<15} "
-          f"{'HH Einbruch':<15} {'HH Netto'}")
+    print(f"{'Country':<8} {'Region':<8} {'Gov 2019-2020':<15} {'Gov 2019-2022':<15} "
+          f"{'HH Drop':<15} {'HH Net'}")
     print("-" * 90)
     for _, row in result_df.iterrows():
-        print(f"{row['country']:<6} {row['region']:<8} {row['gov_growth_2019_2020_pct']:>+10.1f}%    "
+        print(f"{row['country']:<8} {row['region']:<8} {row['gov_growth_2019_2020_pct']:>+10.1f}%    "
               f"{row['gov_growth_2019_2022_pct']:>+10.1f}%    {row['hh_drop_2020_pct']:>+10.1f}%    "
               f"{row['hh_net_change_2019_2022_pct']:>+8.1f}%")
 
     # Regional comparison
     print("\n" + "-" * 90)
-    print("Regionale Durchschnitte:")
-    for region in ['Sued', 'Nord']:
+    print("Regional averages:")
+    for region in ['South', 'North']:
         reg_data = result_df[result_df['region'] == region]
         avg_gov = reg_data['gov_growth_2019_2022_pct'].mean()
         avg_hh_drop = reg_data['hh_drop_2020_pct'].mean()
         avg_hh_net = reg_data['hh_net_change_2019_2022_pct'].mean()
-        print(f"  {region}: Gov-Wachstum {avg_gov:+.1f}%, HH-Einbruch {avg_hh_drop:+.1f}%, "
-              f"HH Netto {avg_hh_net:+.1f}%")
+        print(f"  {region}: Gov growth {avg_gov:+.1f}%, HH drop {avg_hh_drop:+.1f}%, "
+              f"HH net {avg_hh_net:+.1f}%")
 
     # Save
     result_df.to_csv(OUTPUT_TABLES / 'fiscal_response.csv', index=False)
-    print(f"\nGespeichert: {OUTPUT_TABLES / 'fiscal_response.csv'}")
+    print(f"\nSaved: {OUTPUT_TABLES / 'fiscal_response.csv'}")
 
     return result_df, corr_immediate, p_immediate
 
 
 def create_fiscal_cushion_chart(fiscal_df, correlation, p_value):
     """Create chart showing fiscal cushioning effect."""
-    print("\nErstelle Grafik Fiskalische Abfederung...")
+    print("\nCreating fiscal cushioning chart...")
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
-    colors = {'Sued': '#E74C3C', 'Nord': '#3498DB', 'Andere': '#95A5A6'}
+    colors = {'South': '#E74C3C', 'North': '#3498DB', 'Other': '#95A5A6'}
 
     # Left: Gov consumption growth comparison
     data_sorted = fiscal_df.sort_values('region', ascending=False)
@@ -490,8 +490,8 @@ def create_fiscal_cushion_chart(fiscal_df, correlation, p_value):
                    edgecolor='black', alpha=0.8)
 
     ax1.axhline(y=0, color='black', linestyle='-', linewidth=1)
-    ax1.set_ylabel('Wachstum (%)', fontsize=11)
-    ax1.set_title('Staatskonsum-Wachstum 2019-2022', fontsize=12, fontweight='bold')
+    ax1.set_ylabel('Growth (%)', fontsize=11)
+    ax1.set_title('Government Consumption Growth 2019-2022', fontsize=12, fontweight='bold')
     ax1.set_xticks(x)
     ax1.set_xticklabels(data_sorted['country'], fontsize=10)
     ax1.grid(axis='y', alpha=0.3)
@@ -505,16 +505,16 @@ def create_fiscal_cushion_chart(fiscal_df, correlation, p_value):
                      textcoords="offset points",
                      ha='center', va='bottom' if height >= 0 else 'top', fontsize=9)
 
-    # Right: Scatter Gov growth 2021-2022 vs HH recovery 2021-2022 (Energiekrise-Periode)
+    # Right: Scatter Gov growth 2021-2022 vs HH recovery 2021-2022 (Energy crisis period)
     # Calculate 2021-2022 changes for fiscal response to energy crisis
-    for region in ['Sued', 'Nord', 'Andere']:
+    for region in ['South', 'North', 'Other']:
         reg_data = fiscal_df[fiscal_df['region'] == region]
         ax2.scatter(
             reg_data['gov_growth_2019_2022_pct'],  # Changed to full period
             reg_data['hh_net_change_2019_2022_pct'],  # Changed to net HH change
             c=colors[region],
             s=150,
-            label=f'{region}europa' if region != 'Andere' else 'Andere',
+            label=f'{region}ern Europe' if region != 'Other' else 'Other',
             edgecolors='black',
             linewidths=1,
             alpha=0.8
@@ -542,9 +542,9 @@ def create_fiscal_cushion_chart(fiscal_df, correlation, p_value):
     ax2.axhline(y=0, color='gray', linestyle='-', alpha=0.3)
     ax2.axvline(x=0, color='gray', linestyle='-', alpha=0.3)
 
-    ax2.set_xlabel('Staatskonsum-Wachstum 2019-2022 (%)', fontsize=11)
-    ax2.set_ylabel('HH-Konsum Netto-Veraenderung 2019-2022 (%)', fontsize=11)
-    ax2.set_title(f'Fiskalische Abfederung: Gov-Expansion vs. HH-Erholung\n'
+    ax2.set_xlabel('Gov Consumption Growth 2019-2022 (%)', fontsize=11)
+    ax2.set_ylabel('HH Consumption Net Change 2019-2022 (%)', fontsize=11)
+    ax2.set_title(f'Fiscal Cushioning: Gov Expansion vs. HH Recovery\n'
                   f'r = {corr_full:.2f}, p = {p_full:.3f}',
                   fontsize=12, fontweight='bold')
     ax2.legend(loc='lower right', fontsize=9)
@@ -554,7 +554,7 @@ def create_fiscal_cushion_chart(fiscal_df, correlation, p_value):
     plt.savefig(OUTPUT_FIGURES / 'fiscal_cushion.png', dpi=150)
     plt.close()
 
-    print(f"Gespeichert: {OUTPUT_FIGURES / 'fiscal_cushion.png'}")
+    print(f"Saved: {OUTPUT_FIGURES / 'fiscal_cushion.png'}")
 
 
 def print_summary(basis_df, recovery_df, fiscal_df,
@@ -562,68 +562,68 @@ def print_summary(basis_df, recovery_df, fiscal_df,
                   fiscal_corr, fiscal_p):
     """Print executive summary of findings."""
     print("\n" + "=" * 70)
-    print("ZUSAMMENFASSUNG: HYPOTHESE H_int")
+    print("SUMMARY: HYPOTHESIS H_int")
     print("=" * 70)
 
-    print("\nHYPOTHESE:")
-    print("  Suedeuropaeische Laender (ES, IT, GR, PT) zeigen 2022 eine staerkere")
-    print("  nominale, aber schwaeachere reale Erholung als Nordeuropa (DE, AT, NL),")
-    print("  wobei der Unterschied teilweise durch hoehere Staatskonsum-Expansion")
-    print("  abgefedert wird. Der scheinbar staerkere nominale Rebound ist primaer")
-    print("  ein Basis-Effekt des tieferen COVID-Einbruchs 2020.")
+    print("\nHYPOTHESIS:")
+    print("  Southern European countries (ES, IT, GR, PT) show stronger nominal")
+    print("  but weaker real recovery in 2022 than Northern Europe (DE, AT, NL),")
+    print("  with the difference partially cushioned by higher government")
+    print("  consumption expansion. The apparently stronger nominal rebound is")
+    print("  primarily a base effect of the deeper COVID drop in 2020.")
 
     print("\n" + "-" * 70)
-    print("BEFUND 1: BASIS-EFFEKT (H5)")
+    print("FINDING 1: BASE EFFECT (H5)")
     print("-" * 70)
 
     # Regional averages from basis analysis
-    south_drop = basis_df[basis_df['region'] == 'Sued']['covid_drop_pct'].mean()
-    north_drop = basis_df[basis_df['region'] == 'Nord']['covid_drop_pct'].mean()
-    south_recovery = basis_df[basis_df['region'] == 'Sued']['recovery_2020_2022_pct'].mean()
-    north_recovery = basis_df[basis_df['region'] == 'Nord']['recovery_2020_2022_pct'].mean()
+    south_drop = basis_df[basis_df['region'] == 'South']['covid_drop_pct'].mean()
+    north_drop = basis_df[basis_df['region'] == 'North']['covid_drop_pct'].mean()
+    south_recovery = basis_df[basis_df['region'] == 'South']['recovery_2020_2022_pct'].mean()
+    north_recovery = basis_df[basis_df['region'] == 'North']['recovery_2020_2022_pct'].mean()
 
-    print(f"  COVID-Einbruch 2020:    Sued {south_drop:+.1f}% vs. Nord {north_drop:+.1f}%")
-    print(f"  Nominale Erholung 2020-2022: Sued {south_recovery:+.1f}% vs. Nord {north_recovery:+.1f}%")
-    print(f"  Korrelation Einbruch-Erholung: r = {basis_corr:.3f} (p = {basis_p:.4f})")
+    print(f"  COVID drop 2020:           South {south_drop:+.1f}% vs. North {north_drop:+.1f}%")
+    print(f"  Nominal recovery 2020-2022: South {south_recovery:+.1f}% vs. North {north_recovery:+.1f}%")
+    print(f"  Correlation drop-recovery: r = {basis_corr:.3f} (p = {basis_p:.4f})")
 
     if basis_corr < -0.5:
-        print("  BESTAETIGT: Staerkerer Einbruch -> staerkere nominale Erholung (Basis-Effekt)")
+        print("  CONFIRMED: Deeper drop -> stronger nominal recovery (base effect)")
 
     print("\n" + "-" * 70)
-    print("BEFUND 2: NOMINALE VS. REALE ERHOLUNG (H1a, H1b)")
+    print("FINDING 2: NOMINAL VS. REAL RECOVERY (H1a, H1b)")
     print("-" * 70)
 
     data_2022 = recovery_df[recovery_df['year'] == 2022]
-    south_nominal = data_2022[data_2022['region'] == 'Sued']['nominal_index'].mean()
-    north_nominal = data_2022[data_2022['region'] == 'Nord']['nominal_index'].mean()
-    south_real = data_2022[data_2022['region'] == 'Sued']['real_index'].mean()
-    north_real = data_2022[data_2022['region'] == 'Nord']['real_index'].mean()
+    south_nominal = data_2022[data_2022['region'] == 'South']['nominal_index'].mean()
+    north_nominal = data_2022[data_2022['region'] == 'North']['nominal_index'].mean()
+    south_real = data_2022[data_2022['region'] == 'South']['real_index'].mean()
+    north_real = data_2022[data_2022['region'] == 'North']['real_index'].mean()
 
     print(f"  Index 2022 (2019=100):")
-    print(f"    Nominal: Sued {south_nominal:.1f} vs. Nord {north_nominal:.1f}")
-    print(f"    Real:    Sued {south_real:.1f} vs. Nord {north_real:.1f}")
-    print(f"  Differenz Nominal-Real: Sued {south_nominal - south_real:+.1f} vs. Nord {north_nominal - north_real:+.1f}")
+    print(f"    Nominal: South {south_nominal:.1f} vs. North {north_nominal:.1f}")
+    print(f"    Real:    South {south_real:.1f} vs. North {north_real:.1f}")
+    print(f"  Difference Nominal-Real: South {south_nominal - south_real:+.1f} vs. North {north_nominal - north_real:+.1f}")
 
     if south_nominal > north_nominal and south_real < north_real:
-        print("  BESTAETIGT: Sued nominal staerker, aber real schwaecher als Nord")
+        print("  CONFIRMED: South nominally stronger, but real weaker than North")
     elif south_nominal > north_nominal:
-        print("  TEILWEISE: Sued nominal staerker, real ebenfalls (Inflation-Effekt geringer)")
+        print("  PARTIAL: South nominally stronger, real also (inflation effect smaller)")
 
     print("\n" + "-" * 70)
-    print("BEFUND 3: FISKALISCHE ABFEDERUNG (H4)")
+    print("FINDING 3: FISCAL CUSHIONING (H4)")
     print("-" * 70)
 
-    south_gov = fiscal_df[fiscal_df['region'] == 'Sued']['gov_growth_2019_2022_pct'].mean()
-    north_gov = fiscal_df[fiscal_df['region'] == 'Nord']['gov_growth_2019_2022_pct'].mean()
+    south_gov = fiscal_df[fiscal_df['region'] == 'South']['gov_growth_2019_2022_pct'].mean()
+    north_gov = fiscal_df[fiscal_df['region'] == 'North']['gov_growth_2019_2022_pct'].mean()
 
-    print(f"  Gov-Konsum Wachstum 2019-2022: Sued {south_gov:+.1f}% vs. Nord {north_gov:+.1f}%")
-    print(f"  Korrelation Gov-Wachstum vs. HH-Stabilitaet: r = {fiscal_corr:.3f} (p = {fiscal_p:.4f})")
+    print(f"  Gov consumption growth 2019-2022: South {south_gov:+.1f}% vs. North {north_gov:+.1f}%")
+    print(f"  Correlation gov growth vs. HH stability: r = {fiscal_corr:.3f} (p = {fiscal_p:.4f})")
 
     if south_gov > north_gov:
-        print("  BESTAETIGT: Suedeuropa expandierte Staatskonsum staerker")
+        print("  CONFIRMED: Southern Europe expanded gov consumption more")
 
     print("\n" + "-" * 70)
-    print("GESAMTBEWERTUNG")
+    print("OVERALL ASSESSMENT")
     print("-" * 70)
 
     confirmed = 0
@@ -638,21 +638,21 @@ def print_summary(basis_df, recovery_df, fiscal_df,
     if south_gov > north_gov:
         confirmed += 1
 
-    print(f"  Hypothesen-Bestaetigung: {confirmed}/{total} Kernaussagen gestuetzt")
+    print(f"  Hypothesis confirmation: {confirmed}/{total} core statements supported")
 
     if confirmed >= 2:
-        print("\n  -> HYPOTHESE H_int WEITGEHEND BESTAETIGT")
+        print("\n  -> HYPOTHESIS H_int LARGELY CONFIRMED")
     elif confirmed >= 1:
-        print("\n  -> HYPOTHESE H_int TEILWEISE BESTAETIGT")
+        print("\n  -> HYPOTHESIS H_int PARTIALLY CONFIRMED")
     else:
-        print("\n  -> HYPOTHESE H_int NICHT BESTAETIGT")
+        print("\n  -> HYPOTHESIS H_int NOT CONFIRMED")
 
     print("=" * 70)
 
 
 def main():
     print("=" * 70)
-    print("HYPOTHESE H_int ANALYSE")
+    print("HYPOTHESIS H_int ANALYSIS")
     print("Run: run-2026-01-16-1430")
     print("=" * 70)
 
@@ -661,8 +661,8 @@ def main():
 
     # Check if PT exists
     if 'PT' not in df['country'].values:
-        print("\nWARNUNG: Portugal (PT) nicht gefunden!")
-        print("Fuehre zuerst scripts/11_extract_portugal.py aus.")
+        print("\nWARNING: Portugal (PT) not found!")
+        print("Run scripts/11_extract_portugal.py first.")
         return
 
     # Analysis 1: Base effect
@@ -683,9 +683,9 @@ def main():
                   fiscal_corr, fiscal_p)
 
     print("\n" + "=" * 70)
-    print("ANALYSE ABGESCHLOSSEN")
+    print("ANALYSIS COMPLETED")
     print("=" * 70)
-    print("\nErstellte Dateien:")
+    print("\nCreated files:")
     print(f"  - {OUTPUT_TABLES / 'basis_effect_analysis.csv'}")
     print(f"  - {OUTPUT_TABLES / 'recovery_comparison.csv'}")
     print(f"  - {OUTPUT_TABLES / 'fiscal_response.csv'}")

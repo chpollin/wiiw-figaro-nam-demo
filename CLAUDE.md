@@ -14,13 +14,13 @@ wiiw-figaro-nam-demo/
 ├── README.md                    # Project overview and quick start
 ├── .gitignore                   # Excludes data/ folder
 ├── .claude/agents/              # Subagent definitions
-│   ├── analysis-agent.md        # Datenexploration, Hypothesen
-│   ├── implementation-agent.md  # Code, Pipelines, Visualisierungen
-│   └── synthesis-agent.md       # Paper-Erstellung
-├── agents/                      # Arbeitsordner der Subagents
+│   ├── analysis-agent.md        # Data exploration, hypotheses
+│   ├── implementation-agent.md  # Code, pipelines, visualizations
+│   └── synthesis-agent.md       # Paper writing
+├── agents/                      # Subagent working directories
 │   ├── analysis/                # Outputs: data-dictionary, hypotheses
 │   ├── implementation/          # Outputs: validation reports
-│   └── synthesis/               # Arbeitsnotizen
+│   └── synthesis/               # Working notes
 ├── data/                        # Parquet data (not in git, 191 MB)
 │   └── parquet/
 │       └── base=YYYY/
@@ -31,15 +31,15 @@ wiiw-figaro-nam-demo/
 │   ├── research.md              # Workflow phases, research questions
 │   ├── requirements.md          # Technical dependencies
 │   └── journal.md               # Session log for continuity
-├── runs/                        # Versionierte Forschungsdurchlaeufe
+├── runs/                        # Versioned research runs
 │   └── run-YYYY-MM-DD-HHmm/
-│       ├── meta.md              # Run-Metadaten und Status
-│       ├── log.md               # Chronologisches Prozessprotokoll
+│       ├── meta.md              # Run metadata and status
+│       ├── log.md               # Chronological process log
 │       └── paper/
-│           ├── paper.md         # Finales Paper
-│           └── figures/         # Abbildungen
-├── scripts/                     # Python-Analyseskripte
-└── outputs/                     # Ergebnisse (tables/, figures/)
+│           ├── paper.md         # Final paper
+│           └── figures/         # Figures
+├── scripts/                     # Python analysis scripts
+└── outputs/                     # Results (tables/, figures/)
 ```
 
 ## Key Context Files
@@ -112,127 +112,127 @@ After completing work:
 
 ---
 
-## Agentenbasierter Forschungsworkflow
+## Agent-Based Research Workflow
 
-### Rollenverteilung
+### Role Distribution
 
-| Rolle | Aufgabe |
-|-------|---------|
-| **Expert in the Loop** | Gibt Forschungsfrage, validiert Zwischenergebnisse, entscheidet bei Unsicherheit |
-| **Hauptagent (Claude Code)** | Orchestriert Workflow, fuehrt Log, stellt Rueckfragen, delegiert an Subagents |
-| **Subagents** | Spezialisierte Helfer fuer Analyse, Implementierung, Synthese |
+| Role | Task |
+|------|------|
+| **Expert in the Loop** | Provides research question, validates intermediate results, decides under uncertainty |
+| **Main Agent (Claude Code)** | Orchestrates workflow, maintains log, asks clarifying questions, delegates to subagents |
+| **Subagents** | Specialized helpers for analysis, implementation, synthesis |
 
-### Verfuegbare Subagents
+### Available Subagents
 
-| Agent | Beschreibung | Phase | Tools |
-|-------|--------------|-------|-------|
-| `analysis-agent` | Datenexploration, Qualitaetspruefung, Hypothesenbildung | 1 | Read, Grep, Glob, Bash |
-| `implementation-agent` | Code-Entwicklung, Pipelines, Visualisierungen | 2 | Read, Write, Edit, Bash, Glob, Grep |
-| `synthesis-agent` | Paper-Erstellung, Ergebnisdokumentation | 3 | Read, Write, Edit, Glob, Grep |
+| Agent | Description | Phase | Tools |
+|-------|-------------|-------|-------|
+| `analysis-agent` | Data exploration, quality checks, hypothesis formation | 1 | Read, Grep, Glob, Bash |
+| `implementation-agent` | Code development, pipelines, visualizations | 2 | Read, Write, Edit, Bash, Glob, Grep |
+| `synthesis-agent` | Paper writing, results documentation | 3 | Read, Write, Edit, Glob, Grep |
 
-Alle Agents verwenden `model: opus` fuer maximale Analysequalitaet.
+All agents use `model: opus` for maximum analysis quality.
 
-### Workflow-Phasen
+### Workflow Phases
 
 ```
 Phase 1: Exploration     --> analysis-agent
-Phase 2: Implementierung --> implementation-agent
-Phase 3: Dokumentation   --> synthesis-agent
+Phase 2: Implementation  --> implementation-agent
+Phase 3: Documentation   --> synthesis-agent
 ```
 
-Nach jeder Phase prueft der Hauptagent:
-- Ist die Forschungsfrage beantwortbar?
-- **Ja**: Weiter zur naechsten Phase
-- **Nein**: Rueckfrage an Experten oder erneuter Durchlauf
+After each phase, the main agent checks:
+- Can the research question be answered?
+- **Yes**: Proceed to next phase
+- **No**: Clarifying question to expert or re-run
 
-### Run-Management
+### Run Management
 
-Bei neuer Forschungsfrage:
+For new research questions:
 
-1. **Run-Ordner anlegen**: `runs/run-YYYY-MM-DD-HHmm/`
-2. **meta.md initialisieren** mit Forschungsfrage und Status
-3. **log.md initialisieren** fuer Prozessprotokoll
-4. **Agents sequentiell aufrufen**
-5. **Nach Abschluss**: Git-Commit, meta.md finalisieren
+1. **Create run folder**: `runs/run-YYYY-MM-DD-HHmm/`
+2. **Initialize meta.md** with research question and status
+3. **Initialize log.md** for process log
+4. **Call agents sequentially**
+5. **After completion**: Git commit, finalize meta.md
 
-### meta.md Vorlage
+### meta.md Template
 
 ```markdown
-# Run Metadaten
+# Run Metadata
 
 Run-ID: run-YYYY-MM-DD-HHmm
-Status: laufend | abgeschlossen | abgebrochen
+Status: running | completed | aborted
 Start: YYYY-MM-DD HH:mm
-Ende:
+End:
 Commit:
 
-## Forschungsfrage
+## Research Question
 
-[Frage hier]
+[Question here]
 
-## Hypothesen
+## Hypotheses
 
-[Liste der bearbeiteten Hypothesen]
+[List of processed hypotheses]
 
-## Zusammenfassung
+## Summary
 
-[Kurzes Fazit nach Abschluss]
+[Brief conclusion after completion]
 
-## Abbruchgrund (falls relevant)
+## Abort Reason (if applicable)
 
-[Begruendung und gewonnene Erkenntnisse]
+[Justification and lessons learned]
 ```
 
-### log.md Vorlage
+### log.md Template
 
 ```markdown
-# Prozessprotokoll
+# Process Log
 
-| Zeit | Akteur | Aktion | Ergebnis |
-|------|--------|--------|----------|
-| HH:mm | Hauptagent | Run initialisiert | meta.md angelegt |
-| HH:mm | analysis-agent | Daten geladen | 14 Jahre, 27 Laender |
-| HH:mm | Experte | Hypothese gewaehlt | H2 priorisiert |
+| Time | Actor | Action | Result |
+|------|-------|--------|--------|
+| HH:mm | Main agent | Run initialized | meta.md created |
+| HH:mm | analysis-agent | Data loaded | 14 years, 27 countries |
+| HH:mm | Expert | Hypothesis selected | H2 prioritized |
 ```
 
-### Rueckfragen an Experten
+### Clarifying Questions to Experts
 
-Bei Unsicherheit stellt der Hauptagent strukturierte Rueckfragen:
+When uncertain, the main agent asks structured clarifying questions:
 
-| Element | Beschreibung |
-|---------|--------------|
-| **Kontext** | Was ist die aktuelle Situation? |
-| **Optionen** | Welche Wege gibt es? (mit Vor-/Nachteilen) |
-| **Frage** | Konkrete Entscheidungsfrage |
+| Element | Description |
+|---------|-------------|
+| **Context** | What is the current situation? |
+| **Options** | What paths are available? (with pros/cons) |
+| **Question** | Specific decision question |
 
-Trigger fuer Rueckfragen:
-- Ambiguitaet in der Forschungsfrage
-- Auswahl zwischen mehreren Hypothesen
-- Unerwartete Befunde
-- Abbruchentscheidung
+Triggers for clarifying questions:
+- Ambiguity in the research question
+- Selection between multiple hypotheses
+- Unexpected findings
+- Abort decision
 
-### Arbeitsordner der Agents
+### Agent Working Directories
 
-| Ordner | Inhalt |
-|--------|--------|
+| Directory | Contents |
+|-----------|----------|
 | `agents/analysis/` | data-dictionary.md, exploration-report.md, hypotheses.md |
-| `agents/implementation/` | validation.md, Arbeitsnotizen |
-| `agents/synthesis/` | Entwuerfe, Arbeitsnotizen |
+| `agents/implementation/` | validation.md, working notes |
+| `agents/synthesis/` | drafts, working notes |
 
-Die finalen Outputs (Code, Tabellen, Grafiken) landen in `scripts/`, `outputs/tables/`, `outputs/figures/`.
+Final outputs (code, tables, figures) go to `scripts/`, `outputs/tables/`, `outputs/figures/`.
 
-### Paper-Struktur
+### Paper Structure
 
-| Abschnitt | Inhalt |
-|-----------|--------|
-| Fragestellung | Was wurde untersucht und warum? |
-| Datengrundlage | Quellen, Zeitraum, Einschraenkungen |
-| Exploration | Was wurde bei der Datenexploration gefunden? |
-| Befunde | Was zeigen die Daten? (mit Referenzen) |
-| Interpretation | Was folgt daraus? (klar als Interpretation markiert) |
-| Offene Fragen | Was bleibt unklar? |
+| Section | Content |
+|---------|---------|
+| Research Question | What was investigated and why? |
+| Data Foundation | Sources, time period, limitations |
+| Exploration | What was found during data exploration? |
+| Findings | What do the data show? (with references) |
+| Interpretation | What follows from this? (clearly marked as interpretation) |
+| Open Questions | What remains unclear? |
 
-Epistemische Marker:
-- **[FAKT]**: Direkte Datenbeobachtung
-- **[INFERENZ]**: Interpretation mit Annahmen
-- **[HYPOTHESE]**: Frage fuer weitere Forschung
+Epistemic Markers:
+- **[FACT]**: Direct data observation
+- **[INFERENCE]**: Interpretation with assumptions
+- **[HYPOTHESIS]**: Question for further research

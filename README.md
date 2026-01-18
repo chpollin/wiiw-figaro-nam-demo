@@ -85,12 +85,12 @@ cd docs && python -m http.server 8000
 
 | Tab | Visualization | Description |
 |-----|--------------|-------------|
-| Zeitreihen | Multi-Line Chart | Macro aggregates 2010-2023 with crisis markers |
-| Erholung | Bar Chart | Recovery indicator vs Pre-COVID (2019 = 0%) |
-| Kreislauf | Sankey Diagram | Income flow: Production -> Distribution -> Use |
-| Handel | Bar Chart | Export/Import/Balance by partner, Imports by sector (IPR) |
-| Sektoren | Diverging Bars | Sectoral YoY changes (COVID, Energy Crisis) |
-| IO-Verflechtung | Bar Chart | Backward/Forward linkages, intersectoral flows |
+| Time Series | Multi-Line Chart | Macro aggregates 2010-2023 with crisis markers |
+| Recovery | Bar Chart | Recovery indicator vs Pre-COVID (2019 = 0%) |
+| Circular Flow | Sankey Diagram | Income flow: Production -> Distribution -> Use |
+| Trade | Bar Chart | Export/Import/Balance by partner, Imports by sector (IPR) |
+| Sectors | Diverging Bars | Sectoral YoY changes (COVID, Energy Crisis) |
+| IO Linkages | Bar Chart | Backward/Forward linkages, intersectoral flows |
 
 **Technology:** D3.js v7 + d3-sankey, vanilla JavaScript, static JSON data (~57 KB)
 

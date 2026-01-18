@@ -1,44 +1,44 @@
-# Run Metadaten
+# Run Metadata
 
 Run-ID: run-2026-01-16-1430
-Status: abgeschlossen
+Status: completed
 Start: 2026-01-16 14:30
-Ende: 2026-01-16 15:10
+End: 2026-01-16 15:10
 Commit: 345968b
 
-## Forschungsfrage
+## Research Question
 
-Hat die Energiekrise 2022 die COVID-Erholung in Suedeuropa gebremst?
+Did the 2022 energy crisis slow COVID recovery in Southern Europe?
 
-Konkretisierung:
-- Laender: ES, IT, GR, PT (Suedeuropa) vs. DE, AT, NL (Vergleichsgruppe)
-- Zeitraum: 2019 (Pre-COVID), 2020 (COVID), 2021 (Erholung), 2022-2023 (Energiekrise)
-- Metrik: Haushaltskonsum (P3_S14) als Indikator fuer wirtschaftliche Erholung
-- Fragestellung: Zeigen suedeuropaeische Laender 2022 eine Verlangsamung oder Umkehr der Erholung?
+Specification:
+- Countries: ES, IT, GR, PT (Southern Europe) vs. DE, AT, NL (Comparison group)
+- Period: 2019 (Pre-COVID), 2020 (COVID), 2021 (Recovery), 2022-2023 (Energy crisis)
+- Metric: Household consumption (P3_S14) as indicator for economic recovery
+- Question: Do Southern European countries show a slowdown or reversal of recovery in 2022?
 
-## Hypothesen
+## Hypotheses
 
-H_int (Integriert aus H1 + H4 + H5):
-> Suedeuropaeische Laender zeigen 2022 eine staerkere nominale, aber schwaeachere reale Erholung als Nordeuropa, wobei der Unterschied teilweise durch hoehere Staatskonsum-Expansion abgefedert wird. Der scheinbar staerkere nominale Rebound ist primaer ein Basis-Effekt des tieferen COVID-Einbruchs 2020.
+H_int (Integrated from H1 + H4 + H5):
+> Southern European countries show stronger nominal but weaker real recovery in 2022 than Northern Europe, with the difference partially cushioned by higher government consumption expansion. The apparently stronger nominal rebound is primarily a base effect of the deeper COVID drop in 2020.
 
-## Zusammenfassung
+## Summary
 
-**Ergebnis: Hypothese teilweise bestaetigt (1/3 Komponenten)**
+**Result: Hypothesis partially confirmed (1/3 components)**
 
-1. **Basis-Effekt (bestaetigt):** Korrelation r = -0.52 zwischen COVID-Einbruch und Erholungsrate. Suedeuropas tieferer Einbruch (-14.4%) erklaert die hoeheren nominalen Erholungsraten.
+1. **Base effect (confirmed):** Correlation r = -0.52 between COVID drop and recovery rate. Southern Europe's deeper drop (-14.4%) explains the higher nominal recovery rates.
 
-2. **Nominale Ueberlegenheit Suedeuropas (widerlegt):** Entgegen der Erwartung zeigt Nordeuropa einen hoeheren nominalen Index (113.1 vs. 110.0). Real konvergieren beide Regionen auf ~99.5% des Vorkrisenniveaus.
+2. **Nominal superiority of Southern Europe (refuted):** Contrary to expectations, Northern Europe shows a higher nominal index (113.1 vs. 110.0). In real terms, both regions converge to ~99.5% of pre-crisis level.
 
-3. **Fiskalische Abfederung (Gegenteil):** Nordeuropa, insbesondere Deutschland (+21.2%), zeigte staerkere Staatskonsum-Expansion als Suedeuropa (+14.3%).
+3. **Fiscal cushioning (opposite):** Northern Europe, especially Germany (+21.2%), showed stronger government consumption expansion than Southern Europe (+14.3%).
 
-**Kernbefund:** Die Energiekrise 2022 hat die Erholung in beiden Regionen nominal verzerrt, aber real konvergieren alle Laender auf aehnliches Niveau. Der Unterschied liegt nicht in der Erholungsdynamik, sondern in den unterschiedlichen fiskalischen Reaktionen.
+**Key finding:** The 2022 energy crisis distorted recovery nominally in both regions, but in real terms all countries converge to similar levels. The difference lies not in recovery dynamics but in the different fiscal responses.
 
 ## Outputs
 
-| Typ | Dateien |
-|-----|---------|
-| Skripte | scripts/11_extract_portugal.py, scripts/12_hypothesis_h_int.py |
-| Tabellen | outputs/tables/PT_time_series.csv, recovery_comparison.csv, basis_effect_analysis.csv, fiscal_response.csv |
-| Grafiken | outputs/figures/basis_effect_scatter.png, recovery_nominal_vs_real.png, fiscal_cushion.png |
+| Type | Files |
+|------|-------|
+| Scripts | scripts/11_extract_portugal.py, scripts/12_hypothesis_h_int.py |
+| Tables | outputs/tables/PT_time_series.csv, recovery_comparison.csv, basis_effect_analysis.csv, fiscal_response.csv |
+| Figures | outputs/figures/basis_effect_scatter.png, recovery_nominal_vs_real.png, fiscal_cushion.png |
 | Paper | runs/run-2026-01-16-1430/paper/paper.md |
-| Validierung | agents/implementation/validation.md |
+| Validation | agents/implementation/validation.md |

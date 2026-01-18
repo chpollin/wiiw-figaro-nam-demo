@@ -1,307 +1,307 @@
-# Glossar: Input-Output-Analyse und Oekonometrie
+# Glossary: Input-Output Analysis and Econometrics
 
-Dieses Glossar definiert zentrale Begriffe fuer die Arbeit mit FIGARO-NAM Daten und Input-Output-Analyse.
-
----
-
-## Grundbegriffe der Input-Output-Analyse
-
-### Transaktionsmatrix (Z-Matrix)
-Matrix der intersektoralen Lieferungen. Element z_ij gibt den Wert der Lieferungen von Sektor i an Sektor j an. Basis fuer die Berechnung technischer Koeffizienten.
-
-### Technische Koeffizienten (A-Matrix)
-Direkte Inputkoeffizienten. Element a_ij = z_ij / x_j gibt den direkten Input aus Sektor i pro Einheit Output in Sektor j an. Zeigt unmittelbare Vorleistungsverflechtungen.
-
-### Leontief-Inverse (L-Matrix)
-Die Matrix (I - A)^(-1), wobei I die Einheitsmatrix und A die Matrix der technischen Koeffizienten ist. Erfasst sowohl direkte als auch indirekte Effekte von Nachfrageaenderungen auf die Produktion aller Sektoren.
-
-### Output-Multiplikator
-Summe einer Spalte der Leontief-Inversen. Gibt an, um wie viel die gesamtwirtschaftliche Produktion steigt, wenn die Endnachfrage in einem Sektor um eine Einheit zunimmt.
-
-### Endnachfrage (Final Demand)
-Letzte Verwendung von Guetern: Konsum (privat und staatlich), Investitionen, Exporte. Im Gegensatz zu Vorleistungen, die wieder in die Produktion eingehen.
-
-### Vorleistungen (Intermediate Consumption)
-Gueter und Dienstleistungen, die im Produktionsprozess verbraucht oder umgewandelt werden. Bilden die Zeilen/Spalten der Z-Matrix.
-
-### Bruttowertschoepfung (Gross Value Added)
-Output minus Vorleistungen. Entspricht der im Produktionsprozess neu geschaffenen Wertschoepfung. Summe aus Arbeitnehmerentgelt, Betriebsueberschuss und Produktionsabgaben netto.
-
-### Rueckwaertsverflechtung (Backward Linkage)
-Spaltensumme der Leontief-Inversen. Misst, wie stark ein Sektor Vorleistungen aus anderen Sektoren bezieht. Hohe Werte bei verarbeitender Industrie.
-
-### Vorwaertsverflechtung (Forward Linkage)
-Zeilensumme der Ghosh-Inversen oder Output-Koeffizienten. Misst, wie stark ein Sektor andere Sektoren beliefert. Hohe Werte bei Grundstoffindustrien und Energie.
+This glossary defines central concepts for working with FIGARO-NAM data and input-output analysis.
 
 ---
 
-## Oekonometrische Grundbegriffe
+## Fundamentals of Input-Output Analysis
 
-### Strukturbruch (Structural Break)
-Signifikante Aenderung in den Parametern eines statistischen Modells zu einem bestimmten Zeitpunkt. Im FIGARO-Kontext: COVID-19 (2020), Energiekrise (2022).
+### Transaction Matrix (Z-Matrix)
+Matrix of intersectoral deliveries. Element z_ij indicates the value of deliveries from sector i to sector j. Basis for calculating technical coefficients.
+
+### Technical Coefficients (A-Matrix)
+Direct input coefficients. Element a_ij = z_ij / x_j indicates the direct input from sector i per unit of output in sector j. Shows immediate intermediate consumption linkages.
+
+### Leontief Inverse (L-Matrix)
+The matrix (I - A)^(-1), where I is the identity matrix and A is the matrix of technical coefficients. Captures both direct and indirect effects of demand changes on production across all sectors.
+
+### Output Multiplier
+Sum of a column of the Leontief inverse. Indicates how much total economic output increases when final demand in a sector increases by one unit.
+
+### Final Demand
+Final use of goods: consumption (private and government), investment, exports. In contrast to intermediate consumption, which feeds back into production.
+
+### Intermediate Consumption
+Goods and services consumed or transformed in the production process. Form the rows/columns of the Z-matrix.
+
+### Gross Value Added (GVA)
+Output minus intermediate consumption. Corresponds to the value newly created in the production process. Sum of compensation of employees, operating surplus, and production taxes net.
+
+### Backward Linkage
+Column sum of the Leontief inverse. Measures how strongly a sector sources intermediate inputs from other sectors. High values for manufacturing industries.
+
+### Forward Linkage
+Row sum of the Ghosh inverse or output coefficients. Measures how strongly a sector supplies other sectors. High values for basic industries and energy.
+
+---
+
+## Econometric Fundamentals
+
+### Structural Break
+Significant change in the parameters of a statistical model at a specific point in time. In the FIGARO context: COVID-19 (2020), Energy crisis (2022).
 
 ### CAGR (Compound Annual Growth Rate)
-Durchschnittliche jaehrliche Wachstumsrate ueber einen Zeitraum: CAGR = (Endwert/Anfangswert)^(1/n) - 1
+Average annual growth rate over a period: CAGR = (End Value/Start Value)^(1/n) - 1
 
-### Herfindahl-Hirschman-Index (HHI)
-Konzentrationsmass. Summe der quadrierten Marktanteile. Werte von 0 (perfekte Streuung) bis 1 (Monopol). EU-Schwelle fuer strategische Abhaengigkeit: 0.4
+### Herfindahl-Hirschman Index (HHI)
+Concentration measure. Sum of squared market shares. Values from 0 (perfect dispersion) to 1 (monopoly). EU threshold for strategic dependency: 0.4
 
 ### Import Penetration Ratio (IPR)
-Anteil der Importe an der inlaendischen Nachfrage: IPR = M / (BIP - X + M). Werte ueber 50% signalisieren hohe Importabhaengigkeit.
+Share of imports in domestic demand: IPR = M / (GDP - X + M). Values above 50% signal high import dependency.
 
 ### Vertical Specialization (VS)
-Anteil importierter Vorleistungen in Exporten. Quantifiziert Integration in globale Wertschoepfungsketten.
+Share of imported intermediate inputs in exports. Quantifies integration in global value chains.
 
 ---
 
-## Nationale Volkswirtschaftliche Gesamtrechnungen
+## National Accounts
 
-### BIP (Bruttoinlandsprodukt)
-Summe aller im Inland produzierten Waren und Dienstleistungen abzueglich Vorleistungen. Drei Berechnungsarten: Entstehung, Verteilung, Verwendung.
+### GDP (Gross Domestic Product)
+Sum of all goods and services produced domestically minus intermediate consumption. Three calculation approaches: production, income, expenditure.
 
-### Volkswirtschaftliche Gesamtrechnung (VGR)
-System zur konsistenten Erfassung aller wirtschaftlichen Transaktionen einer Volkswirtschaft. In der EU nach ESA 2010 standardisiert.
+### System of National Accounts (SNA)
+System for consistent recording of all economic transactions in an economy. Standardized in the EU according to ESA 2010.
 
 ### ESA 2010
-European System of Accounts 2010. EU-weiter Standard fuer nationale Gesamtrechnungen. Definiert Transaktionscodes (D), Salden (B), Verwendung (P), Sektoren (S).
+European System of Accounts 2010. EU-wide standard for national accounts. Defines transaction codes (D), balances (B), expenditure (P), sectors (S).
 
 ---
 
-## FIGARO-spezifische Begriffe
+## FIGARO-Specific Terms
 
 ### FIGARO
-Full International and Global Accounts for Research in Input-Output Analysis. Offizielle EU-Statistik fuer Multi-Regional Input-Output Tables seit 2021.
+Full International and Global Accounts for Research in Input-Output Analysis. Official EU statistics for Multi-Regional Input-Output Tables since 2021.
 
 ### Set_i / Set_j
-Dimensionen der FIGARO-NAM Matrix. Set_i: Herkunft (Produkte nach CPA, Transaktionen nach ESA). Set_j: Verwendung (Industrien nach NACE, Sektoren nach ESA).
+Dimensions of the FIGARO-NAM Matrix. Set_i: Origin (Products by CPA, Transactions by ESA). Set_j: Use (Industries by NACE, Sectors by ESA).
 
 ### m (Partner)
-Partnerland in bilateralen Stroemen. Inlandsproduktion wenn m = ctr (Berichtsland).
+Partner country in bilateral flows. Domestic production when m = ctr (reporting country).
 
 ### base
-Basisjahr der Daten (2010-2023 verfuegbar).
+Base year of the data (2010-2023 available).
 
 ### ctr
-Berichtsland (50 Laender/Regionen inklusive WRL_REST).
+Reporting country (50 countries/regions including WRL_REST).
 
 ### WRL_REST
-Rest der Welt - Aggregat fuer alle nicht einzeln erfassten Laender.
+Rest of the World - Aggregate for all countries not individually captured.
 
 ---
 
-## Mapping: FIGARO-Codes zu Konzepten
+## Mapping: FIGARO Codes to Concepts
 
-| Konzept | FIGARO-Code | Beschreibung |
-|---------|-------------|--------------|
-| Vorleistungen | CPA-Produkte x NACE-Industrien | Z-Matrix Block |
-| Endnachfrage | Set_j = P3_S14, P3_S13, P51G, P6 | Konsum, Investitionen, Exporte |
-| Wertschoepfung | Set_i = D1, D29X39, B2, B3 | Komponenten der GVA |
-| Importe | m != ctr | Auslaendische Lieferungen |
-| Exporte | P6 in Set_j | Lieferungen ans Ausland |
+| Concept | FIGARO Code | Description |
+|---------|-------------|-------------|
+| Intermediate consumption | CPA products x NACE industries | Z-matrix block |
+| Final demand | Set_j = P3_S14, P3_S13, P51G, P6 | Consumption, investment, exports |
+| Value added | Set_i = D1, D29X39, B2, B3 | Components of GVA |
+| Imports | m != ctr | Foreign deliveries |
+| Exports | P6 in Set_j | Deliveries abroad |
 
 ---
 
-## Abkuerzungsverzeichnis
+## Abbreviations
 
-| Abkuerzung | Bedeutung |
-|------------|-----------|
+| Abbreviation | Meaning |
+|--------------|---------|
 | CAGR | Compound Annual Growth Rate |
 | CPA | Classification of Products by Activity |
 | ESA | European System of Accounts |
 | FIGARO | Full International and Global Accounts for Research in IO |
 | GVA | Gross Value Added |
-| HHI | Herfindahl-Hirschman-Index |
+| HHI | Herfindahl-Hirschman Index |
 | IO | Input-Output |
 | IPR | Import Penetration Ratio |
 | MRIO | Multi-Regional Input-Output |
-| NACE | Nomenclature statistique des Activites economiques |
+| NACE | Statistical Classification of Economic Activities |
 | NAM | National Accounts Matrix |
 | NPISH | Non-Profit Institutions Serving Households |
 | PPP | Purchasing Power Parity |
+| SNA | System of National Accounts |
 | SUT | Supply and Use Tables |
 | TiVA | Trade in Value Added |
-| VGR | Volkswirtschaftliche Gesamtrechnung |
 | VS | Vertical Specialization |
 | YoY | Year-over-Year |
 
 ---
 
-## ESA 2010 Transaktionscodes (D-Codes)
+## ESA 2010 Transaction Codes (D-Codes)
 
-### Arbeitnehmerentgelt (D.1)
+### Compensation of Employees (D.1)
 
-**D.11 - Bruttoloehne und -gehaelter**
-Alle Bar- und Sachleistungen an Arbeitnehmer. Barleistungen: Grundgehaelter, Ueberstunden, Praemien, 13./14. Monatsgehalt. Sachleistungen: Firmenwagen, Dienstwohnungen, Mitarbeiteraktien.
+**D.11 - Wages and Salaries**
+All cash and in-kind payments to employees. Cash payments: base salaries, overtime, bonuses, 13th/14th month salaries. In-kind payments: company cars, subsidized housing, employee shares.
 
-**D.12 - Sozialbeitraege der Arbeitgeber**
-Tatsaechliche Beitraege an Sozialversicherung (D.121) und unterstellte Sozialbeitraege fuer direkte Arbeitgeberleistungen (D.122), z.B. betriebliche Pensionszusagen.
+**D.12 - Employers' Social Contributions**
+Actual contributions to social insurance (D.121) and imputed social contributions for direct employer benefits (D.122), e.g., direct pension commitments.
 
-### Netto-Groessen
+### Net Items
 
-**D.21X31 - Guetersteuern minus Guetersubventionen**
-Zentrale Uebergangsgroesse von Bruttowertschoepfung zum BIP. Enthaelt MwSt, Importzoelle, Verbrauchsteuern abzueglich Agrarsubventionen und Wohnungsbaufoerderung.
+**D.21X31 - Taxes minus Subsidies on Products**
+Central transition item from gross value added to GDP at market prices. Includes VAT, import duties, excise taxes minus product subsidies like agricultural price support or housing subsidies.
 
-**D.29X39 - Sonstige Produktionsabgaben minus sonstige Subventionen**
-Grundsteuern, Gewerberlaubnisgebuehren abzueglich Lohnkostenzuschüsse, Zinsvergünstigungen. Negative Werte: Subventionen > Abgaben.
+**D.29X39 - Other Taxes minus Subsidies on Production**
+Property taxes, business license fees minus wage subsidies, interest subsidies. Negative values: subsidies exceed taxes.
 
-### Vermögenseinkommen (D.4)
+### Property Income (D.4)
 
-| Code | Bezeichnung |
-|------|-------------|
-| D.41 | Zinsen |
-| D.42 | Dividenden und Gewinnentnahmen |
-| D.43 | Reinvestierte Gewinne aus Direktinvestitionen |
-| D.44 | Kapitalertraege aus Versicherungsvertraegen |
-| D.45 | Pachten (Land, Bodenschaetze) |
+| Code | Name |
+|------|------|
+| D.41 | Interest |
+| D.42 | Dividends and withdrawals from income of quasi-corporations |
+| D.43 | Reinvested earnings on foreign direct investment |
+| D.44 | Investment income attributable to insurance policy holders |
+| D.45 | Rent (land, mineral resources) |
 
-### Weitere D-Codes
+### Other D-Codes
 
-| Code | Bezeichnung |
-|------|-------------|
-| D.5 | Einkommen- und Vermoegensteuern |
-| D.61 | Nettosozialbeitraege |
-| D.62 | Monetaere Sozialleistungen (Renten, ALG, Kindergeld) |
-| D.7 | Sonstige laufende Transfers |
-| D.8 | Zunahme betrieblicher Versorgungsansprueche |
-| D.9 | Vermoegenstransfers |
+| Code | Name |
+|------|------|
+| D.5 | Current taxes on income and wealth |
+| D.61 | Net social contributions |
+| D.62 | Social benefits other than transfers in kind (pensions, unemployment benefits, child benefits) |
+| D.7 | Other current transfers |
+| D.8 | Adjustment for change in pension entitlements |
+| D.9 | Capital transfers |
 
 ---
 
-## ESA 2010 Saldengroessen (B-Codes)
+## ESA 2010 Balance Items (B-Codes)
 
-**B.1g - Bruttowertschoepfung**
-Output minus Vorleistungen. Zentrale Groesse fuer Produktivitaetsmessung.
+**B.1g - Gross Value Added**
+Output minus intermediate consumption. Central measure for productivity measurement.
 
-**B.2 - Betriebsueberschuss (Operating Surplus)**
-Faellt bei Kapitalgesellschaften an. Berechnung: B.1g - D.1 - (D.29-D.39). Entspricht Gewinn vor Vermoegenseinkommen.
+**B.2 - Operating Surplus**
+Accrues to corporations. Calculation: B.1g - D.1 - (D.29-D.39). Corresponds to profit before property income.
 
-**B.3 - Selbstaendigeneinkommen (Mixed Income)**
-Nur fuer Haushaltssektor (S.14). Untrennbare Mischung aus Arbeitsentgelt und Kapitalrendite bei Einzelunternehmen, Freiberuflern, Landwirten.
+**B.3 - Mixed Income**
+Only for household sector (S.14). Inseparable mix of labor compensation and capital return for sole proprietorships, freelancers, farmers.
 
-**B.8 - Sparen nach Sektoren**
+**B.8 - Saving by Sector**
 
-| Sektor | Interpretation |
+| Sector | Interpretation |
 |--------|----------------|
-| S.11 (Kapitalgesellschaften) | Einbehaltene Gewinne nach Dividenden |
-| S.13 (Staat) | Primaerueberschuss/-defizit |
-| S.14 (Haushalte) | Klassisches Sparen fuer Vermoegensbildung |
+| S.11 (Corporations) | Retained earnings after dividends |
+| S.13 (Government) | Primary surplus/deficit |
+| S.14 (Households) | Classic saving for wealth accumulation |
 
-**B.9 - Finanzierungssaldo (Net Lending/Borrowing)**
-Positiv: Sektor stellt Mittel bereit. Negativ: Sektor benoetigt Mittel.
-Formel: B.9 = B.8 + Vermoegenstransfers - Bruttoinvestitionen
+**B.9 - Net Lending/Borrowing**
+Positive: Sector provides funds. Negative: Sector needs funds.
+Formula: B.9 = B.8 + Capital transfers - Gross investment
 
-**B9FX9** - Statistische Diskrepanz zwischen realwirtschaftlichem B.9 und B.9F aus Finanzierungskonto.
-
----
-
-## ESA 2010 Verwendungscodes (P-Codes)
-
-**P.3 - Konsumausgaben**
-
-| Sektor | Inhalt |
-|--------|--------|
-| P3_S13 | Staatskonsum (kollektiv + individuell zurechenbar) |
-| P3_S14 | Privater Haushaltskonsum |
-| P3_S15 | NPISH-Konsum (Kirchen, Vereine, Parteien) |
-
-**P.51G - Bruttoanlageinvestitionen (GFCF)**
-Zugaenge abzueglich Abgaenge von Anlageguetern: Bauten, Maschinen, Software, F&E, geistiges Eigentum.
-
-**P.6 - Exporte**
-Lieferungen von Waren und Dienstleistungen an Gebietsfremde.
-
-**P.7 - Importe**
-Bezuege von Waren und Dienstleistungen von Gebietsfremden.
+**B9FX9** - Statistical discrepancy between real economy B.9 and B.9F from financial account.
 
 ---
 
-## ESA 2010 Institutionelle Sektoren (S-Codes)
+## ESA 2010 Expenditure Codes (P-Codes)
 
-**S.11 - Nichtfinanzielle Kapitalgesellschaften**
-Marktproduzenten von Waren und nichtfinanziellen Dienstleistungen.
+**P.3 - Final Consumption Expenditure**
 
-**S.12 - Finanzielle Kapitalgesellschaften**
-Finanzvermittlung: Banken (S.122), Versicherungen (S.128), Pensionsfonds (S.129).
+| Sector | Content |
+|--------|---------|
+| P3_S13 | Government consumption (collective + individually attributable) |
+| P3_S14 | Private household consumption |
+| P3_S15 | NPISH consumption (churches, associations, parties) |
 
-**S.13 - Staat**
-Bund (S.1311), Laender (S.1312), Gemeinden (S.1313), Sozialversicherung (S.1314).
+**P.51G - Gross Fixed Capital Formation (GFCF)**
+Acquisitions less disposals of fixed assets: buildings, machinery, software, R&D, intellectual property.
 
-**S.14 - Private Haushalte**
-Konsumenten und Kleinproduzenten. Einziger Sektor mit B.3 (Mixed Income).
+**P.6 - Exports**
+Deliveries of goods and services to non-residents.
+
+**P.7 - Imports**
+Acquisitions of goods and services from non-residents.
+
+---
+
+## ESA 2010 Institutional Sectors (S-Codes)
+
+**S.11 - Non-financial Corporations**
+Market producers of goods and non-financial services.
+
+**S.12 - Financial Corporations**
+Financial intermediation: banks (S.122), insurance (S.128), pension funds (S.129).
+
+**S.13 - General Government**
+Central government (S.1311), state government (S.1312), local government (S.1313), social security funds (S.1314).
+
+**S.14 - Households**
+Consumers and small producers. Only sector with B.3 (Mixed Income).
 
 **S.15 - NPISH**
-Non-Profit Institutions Serving Households. Kirchen, Parteien, Gewerkschaften, Vereine.
+Non-Profit Institutions Serving Households. Churches, parties, unions, associations.
 
-**S.2 - Uebrige Welt (Rest of World)**
-Alle gebietsfremden Einheiten. In FIGARO nach Laendern disaggregiert.
+**S.2 - Rest of World**
+All non-resident units. Disaggregated by country in FIGARO.
 
 ---
 
-## FIGARO Methodik
+## FIGARO Methodology
 
-### Vergleich mit anderen MRIO-Datenbanken
+### Comparison with Other MRIO Databases
 
-| Merkmal | FIGARO | WIOD | EXIOBASE |
+| Feature | FIGARO | WIOD | EXIOBASE |
 |---------|--------|------|----------|
-| Herausgeber | Eurostat/JRC (offiziell) | Uni Groningen | Akademisch |
-| Zeitreihe | 2010-2022, jaehrlich | 2000-2014, eingestellt | 1995-aktuell |
-| Sektoren | 64 NACE Rev. 2 | 56 ISIC Rev. 4 | 163 Industrien |
-| VGR-Konsistenz | Vollstaendig (99.8% EU-BIP) | Benchmarked | Geschaetzt |
+| Publisher | Eurostat/JRC (official) | University of Groningen | Academic |
+| Time series | 2010-2022, annual | 2000-2014, discontinued | 1995-current |
+| Sectors | 64 NACE Rev. 2 | 56 ISIC Rev. 4 | 163 industries |
+| NA consistency | Complete (99.8% EU GDP) | Benchmarked | Estimated |
 
-### QDR-Methodik
-FIGAROs Alleinstellungsmerkmal: Bilaterale Handelsbalancierung auf HS-6-Digit-Ebene durch gewichtete Mittelwertbildung laenderspezifischer Asymmetrien.
+### QDR Methodology
+FIGARO's distinctive feature: Bilateral trade balancing at HS-6-digit level through weighted averaging of country-specific asymmetries.
 
-### Bekannte Limitationen
-- Sektorale Aggregation: 64 Industrien limitiert praezise Analysen
-- Rest-der-Welt: Nur Export/Import-Vektoren, keine vollstaendigen SUTs
-- Zeitliche Verzoegerung: T-2 Jahre
-- Validierungsabweichungen: WAPE zu OECD-ICIO ~34%, zu EXIOBASE ~83%
+### Known Limitations
+- Sectoral aggregation: 64 industries limits precise analyses
+- Rest of World: Only export/import vectors, no complete SUTs
+- Time lag: T-2 years
+- Validation deviations: WAPE to OECD-ICIO ~34%, to EXIOBASE ~83%
 
 ---
 
-## Empirische Referenzwerte aus FIGARO-NAM
+## Empirical Reference Values from FIGARO-NAM
 
-### COVID-19 Strukturbruch (2019-2020)
-| Land | HH-Konsum YoY | Trend-Abweichung |
-|------|---------------|------------------|
+### COVID-19 Structural Break (2019-2020)
+| Country | HH Consumption YoY | Trend Deviation |
+|---------|-------------------|-----------------|
 | ES | -17.0% | -18.1% |
 | GR | -16.1% | -11.2% |
 | IT | -12.3% | -13.8% |
 | DE | -7.1% | -9.7% |
 
-### Sektorale Gewinner/Verlierer (DE 2020)
-- Verlierer: N79 Travel (-56%), H51 Airlines (-46%), I Hotels (-32%)
-- Gewinner: Q86 Healthcare (+22%), K66 Financial (+14%)
+### Sectoral Winners/Losers (DE 2020)
+- Losers: N79 Travel (-56%), H51 Airlines (-46%), I Hotels (-32%)
+- Winners: Q86 Healthcare (+22%), K66 Financial (+14%)
 
-### Intersektorale Verflechtung (DE 2019)
-- Hoechste Rueckwaertsverflechtung: Motor vehicles, Construction, Machinery
-- Hoechste Vorwaertsverflechtung: Legal/Accounting, Real Estate, Wholesale
+### Intersectoral Linkages (DE 2019)
+- Highest backward linkage: Motor vehicles, Construction, Machinery
+- Highest forward linkage: Legal/Accounting, Real Estate, Wholesale
 
 ---
 
-## Web Dashboard Architektur
+## Web Dashboard Architecture
 
-### Technologie-Stack
+### Technology Stack
 
-| Komponente | Technologie | Begruendung |
-|------------|-------------|-------------|
-| Visualisierung | D3.js v7 | Maximale Flexibilitaet, professionelle Charts |
-| Styling | Vanilla CSS | Keine Dependencies, einfach |
-| Datenformat | JSON | Browser-nativ, kompakt |
-| Hosting | GitHub Pages | Statisch, kostenlos |
+| Component | Technology | Rationale |
+|-----------|------------|-----------|
+| Visualization | D3.js v7 | Maximum flexibility, professional charts |
+| Styling | Vanilla CSS | No dependencies, simple |
+| Data format | JSON | Browser-native, compact |
+| Hosting | GitHub Pages | Static, free |
 
-### Dashboard-Struktur
+### Dashboard Structure
 
 ```
 docs/
-├── index.html          # Haupt-HTML mit Tab-Navigation
-├── css/style.css       # Responsive Styling
+├── index.html          # Main HTML with tab navigation
+├── css/style.css       # Responsive styling
 ├── js/
-│   ├── app.js          # Datenladung, Hilfsfunktionen
-│   ├── timeseries.js   # Multi-Line Chart
-│   ├── trade.js        # Balkendiagramm
-│   ├── sectors.js      # Divergierendes Balkendiagramm
-│   └── linkages.js     # IO-Verflechtung
+│   ├── app.js          # Data loading, helper functions
+│   ├── timeseries.js   # Multi-line chart
+│   ├── trade.js        # Bar chart
+│   ├── sectors.js      # Diverging bar chart
+│   └── linkages.js     # IO linkages
 └── data/
     ├── time_series.json
     ├── trade_partners.json
@@ -310,43 +310,43 @@ docs/
     └── metadata.json
 ```
 
-### JSON-Datenaggregation
+### JSON Data Aggregation
 
-**Quelle:** CSV-Dateien aus `outputs/tables/` (Phase 2 Exploration)
+**Source:** CSV files from `outputs/tables/` (Phase 2 Exploration)
 **Generator:** `scripts/09_generate_json.py`
-**Ziel:** `docs/data/*.json` (~47 KB gesamt)
+**Target:** `docs/data/*.json` (~47 KB total)
 
-### D3.js Visualisierungstypen
+### D3.js Visualization Types
 
-| Chart | D3-Methode | Daten |
-|-------|------------|-------|
-| Zeitreihen | `d3.line()` + `d3.curveMonotoneX` | time_series.json |
-| Handel | `d3.scaleBand()` + `rect` | trade_partners.json |
-| Sektoren | Diverging bars (pos/neg um 0) | sectors.json |
+| Chart | D3 Method | Data |
+|-------|-----------|------|
+| Time series | `d3.line()` + `d3.curveMonotoneX` | time_series.json |
+| Trade | `d3.scaleBand()` + `rect` | trade_partners.json |
+| Sectors | Diverging bars (pos/neg around 0) | sectors.json |
 | Linkages | `d3.scaleSequential()` + `d3.interpolateBlues` | linkages.json |
 
-### Interaktive Elemente
+### Interactive Elements
 
 - **Tooltips:** `d3.select('body').append('div').attr('class', 'tooltip')`
-- **Checkboxen:** Laender-Auswahl fuer Multi-Line-Vergleich
-- **Dropdowns:** Aggregat-Wahl, Modus-Wahl
-- **Slider:** Top-N-Auswahl fuer Rankings
-- **Buttons:** Jahr-Auswahl fuer Strukturbrueche
+- **Checkboxes:** Country selection for multi-line comparison
+- **Dropdowns:** Aggregate selection, mode selection
+- **Slider:** Top-N selection for rankings
+- **Buttons:** Year selection for structural breaks
 
-### Krisenmarker
+### Crisis Markers
 
-| Jahr | Bezeichnung | Visualisierung |
-|------|-------------|----------------|
-| 2020 | COVID-19 | Vertikale gestrichelte Linie |
-| 2022 | Energiekrise | Vertikale gestrichelte Linie |
+| Year | Name | Visualization |
+|------|------|---------------|
+| 2020 | COVID-19 | Vertical dashed line |
+| 2022 | Energy crisis | Vertical dashed line |
 
 ---
 
-## Referenzen
+## References
 
 - ESA 2010 Manual: Regulation EU No 549/2013
 - Miller & Blair: Input-Output Analysis, 3rd Edition 2022
 - OECD TiVA Database Documentation
 - Eurostat FIGARO Methodology Notes
 - D3.js Documentation: https://d3js.org/
-- Lokale Referenz: [ESA 2010 und FIGARO Referenzdokumentation](ESA%202010%20und%20FIGARO%20Referenzdokumentation.md)
+- Local Reference: [ESA 2010 and FIGARO Reference Documentation](ESA%202010%20and%20FIGARO%20Reference%20Documentation.md)

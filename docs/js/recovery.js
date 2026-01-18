@@ -1,6 +1,6 @@
 /**
- * Recovery Chart - Vergleich mit Pre-COVID Niveau (2019)
- * Forschungsfrage B3: Hat die Energiekrise 2022 die COVID-Erholung gebremst?
+ * Recovery Chart - Comparison with Pre-COVID Level (2019)
+ * Research Question B3: Did the 2022 energy crisis slow the COVID recovery?
  */
 
 (function() {
@@ -22,14 +22,14 @@
     };
 
     const countryNames = {
-        'DE': 'Deutschland',
-        'FR': 'Frankreich',
-        'IT': 'Italien',
-        'ES': 'Spanien',
-        'AT': 'Oesterreich',
-        'PL': 'Polen',
-        'GR': 'Griechenland',
-        'NL': 'Niederlande'
+        'DE': 'Germany',
+        'FR': 'France',
+        'IT': 'Italy',
+        'ES': 'Spain',
+        'AT': 'Austria',
+        'PL': 'Poland',
+        'GR': 'Greece',
+        'NL': 'Netherlands'
     };
 
     function initRecoveryChart() {
@@ -55,7 +55,7 @@
             .attr('text-anchor', 'middle')
             .style('font-size', '14px')
             .style('font-weight', '600')
-            .text('Erholung gegenueber Pre-COVID Niveau (2019 = 0%)');
+            .text('Recovery vs Pre-COVID Level (2019 = 0%)');
     }
 
     function updateRecoveryChart() {
@@ -72,9 +72,9 @@
 
         // Calculate recovery for each country
         const recoveryData = [];
-        const countries = data.laender || [];
-        const aggregateData = data.aggregate && data.aggregate[aggregat];
-        const years = data.jahre || [];
+        const countries = data.countries || [];
+        const aggregateData = data.aggregates && data.aggregates[aggregat];
+        const years = data.years || [];
 
         if (!aggregateData) return;
 
@@ -146,7 +146,7 @@
             .attr('x', -height / 2)
             .attr('text-anchor', 'middle')
             .style('font-size', '12px')
-            .text('Veraenderung gegenueber 2019');
+            .text('Change vs 2019');
 
         // Zero baseline
         g.append('line')
@@ -194,9 +194,9 @@
 
     function showTooltip(event, d, aggregat, year) {
         const aggregatNames = {
-            'hh_konsum': 'Privater Konsum',
-            'staat_konsum': 'Staatskonsum',
-            'investitionen': 'Investitionen'
+            'hh_consumption': 'Household Consumption',
+            'gov_consumption': 'Government Consumption',
+            'investment': 'Investment'
         };
 
         const tooltip = d3.select('body').append('div')
@@ -209,7 +209,7 @@
             ${aggregatNames[aggregat] || aggregat}<br/>
             2019: ${window.formatMio(d.baseValue)}<br/>
             ${year}: ${window.formatMio(d.targetValue)}<br/>
-            <strong>Veraenderung: ${(d.recovery >= 0 ? '+' : '') + d.recovery.toFixed(1)}%</strong>
+            <strong>Change: ${(d.recovery >= 0 ? '+' : '') + d.recovery.toFixed(1)}%</strong>
         `);
     }
 

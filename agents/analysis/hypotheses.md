@@ -1,281 +1,281 @@
-# Hypothesen: Energiekrise und COVID-Erholung in Suedeuropa
+# Hypotheses: Energy Crisis and COVID Recovery in Southern Europe
 
-## Forschungsfrage
+## Research Question
 
-Hat die Energiekrise 2022 die COVID-Erholung in Suedeuropa gebremst?
-
----
-
-## Hypothese 1: Differentielle Erholungsgeschwindigkeit
-
-**Prioritaet: HOCH**
-
-### Formulierung
-
-Suedeuropaeische Laender (ES, IT, GR, PT) zeigten 2021-2022 eine langsamere reale Konsum-Erholung als die Vergleichsgruppe (DE, AT, NL), obwohl ihre nominalen Wachstumsraten hoeher waren.
-
-### Operationalisierung
-
-| Schritt | Berechnung | Datenquelle |
-|---------|------------|-------------|
-| 1 | HH-Konsum nominal 2019, 2021, 2022 extrahieren | all_countries_time_series.csv |
-| 2 | HICP-Deflatoren (2019=100) von Eurostat beziehen | Extern (HICP prc_hicp_aind) |
-| 3 | Realer Konsum = Nominal / (HICP/100) | Berechnung |
-| 4 | Realer Erholungsindex = Real_2022 / Real_2019 * 100 | Berechnung |
-| 5 | Gruppenvergleich Suedeuropa vs. Vergleich | t-Test oder Mittelwertvergleich |
-
-### Testbare Vorhersage
-
-- H0: Realer Erholungsindex Suedeuropa >= Realer Erholungsindex Vergleich
-- H1: Realer Erholungsindex Suedeuropa < Realer Erholungsindex Vergleich
-
-### Erwartetes Ergebnis
-
-Die nominalen Anstiege 2022 (+14-19% in Suedeuropa) maskieren reale Kaufkraftverluste. Nach Inflationsbereinigung sollte die Vergleichsgruppe staerker erholt sein.
-
-### Aufwand
-
-- Niedrig (bestehende Daten + externe Deflatoren)
-- Geschaetzte Zeit: 2-3 Stunden
+Did the 2022 energy crisis slow COVID recovery in Southern Europe?
 
 ---
 
-## Hypothese 2: Tourismusabhaengigkeit als Treiber
+## Hypothesis 1: Differential Recovery Speed
 
-**Prioritaet: MITTEL**
+**Priority: HIGH**
 
-### Formulierung
+### Formulation
 
-Laender mit hoher Tourismusabhaengigkeit (GR, ES, PT) zeigten 2021 eine staerkere aber 2022 eine gebremste Erholung gegenueber weniger tourismusabhaengigen Laendern.
+Southern European countries (ES, IT, GR, PT) showed slower real consumption recovery in 2021-2022 than the comparison group (DE, AT, NL), although their nominal growth rates were higher.
 
-### Operationalisierung
+### Operationalization
 
-| Schritt | Berechnung | Datenquelle |
-|---------|------------|-------------|
-| 1 | Tourismussektor-Konsum (CPA_I, CPA_H49-H53) extrahieren | Parquet (Set_i Filter) |
-| 2 | Anteil Tourismus am HH-Konsum berechnen | Aggregation |
-| 3 | Tourismuswachstum 2020-2021 vs. 2021-2022 vergleichen | YoY-Berechnung |
-| 4 | Korrelation Tourismusanteil 2019 vs. Erholungsdynamik | Regression |
+| Step | Calculation | Data Source |
+|------|-------------|-------------|
+| 1 | Extract HH consumption nominal 2019, 2021, 2022 | all_countries_time_series.csv |
+| 2 | Obtain HICP deflators (2019=100) from Eurostat | External (HICP prc_hicp_aind) |
+| 3 | Real consumption = Nominal / (HICP/100) | Calculation |
+| 4 | Real recovery index = Real_2022 / Real_2019 * 100 | Calculation |
+| 5 | Group comparison Southern Europe vs. Comparison | t-test or mean comparison |
 
-### Testbare Vorhersage
+### Testable Prediction
 
-- H0: Kein Zusammenhang zwischen Tourismusanteil und Erholungsmuster
-- H1: Hoehere Tourismusabhaengigkeit korreliert mit staerkerer Erholung 2021 aber Verlangsamung 2022
+- H0: Real recovery index Southern Europe >= Real recovery index Comparison
+- H1: Real recovery index Southern Europe < Real recovery index Comparison
 
-### Erwartetes Ergebnis
+### Expected Result
 
-Tourismusrebound 2021 (nach Aufhebung Reisebeschraenkungen) erklaert Teile der Suedeuropa-Erholung. 2022 Normalisierung.
+The nominal increases in 2022 (+14-19% in Southern Europe) mask real purchasing power losses. After inflation adjustment, the comparison group should be more recovered.
 
-### Aufwand
+### Effort
 
-- Mittel (Parquet-Abfrage erforderlich)
-- Geschaetzte Zeit: 4-5 Stunden
-
----
-
-## Hypothese 3: Energieintensitaet des Konsums
-
-**Prioritaet: HOCH**
-
-### Formulierung
-
-Haushalte in Suedeuropa hatten 2022 einen hoeheren Anteil energieintensiver Ausgaben am Gesamtkonsum, was zu staerkeren Preissteigerungseffekten fuehrte.
-
-### Operationalisierung
-
-| Schritt | Berechnung | Datenquelle |
-|---------|------------|-------------|
-| 1 | CPA_D35 (Strom/Gas) Konsum der HH extrahieren | Parquet (Set_i=CPA_D35, Set_j=S14) |
-| 2 | Energieanteil = CPA_D35 / P3_S14 * 100 | Berechnung |
-| 3 | Veraenderung Energieanteil 2019-2022 nach Land | Zeitreihe |
-| 4 | Zusammenhang Energieanteilsanstieg vs. nominaler Konsumanstieg | Korrelation |
-
-### Testbare Vorhersage
-
-- H0: Energieanteilsanstieg 2019-2022 ist in Suedeuropa gleich wie in Vergleichsgruppe
-- H1: Energieanteilsanstieg 2019-2022 ist in Suedeuropa hoeher
-
-### Erwartetes Ergebnis
-
-Durch hoehere Energie-Preisanstiege in energieabhaengigeren Haushalten steigt der nominale Energieanteil staerker, was auf geringere Kaufkraft fuer andere Gueter hindeutet.
-
-### Aufwand
-
-- Niedrig bis Mittel (Parquet-Abfrage)
-- Geschaetzte Zeit: 3-4 Stunden
+- Low (existing data + external deflators)
+- Estimated time: 2-3 hours
 
 ---
 
-## Hypothese 4: Fiskalische Abfederung
+## Hypothesis 2: Tourism Dependency as Driver
 
-**Prioritaet: NIEDRIG**
+**Priority: MEDIUM**
 
-### Formulierung
+### Formulation
 
-Laender mit staerkerer Ausweitung des Staatskonsums (P3_S13) 2022 zeigten eine bessere Abfederung der Energiekrise fuer Haushalte.
+Countries with high tourism dependency (GR, ES, PT) showed stronger recovery in 2021 but slowed recovery in 2022 compared to less tourism-dependent countries.
 
-### Operationalisierung
+### Operationalization
 
-| Schritt | Berechnung | Datenquelle |
-|---------|------------|-------------|
-| 1 | Gov-Konsum Wachstum 2021-2022 nach Land | all_countries_time_series.csv |
-| 2 | HH-Realkonsum-Entwicklung (siehe H1) | Berechnung |
-| 3 | Korrelation Gov-Konsum-Wachstum vs. HH-Realkonsum-Entwicklung | Regression |
+| Step | Calculation | Data Source |
+|------|-------------|-------------|
+| 1 | Extract tourism sector consumption (CPA_I, CPA_H49-H53) | Parquet (Set_i filter) |
+| 2 | Calculate tourism share of HH consumption | Aggregation |
+| 3 | Compare tourism growth 2020-2021 vs. 2021-2022 | YoY calculation |
+| 4 | Correlation tourism share 2019 vs. recovery dynamics | Regression |
 
-### Testbare Vorhersage
+### Testable Prediction
 
-- H0: Kein Zusammenhang zwischen fiskalischer Expansion und HH-Konsumstabilitaet
-- H1: Hoehere fiskalische Expansion stabilisiert HH-Konsum
+- H0: No relationship between tourism share and recovery pattern
+- H1: Higher tourism dependency correlates with stronger recovery 2021 but slowdown 2022
 
-### Erwartetes Ergebnis
+### Expected Result
 
-Staatliche Energiepreis-Subventionen und Transfers in einigen Laendern (DE, NL) haben die Haushaltskaufkraft teilweise gestuetzt.
+Tourism rebound 2021 (after lifting travel restrictions) explains parts of Southern Europe recovery. 2022 normalization.
 
-### Aufwand
+### Effort
 
-- Niedrig (bestehende Daten)
-- Geschaetzte Zeit: 2 Stunden
-
----
-
-## Hypothese 5: Basis-Effekt der COVID-Tiefe
-
-**Prioritaet: MITTEL**
-
-### Formulierung
-
-Laender mit tieferem COVID-Einbruch 2020 zeigen mechanisch hoehere prozentuale Erholungsraten 2021-2022, was keine echte Ueberlegenheit der Erholung bedeutet.
-
-### Operationalisierung
-
-| Schritt | Berechnung | Datenquelle |
-|---------|------------|-------------|
-| 1 | COVID-Einbruch (%) = (2020-2019)/2019 | all_countries_time_series.csv |
-| 2 | Erholungsrate (%) = (2022-2020)/2020 | Berechnung |
-| 3 | Korrelation Einbruchstiefe vs. Erholungsrate | Streudiagramm |
-| 4 | Niveau-Vergleich (Index 2019=100 fuer 2022) | Berechnung |
-
-### Testbare Vorhersage
-
-- H0: Erholungsrate ist unabhaengig von Einbruchstiefe
-- H1: Staerkerer Einbruch korreliert mit hoeherer prozentualer Erholung (Basis-Effekt)
-
-### Erwartetes Ergebnis
-
-ES und GR (tiefster Einbruch) zeigen nominell staerkste Erholung, liegen aber im Niveau-Vergleich zurueck.
-
-### Aufwand
-
-- Sehr niedrig (bestehende Daten)
-- Geschaetzte Zeit: 1 Stunde
+- Medium (Parquet query required)
+- Estimated time: 4-5 hours
 
 ---
 
-## Priorisierte Reihenfolge (Original)
+## Hypothesis 3: Energy Intensity of Consumption
 
-| Prioritaet | Hypothese | Aufwand | Empfehlung |
-|------------|-----------|---------|------------|
-| 1 | H1: Differentielle Erholungsgeschwindigkeit | Niedrig | **ZUERST TESTEN** |
-| 2 | H5: Basis-Effekt | Sehr niedrig | Parallel zu H1 |
-| 3 | H3: Energieintensitaet | Mittel | Nach H1/H5 |
-| 4 | H2: Tourismusabhaengigkeit | Mittel | Optional |
-| 5 | H4: Fiskalische Abfederung | Niedrig | Ergaenzend |
+**Priority: HIGH**
+
+### Formulation
+
+Households in Southern Europe had a higher share of energy-intensive expenditure in total consumption in 2022, leading to stronger price increase effects.
+
+### Operationalization
+
+| Step | Calculation | Data Source |
+|------|-------------|-------------|
+| 1 | Extract CPA_D35 (electricity/gas) HH consumption | Parquet (Set_i=CPA_D35, Set_j=S14) |
+| 2 | Energy share = CPA_D35 / P3_S14 * 100 | Calculation |
+| 3 | Change in energy share 2019-2022 by country | Time series |
+| 4 | Relationship energy share increase vs. nominal consumption increase | Correlation |
+
+### Testable Prediction
+
+- H0: Energy share increase 2019-2022 is equal in Southern Europe and comparison group
+- H1: Energy share increase 2019-2022 is higher in Southern Europe
+
+### Expected Result
+
+Due to higher energy price increases in more energy-dependent households, the nominal energy share rises more strongly, indicating lower purchasing power for other goods.
+
+### Effort
+
+- Low to medium (Parquet query)
+- Estimated time: 3-4 hours
 
 ---
 
-## AUSGEWAEHLTE HYPOTHESE: H_int (Integriert)
+## Hypothesis 4: Fiscal Cushioning
 
-**Status: GENEHMIGT durch Expert in the Loop (2026-01-16)**
+**Priority: LOW**
 
-### Formulierung
+### Formulation
 
-> Suedeuropaeische Laender (ES, IT, GR, PT) zeigen 2022 eine staerkere nominale, aber schwaeachere reale Erholung als Nordeuropa (DE, AT, NL), wobei der Unterschied teilweise durch hoehere Staatskonsum-Expansion in Suedeuropa abgefedert wird. Der scheinbar staerkere nominale Rebound ist primaer ein Basis-Effekt des tieferen COVID-Einbruchs 2020.
+Countries with stronger government consumption (P3_S13) expansion in 2022 showed better cushioning of the energy crisis for households.
 
-### Komponenten
+### Operationalization
 
-| Komponente | Ursprung | Funktion |
-|------------|----------|----------|
-| Basis-Effekt | H5 | Methodische Kontrolle |
-| Nominale vs. reale Erholung | H1 | Kernhypothese |
-| Fiskalische Abfederung | H4 | Erklaerungsmechanismus |
+| Step | Calculation | Data Source |
+|------|-------------|-------------|
+| 1 | Gov consumption growth 2021-2022 by country | all_countries_time_series.csv |
+| 2 | HH real consumption development (see H1) | Calculation |
+| 3 | Correlation gov consumption growth vs. HH real consumption development | Regression |
 
-### Kausale Kette
+### Testable Prediction
+
+- H0: No relationship between fiscal expansion and HH consumption stability
+- H1: Higher fiscal expansion stabilizes HH consumption
+
+### Expected Result
+
+Government energy price subsidies and transfers in some countries (DE, NL) have partially supported household purchasing power.
+
+### Effort
+
+- Low (existing data)
+- Estimated time: 2 hours
+
+---
+
+## Hypothesis 5: Base Effect of COVID Depth
+
+**Priority: MEDIUM**
+
+### Formulation
+
+Countries with deeper COVID drop in 2020 mechanically show higher percentage recovery rates in 2021-2022, which does not mean genuine recovery superiority.
+
+### Operationalization
+
+| Step | Calculation | Data Source |
+|------|-------------|-------------|
+| 1 | COVID drop (%) = (2020-2019)/2019 | all_countries_time_series.csv |
+| 2 | Recovery rate (%) = (2022-2020)/2020 | Calculation |
+| 3 | Correlation drop depth vs. recovery rate | Scatter plot |
+| 4 | Level comparison (Index 2019=100 for 2022) | Calculation |
+
+### Testable Prediction
+
+- H0: Recovery rate is independent of drop depth
+- H1: Stronger drop correlates with higher percentage recovery (base effect)
+
+### Expected Result
+
+ES and GR (deepest drop) show nominally strongest recovery, but lag in level comparison.
+
+### Effort
+
+- Very low (existing data)
+- Estimated time: 1 hour
+
+---
+
+## Prioritized Order (Original)
+
+| Priority | Hypothesis | Effort | Recommendation |
+|----------|------------|--------|----------------|
+| 1 | H1: Differential recovery speed | Low | **TEST FIRST** |
+| 2 | H5: Base effect | Very low | Parallel to H1 |
+| 3 | H3: Energy intensity | Medium | After H1/H5 |
+| 4 | H2: Tourism dependency | Medium | Optional |
+| 5 | H4: Fiscal cushioning | Low | Supplementary |
+
+---
+
+## SELECTED HYPOTHESIS: H_int (Integrated)
+
+**Status: APPROVED by Expert in the Loop (2026-01-16)**
+
+### Formulation
+
+> Southern European countries (ES, IT, GR, PT) show stronger nominal but weaker real recovery in 2022 than Northern Europe (DE, AT, NL), with the difference partially cushioned by higher government consumption expansion in Southern Europe. The apparently stronger nominal rebound is primarily a base effect of the deeper COVID drop in 2020.
+
+### Components
+
+| Component | Origin | Function |
+|-----------|--------|----------|
+| Base effect | H5 | Methodological control |
+| Nominal vs. real recovery | H1 | Core hypothesis |
+| Fiscal cushioning | H4 | Explanatory mechanism |
+
+### Causal Chain
 
 ```
-H5 (Basis-Effekt)     --> Methodische Kontrolle: Hohe Erholungsraten = Artefakt?
+H5 (Base effect)     --> Methodological control: High recovery rates = artifact?
         |
         v
-H1 (Differentielle    --> Kernhypothese: Nominal stark, real schwach?
-    Erholung)
+H1 (Differential    --> Core hypothesis: Nominal strong, real weak?
+    recovery)
         |
         v
-H4 (Fiskalische       --> Erklaerungsmechanismus: Staatskonsum als Puffer?
-    Abfederung)
+H4 (Fiscal          --> Explanatory mechanism: Government consumption as buffer?
+    cushioning)
 ```
 
-### Operationalisierung
+### Operationalization
 
-| Schritt | Metrik | Datenquelle | Status |
-|---------|--------|-------------|--------|
-| 1 | PT-Daten extrahieren | Parquet | Ausstehend |
-| 2 | Basis-Effekt: Korrelation Einbruch 2020 vs. Erholung 2021-22 | Bestehende CSV | Ausstehend |
-| 3 | Nominaler Index 2019=100, Niveau 2022 | Bestehende CSV | Ausstehend |
-| 4 | HICP-Deflatoren holen | Eurostat extern | Ausstehend |
-| 5 | Realer Index 2019=100, Niveau 2022 | Berechnung | Ausstehend |
-| 6 | Staatskonsum-Wachstum vs. HH-Konsum-Stabilisierung | Bestehende CSV | Ausstehend |
-| 7 | Visualisierungen erstellen | matplotlib | Ausstehend |
+| Step | Metric | Data Source | Status |
+|------|--------|-------------|--------|
+| 1 | Extract PT data | Parquet | Pending |
+| 2 | Base effect: Correlation drop 2020 vs. recovery 2021-22 | Existing CSV | Pending |
+| 3 | Nominal index 2019=100, level 2022 | Existing CSV | Pending |
+| 4 | Obtain HICP deflators | Eurostat external | Pending |
+| 5 | Real index 2019=100, level 2022 | Calculation | Pending |
+| 6 | Government consumption growth vs. HH consumption stabilization | Existing CSV | Pending |
+| 7 | Create visualizations | matplotlib | Pending |
 
-### Erwartete Outputs
+### Expected Outputs
 
-| Output | Beschreibung |
-|--------|--------------|
-| `outputs/tables/recovery_comparison.csv` | Nominale und reale Erholungsindizes |
-| `outputs/tables/basis_effect_analysis.csv` | Korrelation Einbruch vs. Erholung |
-| `outputs/tables/fiscal_response.csv` | Staatskonsum-Entwicklung |
-| `outputs/figures/recovery_nominal_vs_real.png` | Balkendiagramm Vergleich |
-| `outputs/figures/basis_effect_scatter.png` | Streudiagramm |
-| `outputs/figures/fiscal_cushion.png` | Gov-Konsum vs. HH-Konsum |
+| Output | Description |
+|--------|-------------|
+| `outputs/tables/recovery_comparison.csv` | Nominal and real recovery indices |
+| `outputs/tables/basis_effect_analysis.csv` | Correlation drop vs. recovery |
+| `outputs/tables/fiscal_response.csv` | Government consumption development |
+| `outputs/figures/recovery_nominal_vs_real.png` | Bar chart comparison |
+| `outputs/figures/basis_effect_scatter.png` | Scatter plot |
+| `outputs/figures/fiscal_cushion.png` | Gov consumption vs. HH consumption |
 
-### Testbare Vorhersagen
+### Testable Predictions
 
-1. **Basis-Effekt:** Negative Korrelation zwischen COVID-Einbruch 2020 und Niveau-Index 2022
-2. **Nominale Illusion:** Suedeuropa nominal >100%, real <100% (2019=100)
-3. **Fiskalische Abfederung:** Laender mit hoeherem Gov-Konsum-Wachstum zeigen stabileren HH-Konsum
-
----
-
-## Datenbedarf fuer vollstaendige Analyse
-
-### Intern verfuegbar
-
-- HH-Konsum nominal 2019-2023 (6 von 7 Laendern)
-- Staatskonsum 2019-2023
-- Investitionen 2019-2023
-
-### Parquet-Extraktion erforderlich
-
-- Portugal (PT) Daten
-- Sektorale Aufschluesselung (CPA_D35, CPA_I)
-
-### Extern erforderlich
-
-- HICP-Deflatoren (Eurostat prc_hicp_aind)
-- Optional: Energiepreisindizes
+1. **Base effect:** Negative correlation between COVID drop 2020 and level index 2022
+2. **Nominal illusion:** Southern Europe nominal >100%, real <100% (2019=100)
+3. **Fiscal cushioning:** Countries with higher gov consumption growth show more stable HH consumption
 
 ---
 
-## Empfehlung fuer naechsten Schritt
+## Data Requirements for Complete Analysis
 
-**Sofort umsetzen:**
+### Internally Available
 
-1. Hypothese H5 (Basis-Effekt) mit bestehenden Daten berechnen
-2. Hypothese H1 vorbereiten: HICP-Daten von Eurostat beschaffen
+- HH consumption nominal 2019-2023 (6 of 7 countries)
+- Government consumption 2019-2023
+- Investment 2019-2023
 
-**Kurzfristig:**
+### Parquet Extraction Required
 
-3. PT-Daten aus Parquet extrahieren fuer vollstaendige Suedeuropa-Gruppe
+- Portugal (PT) data
+- Sectoral breakdown (CPA_D35, CPA_I)
+
+### External Required
+
+- HICP deflators (Eurostat prc_hicp_aind)
+- Optional: Energy price indices
 
 ---
 
-Erstellt: 2026-01-16
+## Recommendation for Next Step
+
+**Implement immediately:**
+
+1. Calculate hypothesis H5 (base effect) with existing data
+2. Prepare hypothesis H1: Obtain HICP data from Eurostat
+
+**Short-term:**
+
+3. Extract PT data from Parquet for complete Southern Europe group
+
+---
+
+Created: 2026-01-16
 Basis: exploration-report.md, outputs/tables/*.csv

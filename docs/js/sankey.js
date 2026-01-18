@@ -1,9 +1,9 @@
 /**
- * Sankey Diagram - Wirtschaftskreislauf Visualisierung
- * Forschungsfrage A1: Wie fliesst Wertschoepfung von Produktion ueber Einkommen zur Verwendung?
+ * Sankey Diagram - Economic Circular Flow Visualization
+ * Research Question A1: How does value added flow from production through income to final use?
  *
- * Flow: Produktion -> Einkommen -> Verwendung
- *       (Branchen)    (D-Codes)   (P-Codes)
+ * Flow: Production -> Income -> Final Use
+ *       (Industries)  (D-Codes)  (P-Codes)
  */
 
 (function() {
@@ -14,10 +14,10 @@
 
     // Color palette for flow stages - distinct colors for better readability
     const stageColors = {
-        production: '#2563eb',   // Produktion (Branchen) - Blue
-        income: '#059669',       // Einkommen (D11, B2, B3) - Emerald Green
-        distribution: '#7c3aed', // Volkseinkommen (Verteilung) - Purple
-        use: '#dc2626'           // Verwendung (P3, P51G, P6) - Red
+        production: '#2563eb',   // Production (Industries) - Blue
+        income: '#059669',       // Income (D11, B2, B3) - Emerald Green
+        distribution: '#7c3aed', // National Income (Distribution) - Purple
+        use: '#dc2626'           // Final Use (P3, P51G, P6) - Red
     };
 
     function initSankeyChart() {
@@ -121,9 +121,9 @@
 
         // Stage labels (top)
         const stageLabels = [
-            { x: 0, label: 'Einkommen' },
-            { x: width / 2, label: 'Verteilung' },
-            { x: width, label: 'Verwendung' }
+            { x: 0, label: 'Income' },
+            { x: width / 2, label: 'Distribution' },
+            { x: width, label: 'Final Use' }
         ];
 
         svg.selectAll('.stage-label')
@@ -147,22 +147,22 @@
 
         // Income sources (left)
         const incomeSources = [
-            { name: 'D11', label: 'Loehne (D11)', stage: 'income', value: data.D11 || 0 },
-            { name: 'B2', label: 'Betriebsueberschuss (B2)', stage: 'income', value: data.B2 || 0 },
-            { name: 'B3', label: 'Selbst. Einkommen (B3)', stage: 'income', value: data.B3 || 0 }
+            { name: 'D11', label: 'Wages (D11)', stage: 'income', value: data.D11 || 0 },
+            { name: 'B2', label: 'Operating Surplus (B2)', stage: 'income', value: data.B2 || 0 },
+            { name: 'B3', label: 'Mixed Income (B3)', stage: 'income', value: data.B3 || 0 }
         ];
 
         // Final uses (right)
         const finalUses = [
-            { name: 'P3_S14', label: 'Privater Konsum', stage: 'use', value: data.P3_S14 || 0 },
-            { name: 'P3_S13', label: 'Staatskonsum', stage: 'use', value: data.P3_S13 || 0 },
-            { name: 'P51G', label: 'Investitionen', stage: 'use', value: data.P51G || 0 },
-            { name: 'Saldo', label: 'Aussenbeitrag', stage: 'use', value: data.Saldo || 0 }
+            { name: 'P3_S14', label: 'Household Consumption', stage: 'use', value: data.P3_S14 || 0 },
+            { name: 'P3_S13', label: 'Government Consumption', stage: 'use', value: data.P3_S13 || 0 },
+            { name: 'P51G', label: 'Investment', stage: 'use', value: data.P51G || 0 },
+            { name: 'net_exports', label: 'Net Exports', stage: 'use', value: data.net_exports || 0 }
         ];
 
         // Intermediate node (distribution)
         const totalIncome = incomeSources.reduce((sum, d) => sum + d.value, 0);
-        nodes.push({ name: 'Volkseinkommen', label: 'Volkseinkommen', stage: 'distribution', value: totalIncome });
+        nodes.push({ name: 'NationalIncome', label: 'National Income', stage: 'distribution', value: totalIncome });
 
         // Add all nodes
         incomeSources.forEach(d => { if (d.value > 0) nodes.push(d); });
@@ -173,7 +173,7 @@
             if (source.value > 0) {
                 links.push({
                     source: source.name,
-                    target: 'Volkseinkommen',
+                    target: 'NationalIncome',
                     value: source.value
                 });
             }
@@ -186,7 +186,7 @@
                 // Scale to match total income
                 const scaledValue = (use.value / totalUse) * totalIncome * 0.95;
                 links.push({
-                    source: 'Volkseinkommen',
+                    source: 'NationalIncome',
                     target: use.name,
                     value: scaledValue
                 });
@@ -210,7 +210,7 @@
             .attr('text-anchor', 'middle')
             .style('font-size', '14px')
             .style('fill', '#7f8c8d')
-            .text('Sankey-Daten werden generiert...');
+            .text('Sankey data is being generated...');
 
         g.append('text')
             .attr('x', width / 2)
@@ -218,7 +218,7 @@
             .attr('text-anchor', 'middle')
             .style('font-size', '12px')
             .style('fill', '#95a5a6')
-            .text('Bitte regenerieren Sie die JSON-Daten.');
+            .text('Please regenerate the JSON data.');
     }
 
     function showNodeTooltip(event, d) {
@@ -229,7 +229,7 @@
 
         tooltip.html(`
             <strong>${d.label}</strong><br/>
-            Wert: ${window.formatMio ? window.formatMio(d.value) : d.value.toFixed(0) + ' Mio EUR'}
+            Value: ${window.formatMio ? window.formatMio(d.value) : d.value.toFixed(0) + ' m EUR'}
         `);
     }
 
@@ -241,7 +241,7 @@
 
         tooltip.html(`
             <strong>${d.source.label} &rarr; ${d.target.label}</strong><br/>
-            Fluss: ${window.formatMio ? window.formatMio(d.value) : d.value.toFixed(0) + ' Mio EUR'}
+            Flow: ${window.formatMio ? window.formatMio(d.value) : d.value.toFixed(0) + ' m EUR'}
         `);
     }
 

@@ -1,22 +1,22 @@
 /**
- * FIGARO-NAM Explorer - Handelspartner-Visualisierung
- * Horizontales Balkendiagramm fuer Export/Import/Bilanz
+ * FIGARO-NAM Explorer - Trade Partners Visualization
+ * Horizontal bar chart for exports/imports/balance
  */
 
 let tradeTooltip = null;
-let tradeMode = 'exporte';
+let tradeMode = 'exports';
 let tradeTopN = 15;
 
 /**
- * Handelspartner-Chart initialisieren
+ * Initialize trade chart
  */
 function initTradeChart() {
     if (!DATA.trade) return;
 
-    // Tooltip erstellen
+    // Create tooltip
     tradeTooltip = createTooltip();
 
-    // Mode-Dropdown
+    // Mode dropdown
     const modeSelect = document.getElementById('trade-mode');
     if (modeSelect) {
         modeSelect.addEventListener('change', () => {
@@ -26,7 +26,7 @@ function initTradeChart() {
         });
     }
 
-    // TopN-Slider
+    // TopN slider
     const topnSlider = document.getElementById('trade-topn');
     const topnValue = document.getElementById('trade-topn-value');
     if (topnSlider) {
@@ -37,12 +37,12 @@ function initTradeChart() {
         });
     }
 
-    // Chart zeichnen
+    // Draw chart
     updateTradeChart();
 }
 
 /**
- * Handelspartner-Chart aktualisieren
+ * Update trade chart
  */
 function updateTradeChart() {
     if (!DATA.trade) return;
@@ -55,28 +55,28 @@ function updateTradeChart() {
     const width = container.clientWidth - margin.left - margin.right;
     const height = container.clientHeight - margin.top - margin.bottom;
 
-    // Abbrechen wenn Container nicht sichtbar (Tab inaktiv)
+    // Abort if container not visible (tab inactive)
     if (width <= 0 || height <= 0) return;
 
     const g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Daten je nach Modus
+    // Data based on mode
     let data = [];
     let title = '';
 
-    if (tradeMode === 'exporte') {
-        data = DATA.trade.exporte.slice(0, tradeTopN);
-        title = 'Exporte nach Handelspartner (Deutschland 2019)';
-    } else if (tradeMode === 'importe') {
-        data = DATA.trade.importe.slice(0, tradeTopN);
-        title = 'Importe nach Handelspartner (Deutschland 2019)';
-    } else if (tradeMode === 'bilanz') {
-        data = DATA.trade.bilanz.slice(0, tradeTopN);
-        title = 'Handelsbilanz nach Partner (Deutschland 2019)';
-    } else if (tradeMode === 'sektoren') {
-        data = DATA.trade.importe_nach_sektor ? DATA.trade.importe_nach_sektor.slice(0, tradeTopN) : [];
-        title = 'Importe nach Produktgruppe - Import-Intensitaet (Deutschland 2019)';
+    if (tradeMode === 'exports') {
+        data = DATA.trade.exports.slice(0, tradeTopN);
+        title = 'Exports by Trade Partner (Germany 2019)';
+    } else if (tradeMode === 'imports') {
+        data = DATA.trade.imports.slice(0, tradeTopN);
+        title = 'Imports by Trade Partner (Germany 2019)';
+    } else if (tradeMode === 'balance') {
+        data = DATA.trade.balance.slice(0, tradeTopN);
+        title = 'Trade Balance by Partner (Germany 2019)';
+    } else if (tradeMode === 'sectors') {
+        data = DATA.trade.imports_by_sector ? DATA.trade.imports_by_sector.slice(0, tradeTopN) : [];
+        title = 'Imports by Product Group - Import Intensity (Germany 2019)';
     }
 
     if (data.length === 0) {
@@ -84,11 +84,11 @@ function updateTradeChart() {
             .attr('x', width / 2)
             .attr('y', height / 2)
             .attr('text-anchor', 'middle')
-            .text('Keine Daten verfuegbar');
+            .text('No data available');
         return;
     }
 
-    // Titel
+    // Title
     g.append('text')
         .attr('x', width / 2)
         .attr('y', -10)
@@ -97,9 +97,9 @@ function updateTradeChart() {
         .style('font-weight', '600')
         .text(title);
 
-    if (tradeMode === 'bilanz') {
+    if (tradeMode === 'balance') {
         drawBalanceChart(g, data, width, height);
-    } else if (tradeMode === 'sektoren') {
+    } else if (tradeMode === 'sectors') {
         drawSectorImportsChart(g, data, width, height);
     } else {
         drawBarChart(g, data, width, height, tradeMode);
@@ -107,13 +107,13 @@ function updateTradeChart() {
 }
 
 /**
- * Einfaches Balkendiagramm (Export oder Import)
+ * Simple bar chart (export or import)
  */
 function drawBarChart(g, data, width, height, mode) {
-    const valueKey = 'wert';
-    const barClass = mode === 'exporte' ? 'bar-export' : 'bar-import';
+    const valueKey = 'value';
+    const barClass = mode === 'exports' ? 'bar-export' : 'bar-import';
 
-    // Skalen
+    // Scales
     const yScale = d3.scaleBand()
         .domain(data.map(d => d.partner_name))
         .range([0, height])
@@ -123,7 +123,7 @@ function drawBarChart(g, data, width, height, mode) {
         .domain([0, d3.max(data, d => d[valueKey]) * 1.1])
         .range([0, width]);
 
-    // Achsen
+    // Axes
     g.append('g')
         .attr('class', 'axis y-axis')
         .call(d3.axisLeft(yScale));
@@ -133,16 +133,16 @@ function drawBarChart(g, data, width, height, mode) {
         .attr('transform', `translate(0,${height})`)
         .call(d3.axisBottom(xScale).tickFormat(d => formatNumber(d, 0)));
 
-    // X-Achsen-Label
+    // X-axis label
     g.append('text')
         .attr('x', width / 2)
         .attr('y', height + 40)
         .attr('text-anchor', 'middle')
         .style('font-size', '12px')
         .style('fill', '#7f8c8d')
-        .text('Mio. EUR');
+        .text('million EUR');
 
-    // Balken
+    // Bars
     g.selectAll('.bar')
         .data(data)
         .enter()
@@ -156,8 +156,8 @@ function drawBarChart(g, data, width, height, mode) {
             d3.select(this).style('opacity', 0.8);
             showTooltip(tradeTooltip,
                 `<strong>${d.partner_name}</strong><br/>
-                 Wert: ${formatNumber(d[valueKey])} EUR<br/>
-                 Anteil: ${d.anteil.toFixed(1)}%`,
+                 Value: ${formatNumber(d[valueKey])} EUR<br/>
+                 Share: ${d.share.toFixed(1)}%`,
                 event);
         })
         .on('mouseout', function() {
@@ -165,7 +165,7 @@ function drawBarChart(g, data, width, height, mode) {
             hideTooltip(tradeTooltip);
         });
 
-    // Werte an Balken
+    // Values on bars
     g.selectAll('.bar-label')
         .data(data)
         .enter()
@@ -175,25 +175,25 @@ function drawBarChart(g, data, width, height, mode) {
         .attr('x', d => xScale(d[valueKey]) + 5)
         .style('font-size', '10px')
         .style('fill', '#7f8c8d')
-        .text(d => d.anteil.toFixed(1) + '%');
+        .text(d => d.share.toFixed(1) + '%');
 }
 
 /**
- * Handelsbilanz-Chart (Export vs Import mit Saldo)
+ * Trade balance chart (export vs import with net)
  */
 function drawBalanceChart(g, data, width, height) {
-    // Skalen
+    // Scales
     const yScale = d3.scaleBand()
         .domain(data.map(d => d.partner_name))
         .range([0, height])
         .padding(0.2);
 
-    const maxVal = d3.max(data, d => Math.max(d.exporte, d.importe));
+    const maxVal = d3.max(data, d => Math.max(d.exports, d.imports));
     const xScale = d3.scaleLinear()
         .domain([0, maxVal * 1.1])
         .range([0, width / 2 - 20]);
 
-    // Mittellinie
+    // Center line
     const center = width / 2;
 
     g.append('line')
@@ -204,7 +204,7 @@ function drawBalanceChart(g, data, width, height) {
         .style('stroke', '#bdc3c7')
         .style('stroke-width', 1);
 
-    // Y-Achse (Partner-Namen)
+    // Y-axis (partner names)
     g.append('g')
         .attr('class', 'axis y-axis')
         .attr('transform', `translate(${center},0)`)
@@ -212,7 +212,7 @@ function drawBalanceChart(g, data, width, height) {
         .selectAll('text')
         .style('text-anchor', 'middle');
 
-    // Export-Balken (rechts)
+    // Export bars (right)
     g.selectAll('.bar-export')
         .data(data)
         .enter()
@@ -221,42 +221,42 @@ function drawBalanceChart(g, data, width, height) {
         .attr('y', d => yScale(d.partner_name))
         .attr('x', center + 5)
         .attr('height', yScale.bandwidth() / 2)
-        .attr('width', d => xScale(d.exporte))
+        .attr('width', d => xScale(d.exports))
         .on('mouseover', function(event, d) {
             showTooltip(tradeTooltip,
                 `<strong>${d.partner_name}</strong><br/>
-                 Export: ${formatNumber(d.exporte)} EUR<br/>
-                 Import: ${formatNumber(d.importe)} EUR<br/>
-                 Saldo: ${formatNumber(d.saldo)} EUR`,
+                 Exports: ${formatNumber(d.exports)} EUR<br/>
+                 Imports: ${formatNumber(d.imports)} EUR<br/>
+                 Net: ${formatNumber(d.net)} EUR`,
                 event);
         })
         .on('mouseout', function() {
             hideTooltip(tradeTooltip);
         });
 
-    // Import-Balken (links, gespiegelt)
+    // Import bars (left, mirrored)
     g.selectAll('.bar-import')
         .data(data)
         .enter()
         .append('rect')
         .attr('class', 'bar-import')
         .attr('y', d => yScale(d.partner_name) + yScale.bandwidth() / 2)
-        .attr('x', d => center - 5 - xScale(d.importe))
+        .attr('x', d => center - 5 - xScale(d.imports))
         .attr('height', yScale.bandwidth() / 2)
-        .attr('width', d => xScale(d.importe))
+        .attr('width', d => xScale(d.imports))
         .on('mouseover', function(event, d) {
             showTooltip(tradeTooltip,
                 `<strong>${d.partner_name}</strong><br/>
-                 Export: ${formatNumber(d.exporte)} EUR<br/>
-                 Import: ${formatNumber(d.importe)} EUR<br/>
-                 Saldo: ${formatNumber(d.saldo)} EUR`,
+                 Exports: ${formatNumber(d.exports)} EUR<br/>
+                 Imports: ${formatNumber(d.imports)} EUR<br/>
+                 Net: ${formatNumber(d.net)} EUR`,
                 event);
         })
         .on('mouseout', function() {
             hideTooltip(tradeTooltip);
         });
 
-    // Legende
+    // Legend
     const legend = g.append('g')
         .attr('transform', `translate(${width - 100}, -20)`);
 
@@ -268,7 +268,7 @@ function drawBalanceChart(g, data, width, height) {
         .attr('x', 16)
         .attr('y', 10)
         .style('font-size', '11px')
-        .text('Exporte');
+        .text('Exports');
 
     legend.append('rect')
         .attr('x', 70)
@@ -279,24 +279,24 @@ function drawBalanceChart(g, data, width, height) {
         .attr('x', 86)
         .attr('y', 10)
         .style('font-size', '11px')
-        .text('Importe');
+        .text('Imports');
 }
 
 /**
- * Sektor-Importe Chart (Import-Intensitaet)
+ * Sector imports chart (import intensity)
  */
 function drawSectorImportsChart(g, data, width, height) {
-    // Skalen
+    // Scales
     const yScale = d3.scaleBand()
-        .domain(data.map(d => d.bezeichnung || d.code))
+        .domain(data.map(d => d.label || d.code))
         .range([0, height])
         .padding(0.2);
 
     const xScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.wert) * 1.1])
+        .domain([0, d3.max(data, d => d.value) * 1.1])
         .range([0, width]);
 
-    // Achsen
+    // Axes
     g.append('g')
         .attr('class', 'axis y-axis')
         .call(d3.axisLeft(yScale));
@@ -306,32 +306,32 @@ function drawSectorImportsChart(g, data, width, height) {
         .attr('transform', `translate(0,${height})`)
         .call(d3.axisBottom(xScale).tickFormat(d => formatNumber(d, 0)));
 
-    // X-Achsen-Label
+    // X-axis label
     g.append('text')
         .attr('x', width / 2)
         .attr('y', height + 40)
         .attr('text-anchor', 'middle')
         .style('font-size', '12px')
         .style('fill', '#7f8c8d')
-        .text('Mio. EUR (Importe)');
+        .text('million EUR (Imports)');
 
-    // Balken
+    // Bars
     g.selectAll('.bar')
         .data(data)
         .enter()
         .append('rect')
         .attr('class', 'bar-import')
-        .attr('y', d => yScale(d.bezeichnung || d.code))
+        .attr('y', d => yScale(d.label || d.code))
         .attr('x', 0)
         .attr('height', yScale.bandwidth())
-        .attr('width', d => xScale(d.wert))
+        .attr('width', d => xScale(d.value))
         .on('mouseover', function(event, d) {
             d3.select(this).style('opacity', 0.8);
             showTooltip(tradeTooltip,
-                `<strong>${d.bezeichnung || d.code}</strong><br/>
+                `<strong>${d.label || d.code}</strong><br/>
                  Code: ${d.code}<br/>
-                 Importe: ${formatNumber(d.wert)} EUR<br/>
-                 Anteil: ${d.anteil ? d.anteil.toFixed(1) + '%' : '-'}`,
+                 Imports: ${formatNumber(d.value)} EUR<br/>
+                 Share: ${d.share ? d.share.toFixed(1) + '%' : '-'}`,
                 event);
         })
         .on('mouseout', function() {
@@ -339,36 +339,36 @@ function drawSectorImportsChart(g, data, width, height) {
             hideTooltip(tradeTooltip);
         });
 
-    // Werte an Balken
+    // Values on bars
     g.selectAll('.bar-label')
         .data(data)
         .enter()
         .append('text')
         .attr('class', 'bar-label')
-        .attr('y', d => yScale(d.bezeichnung || d.code) + yScale.bandwidth() / 2 + 4)
-        .attr('x', d => xScale(d.wert) + 5)
+        .attr('y', d => yScale(d.label || d.code) + yScale.bandwidth() / 2 + 4)
+        .attr('x', d => xScale(d.value) + 5)
         .style('font-size', '10px')
         .style('fill', '#7f8c8d')
-        .text(d => d.anteil ? d.anteil.toFixed(1) + '%' : '');
+        .text(d => d.share ? d.share.toFixed(1) + '%' : '');
 }
 
 /**
- * Label fuer TopN-Slider basierend auf Modus aktualisieren
+ * Update label for TopN slider based on mode
  */
 function updateTopNLabel() {
     const label = document.getElementById('trade-topn-label');
     if (label) {
-        if (tradeMode === 'sektoren') {
-            label.textContent = 'Anzahl Sektoren';
+        if (tradeMode === 'sectors') {
+            label.textContent = 'Number of Sectors';
         } else {
-            label.textContent = 'Anzahl Partner';
+            label.textContent = 'Number of Partners';
         }
     }
 }
 
-// Fenster-Resize
+// Window resize
 window.addEventListener('resize', () => {
-    if (document.getElementById('handel').classList.contains('active')) {
+    if (document.getElementById('trade').classList.contains('active')) {
         updateTradeChart();
     }
 });

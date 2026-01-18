@@ -96,11 +96,11 @@ def main():
     print("SUMMARY: Portugal Key Indicators")
     print("=" * 60)
 
-    print("\nHH Consumption (Mrd EUR):")
+    print("\nHH Consumption (bn EUR):")
     for _, row in ts.iterrows():
         print(f"  {int(row['year'])}: {row['hh_consumption']/1000:.1f}")
 
-    print("\nGov Consumption (Mrd EUR):")
+    print("\nGov Consumption (bn EUR):")
     for _, row in ts.iterrows():
         print(f"  {int(row['year'])}: {row['gov_consumption']/1000:.1f}")
 
@@ -112,8 +112,8 @@ def main():
     covid_drop = (val_2020 - val_2019) / val_2019 * 100
     recovery = (val_2022 - val_2020) / val_2020 * 100
 
-    print(f"\nCOVID-Einbruch 2019-2020: {covid_drop:+.1f}%")
-    print(f"Erholung 2020-2022: {recovery:+.1f}%")
+    print(f"\nCOVID drop 2019-2020: {covid_drop:+.1f}%")
+    print(f"Recovery 2020-2022: {recovery:+.1f}%")
 
     print("\n" + "=" * 60)
     print("PORTUGAL EXTRACTION COMPLETE")

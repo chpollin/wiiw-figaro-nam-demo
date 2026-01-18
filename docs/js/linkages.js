@@ -1,21 +1,21 @@
 /**
- * FIGARO-NAM Explorer - IO-Verflechtungs-Visualisierung
- * Balkendiagramm fuer Rueckwaerts-/Vorwaertsverflechtung
+ * FIGARO-NAM Explorer - IO Linkages Visualization
+ * Bar chart for backward/forward linkages
  */
 
 let linkagesTooltip = null;
-let linkageMode = 'rueckwaerts';
+let linkageMode = 'backward';
 
 /**
- * Verflechtungs-Chart initialisieren
+ * Initialize linkages chart
  */
 function initLinkagesChart() {
     if (!DATA.linkages) return;
 
-    // Tooltip erstellen
+    // Create tooltip
     linkagesTooltip = createTooltip();
 
-    // Mode-Dropdown
+    // Mode dropdown
     const modeSelect = document.getElementById('linkage-mode');
     if (modeSelect) {
         modeSelect.addEventListener('change', () => {
@@ -24,12 +24,12 @@ function initLinkagesChart() {
         });
     }
 
-    // Chart zeichnen
+    // Draw chart
     updateLinkagesChart();
 }
 
 /**
- * Verflechtungs-Chart aktualisieren
+ * Update linkages chart
  */
 function updateLinkagesChart() {
     if (!DATA.linkages) return;
@@ -42,29 +42,29 @@ function updateLinkagesChart() {
     const width = container.clientWidth - margin.left - margin.right;
     const height = container.clientHeight - margin.top - margin.bottom;
 
-    // Abbrechen wenn Container nicht sichtbar (Tab inaktiv)
+    // Abort if container not visible (tab inactive)
     if (width <= 0 || height <= 0) return;
 
     const g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Daten je nach Modus
+    // Data based on mode
     let data = [];
     let title = '';
     let xLabel = '';
 
-    if (linkageMode === 'rueckwaerts') {
-        data = DATA.linkages.rueckwaerts || [];
-        title = 'Rueckwaertsverflechtung: Welche Branchen kaufen am meisten Vorleistungen?';
-        xLabel = 'Intermediate Inputs (Mio. EUR)';
-    } else if (linkageMode === 'vorwaerts') {
-        data = DATA.linkages.vorwaerts || [];
-        title = 'Vorwaertsverflechtung: Welche Produkte beliefern am meisten andere Sektoren?';
-        xLabel = 'Total Supply (Mio. EUR)';
-    } else if (linkageMode === 'fluesse') {
-        data = DATA.linkages.top_fluesse || [];
-        title = 'Top Intersektorale Fluesse (Produkt -> Branche)';
-        xLabel = 'Fluss (Mio. EUR)';
+    if (linkageMode === 'backward') {
+        data = DATA.linkages.backward || [];
+        title = 'Backward Linkages: Which industries purchase the most intermediate inputs?';
+        xLabel = 'Intermediate Inputs (million EUR)';
+    } else if (linkageMode === 'forward') {
+        data = DATA.linkages.forward || [];
+        title = 'Forward Linkages: Which products supply the most to other sectors?';
+        xLabel = 'Total Supply (million EUR)';
+    } else if (linkageMode === 'flows') {
+        data = DATA.linkages.top_flows || [];
+        title = 'Top Intersectoral Flows (Product -> Industry)';
+        xLabel = 'Flow (million EUR)';
     }
 
     if (data.length === 0) {
@@ -72,11 +72,11 @@ function updateLinkagesChart() {
             .attr('x', width / 2)
             .attr('y', height / 2)
             .attr('text-anchor', 'middle')
-            .text('Keine Daten verfuegbar');
+            .text('No data available');
         return;
     }
 
-    // Titel
+    // Title
     g.append('text')
         .attr('x', width / 2)
         .attr('y', -20)
@@ -85,7 +85,7 @@ function updateLinkagesChart() {
         .style('font-weight', '600')
         .text(title);
 
-    if (linkageMode === 'fluesse') {
+    if (linkageMode === 'flows') {
         drawFlowsChart(g, data, width, height, xLabel);
     } else {
         drawLinkageBarChart(g, data, width, height, xLabel);
@@ -93,20 +93,20 @@ function updateLinkagesChart() {
 }
 
 /**
- * Balkendiagramm fuer Verflechtung
+ * Bar chart for linkages
  */
 function drawLinkageBarChart(g, data, width, height, xLabel) {
-    // Skalen
+    // Scales
     const yScale = d3.scaleBand()
-        .domain(data.map(d => d.bezeichnung))
+        .domain(data.map(d => d.label))
         .range([0, height])
         .padding(0.15);
 
     const xScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.wert) * 1.1])
+        .domain([0, d3.max(data, d => d.value) * 1.1])
         .range([0, width]);
 
-    // Achsen
+    // Axes
     g.append('g')
         .attr('class', 'axis y-axis')
         .call(d3.axisLeft(yScale))
@@ -118,7 +118,7 @@ function drawLinkageBarChart(g, data, width, height, xLabel) {
         .attr('transform', `translate(0,${height})`)
         .call(d3.axisBottom(xScale).tickFormat(d => formatNumber(d, 0)));
 
-    // X-Achsen-Label
+    // X-axis label
     g.append('text')
         .attr('x', width / 2)
         .attr('y', height + 40)
@@ -127,22 +127,22 @@ function drawLinkageBarChart(g, data, width, height, xLabel) {
         .style('fill', '#7f8c8d')
         .text(xLabel);
 
-    // Balken
+    // Bars
     g.selectAll('.bar')
         .data(data)
         .enter()
         .append('rect')
         .attr('class', 'bar-neutral')
-        .attr('y', d => yScale(d.bezeichnung))
+        .attr('y', d => yScale(d.label))
         .attr('x', 0)
         .attr('height', yScale.bandwidth())
-        .attr('width', d => xScale(d.wert))
+        .attr('width', d => xScale(d.value))
         .on('mouseover', function(event, d) {
             d3.select(this).style('opacity', 0.8);
             showTooltip(linkagesTooltip,
-                `<strong>${d.bezeichnung}</strong><br/>
+                `<strong>${d.label}</strong><br/>
                  Code: ${d.code}<br/>
-                 Wert: ${formatNumber(d.wert)} EUR`,
+                 Value: ${formatNumber(d.value)} EUR`,
                 event);
         })
         .on('mouseout', function() {
@@ -150,40 +150,40 @@ function drawLinkageBarChart(g, data, width, height, xLabel) {
             hideTooltip(linkagesTooltip);
         });
 
-    // Werte an Balken
+    // Values on bars
     g.selectAll('.bar-label')
         .data(data)
         .enter()
         .append('text')
         .attr('class', 'bar-label')
-        .attr('y', d => yScale(d.bezeichnung) + yScale.bandwidth() / 2 + 3)
-        .attr('x', d => xScale(d.wert) + 5)
+        .attr('y', d => yScale(d.label) + yScale.bandwidth() / 2 + 3)
+        .attr('x', d => xScale(d.value) + 5)
         .style('font-size', '9px')
         .style('fill', '#7f8c8d')
-        .text(d => formatNumber(d.wert, 0));
+        .text(d => formatNumber(d.value, 0));
 }
 
 /**
- * Chart fuer intersektorale Fluesse
+ * Chart for intersectoral flows
  */
 function drawFlowsChart(g, data, width, height, xLabel) {
-    // Labels erstellen: "Von -> Nach"
+    // Create labels: "From -> To"
     const labeledData = data.map(d => ({
         ...d,
-        label: `${d.von_bezeichnung} -> ${d.nach_bezeichnung}`
+        displayLabel: `${d.from_label} -> ${d.to_label}`
     }));
 
-    // Skalen
+    // Scales
     const yScale = d3.scaleBand()
-        .domain(labeledData.map(d => d.label))
+        .domain(labeledData.map(d => d.displayLabel))
         .range([0, height])
         .padding(0.15);
 
     const xScale = d3.scaleLinear()
-        .domain([0, d3.max(labeledData, d => d.wert) * 1.1])
+        .domain([0, d3.max(labeledData, d => d.value) * 1.1])
         .range([0, width]);
 
-    // Achsen
+    // Axes
     g.append('g')
         .attr('class', 'axis y-axis')
         .call(d3.axisLeft(yScale))
@@ -195,7 +195,7 @@ function drawFlowsChart(g, data, width, height, xLabel) {
         .attr('transform', `translate(0,${height})`)
         .call(d3.axisBottom(xScale).tickFormat(d => formatNumber(d, 0)));
 
-    // X-Achsen-Label
+    // X-axis label
     g.append('text')
         .attr('x', width / 2)
         .attr('y', height + 40)
@@ -204,27 +204,27 @@ function drawFlowsChart(g, data, width, height, xLabel) {
         .style('fill', '#7f8c8d')
         .text(xLabel);
 
-    // Farb-Skala fuer Fluesse
+    // Color scale for flows
     const colorScale = d3.scaleSequential(d3.interpolateBlues)
-        .domain([0, d3.max(labeledData, d => d.wert)]);
+        .domain([0, d3.max(labeledData, d => d.value)]);
 
-    // Balken
+    // Bars
     g.selectAll('.bar')
         .data(labeledData)
         .enter()
         .append('rect')
-        .attr('y', d => yScale(d.label))
+        .attr('y', d => yScale(d.displayLabel))
         .attr('x', 0)
         .attr('height', yScale.bandwidth())
-        .attr('width', d => xScale(d.wert))
-        .attr('fill', d => colorScale(d.wert))
+        .attr('width', d => xScale(d.value))
+        .attr('fill', d => colorScale(d.value))
         .on('mouseover', function(event, d) {
             d3.select(this).style('opacity', 0.8);
             showTooltip(linkagesTooltip,
-                `<strong>Intersektoraler Fluss</strong><br/>
-                 Von: ${d.von_bezeichnung} (${d.von_code})<br/>
-                 Nach: ${d.nach_bezeichnung} (${d.nach_code})<br/>
-                 Wert: ${formatNumber(d.wert)} EUR`,
+                `<strong>Intersectoral Flow</strong><br/>
+                 From: ${d.from_label} (${d.from_code})<br/>
+                 To: ${d.to_label} (${d.to_code})<br/>
+                 Value: ${formatNumber(d.value)} EUR`,
                 event);
         })
         .on('mouseout', function() {
@@ -232,22 +232,22 @@ function drawFlowsChart(g, data, width, height, xLabel) {
             hideTooltip(linkagesTooltip);
         });
 
-    // Werte an Balken
+    // Values on bars
     g.selectAll('.bar-label')
         .data(labeledData)
         .enter()
         .append('text')
         .attr('class', 'bar-label')
-        .attr('y', d => yScale(d.label) + yScale.bandwidth() / 2 + 3)
-        .attr('x', d => xScale(d.wert) + 5)
+        .attr('y', d => yScale(d.displayLabel) + yScale.bandwidth() / 2 + 3)
+        .attr('x', d => xScale(d.value) + 5)
         .style('font-size', '9px')
         .style('fill', '#7f8c8d')
-        .text(d => formatNumber(d.wert, 1));
+        .text(d => formatNumber(d.value, 1));
 }
 
-// Fenster-Resize
+// Window resize
 window.addEventListener('resize', () => {
-    if (document.getElementById('verflechtung').classList.contains('active')) {
+    if (document.getElementById('linkages').classList.contains('active')) {
         updateLinkagesChart();
     }
 });

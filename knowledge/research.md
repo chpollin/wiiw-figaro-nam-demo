@@ -78,13 +78,13 @@ COVID-19 Impact (2019-2020):
 | DE | -7.1% | +7.2% |
 | PL | -4.7% | +4.4% |
 
-Sektorale Asymmetrie (Germany):
-- Verlierer: N79 Travel -56%, H51 Airlines -46%, I Hotels -32%
-- Gewinner: Q86 Healthcare +22%, K66 Financial +14%, H53 Postal +11%
+Sectoral Asymmetry (Germany):
+- Losers: N79 Travel -56%, H51 Airlines -46%, I Hotels -32%
+- Winners: Q86 Healthcare +22%, K66 Financial +14%, H53 Postal +11%
 
 Energy Crisis (2021-2022):
-- Nominale HH-Konsumanstiege 10-19% (Inflationseffekt)
-- Interpretation erfordert externe Deflator-Daten
+- Nominal HH consumption increases 10-19% (inflation effect)
+- Interpretation requires external deflator data
 
 **Outputs Phase 2a:**
 - `outputs/tables/` - 15 CSV data files
@@ -146,19 +146,19 @@ Negative Values Analysis:
 
 **Completed Research Run: run-2026-01-16-1430**
 
-| Aspekt | Details |
+| Aspect | Details |
 |--------|---------|
-| Forschungsfrage | Hat die Energiekrise 2022 die COVID-Erholung in Suedeuropa gebremst? |
-| Hypothese | H_int (integriert aus H1+H4+H5) |
-| Laender | ES, IT, GR, PT (Sued) vs. DE, AT, NL (Nord) |
-| Methodik | FIGARO-NAM + HICP-Deflation |
-| Ergebnis | Hypothese 1/3 bestaetigt |
+| Research question | Did the 2022 energy crisis slow COVID recovery in Southern Europe? |
+| Hypothesis | H_int (integrated from H1+H4+H5) |
+| Countries | ES, IT, GR, PT (South) vs. DE, AT, NL (North) |
+| Methodology | FIGARO-NAM + HICP deflation |
+| Result | Hypothesis 1/3 confirmed |
 
-**Kernbefunde:**
-- Basis-Effekt bestaetigt (r = -0.52): Tieferer COVID-Einbruch erklaert hoehere Erholungsraten
-- Nominale Ueberlegenheit Suedeuropas widerlegt: Nord 113.1 vs. Sued 110.0
-- Fiskalische Abfederung widerlegt: Nord +19.7% vs. Sued +14.3% Staatskonsum-Wachstum
-- Ueberraschung: Deutschland fuehrt bei Staatskonsum-Expansion (+21.2%)
+**Key Findings:**
+- Base effect confirmed (r = -0.52): Deeper COVID drop explains higher recovery rates
+- Nominal superiority of Southern Europe refuted: North 113.1 vs. South 110.0
+- Fiscal cushioning refuted: North +19.7% vs. South +14.3% government consumption growth
+- Surprise: Germany leads in government consumption expansion (+21.2%)
 
 **Outputs:** `runs/run-2026-01-16-1430/paper/paper.md`
 
@@ -178,10 +178,10 @@ An interactive D3.js dashboard has been created to support the selection process
 
 | Tab | Visualization | Research Questions Addressed |
 |-----|--------------|------------------------------|
-| Zeitreihen | Multi-line chart | B3 (Energy vs COVID), country comparison |
-| Handelspartner | Bar chart | D1-D3 (Import dependency, trade structure) |
-| Sektoren | Diverging bars | B2, B4 (Sectoral dynamics, volatility) |
-| IO-Verflechtung | Bar chart | A1-A2 (Circular flow, linkages) |
+| Time Series | Multi-line chart | B3 (Energy vs COVID), country comparison |
+| Trade Partners | Bar chart | D1-D3 (Import dependency, trade structure) |
+| Sectors | Diverging bars | B2, B4 (Sectoral dynamics, volatility) |
+| IO Linkages | Bar chart | A1-A2 (Circular flow, linkages) |
 
 **Data Availability:**
 
@@ -432,4 +432,4 @@ IPR = Imports / (Domestic Production - Exports + Imports)
 - [Eurostat FIGARO](https://ec.europa.eu/eurostat/web/esa-supply-use-input-tables/figaro)
 - [NACE Rev. 2 Classification](https://ec.europa.eu/eurostat/web/nace-rev2)
 - [CPA 2.1 Classification](https://ec.europa.eu/eurostat/web/cpa)
-- [ESA 2010 und FIGARO Referenzdokumentation](ESA%202010%20und%20FIGARO%20Referenzdokumentation.md) - Local domain knowledge
+- [ESA 2010 and FIGARO Reference Documentation](ESA%202010%20and%20FIGARO%20Reference%20Documentation.md) - Local domain knowledge

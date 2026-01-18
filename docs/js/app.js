@@ -1,9 +1,9 @@
 /**
- * FIGARO-NAM Explorer - Haupt-Anwendungslogik
- * Laedt Daten und initialisiert Visualisierungen
+ * FIGARO-NAM Explorer - Main Application Logic
+ * Loads data and initializes visualizations
  */
 
-// Globale Daten
+// Global data
 let DATA = {
     timeSeries: null,
     trade: null,
@@ -16,7 +16,7 @@ let DATA = {
 // Export for other modules
 window.APP_DATA = DATA;
 
-// Farben fuer Laender
+// Colors for countries
 const COUNTRY_COLORS = {
     'DE': '#3498db',
     'FR': '#e74c3c',
@@ -29,7 +29,7 @@ const COUNTRY_COLORS = {
 };
 
 /**
- * Daten laden
+ * Load data
  */
 async function loadData() {
     try {
@@ -52,16 +52,16 @@ async function loadData() {
         // Update global reference
         window.APP_DATA = DATA;
 
-        console.log('Daten geladen:', DATA);
+        console.log('Data loaded:', DATA);
         return true;
     } catch (error) {
-        console.error('Fehler beim Laden der Daten:', error);
+        console.error('Error loading data:', error);
         return false;
     }
 }
 
 /**
- * Tab-Navigation
+ * Tab navigation
  */
 function initTabs() {
     const tabBtns = document.querySelectorAll('.tab-btn');
@@ -71,31 +71,31 @@ function initTabs() {
         btn.addEventListener('click', () => {
             const tabId = btn.dataset.tab;
 
-            // Aktiven Tab wechseln
+            // Switch active tab
             tabBtns.forEach(b => b.classList.remove('active'));
             tabContents.forEach(c => c.classList.remove('active'));
 
             btn.classList.add('active');
             document.getElementById(tabId).classList.add('active');
 
-            // Chart neu zeichnen bei Tab-Wechsel
+            // Redraw chart on tab switch
             switch(tabId) {
-                case 'zeitreihen':
+                case 'timeseries':
                     if (typeof updateTimeSeriesChart === 'function') updateTimeSeriesChart();
                     break;
-                case 'erholung':
+                case 'recovery':
                     if (typeof updateRecoveryChart === 'function') updateRecoveryChart();
                     break;
-                case 'kreislauf':
+                case 'circular':
                     if (typeof updateSankeyChart === 'function') updateSankeyChart();
                     break;
-                case 'handel':
+                case 'trade':
                     if (typeof updateTradeChart === 'function') updateTradeChart();
                     break;
-                case 'sektoren':
+                case 'sectors':
                     if (typeof updateSectorsChart === 'function') updateSectorsChart();
                     break;
-                case 'verflechtung':
+                case 'linkages':
                     if (typeof updateLinkagesChart === 'function') updateLinkagesChart();
                     break;
             }
@@ -104,7 +104,7 @@ function initTabs() {
 }
 
 /**
- * Tooltip erstellen
+ * Create tooltip
  */
 function createTooltip() {
     return d3.select('body')
@@ -114,7 +114,7 @@ function createTooltip() {
 }
 
 /**
- * Tooltip anzeigen
+ * Show tooltip
  */
 function showTooltip(tooltip, html, event) {
     tooltip.transition()
@@ -126,7 +126,7 @@ function showTooltip(tooltip, html, event) {
 }
 
 /**
- * Tooltip verstecken
+ * Hide tooltip
  */
 function hideTooltip(tooltip) {
     tooltip.transition()
@@ -135,22 +135,22 @@ function hideTooltip(tooltip) {
 }
 
 /**
- * Zahl formatieren
+ * Format number
  */
 function formatNumber(num, decimals = 1) {
     if (num === null || num === undefined || isNaN(num)) return '-';
     if (Math.abs(num) >= 1e9) {
-        return (num / 1e9).toFixed(decimals) + ' Mrd.';
+        return (num / 1e9).toFixed(decimals) + ' bn';
     } else if (Math.abs(num) >= 1e6) {
-        return (num / 1e6).toFixed(decimals) + ' Mio.';
+        return (num / 1e6).toFixed(decimals) + ' m';
     } else if (Math.abs(num) >= 1e3) {
-        return (num / 1e3).toFixed(decimals) + ' Tsd.';
+        return (num / 1e3).toFixed(decimals) + ' k';
     }
     return num.toFixed(decimals);
 }
 
 /**
- * Prozent formatieren
+ * Format percent
  */
 function formatPercent(num, decimals = 1) {
     if (num === null || num === undefined || isNaN(num)) return '-';
@@ -159,22 +159,22 @@ function formatPercent(num, decimals = 1) {
 }
 
 /**
- * Initialisierung
+ * Initialization
  */
 async function init() {
-    console.log('FIGARO-NAM Explorer wird initialisiert...');
+    console.log('FIGARO-NAM Explorer initializing...');
 
-    // Daten laden
+    // Load data
     const loaded = await loadData();
     if (!loaded) {
-        alert('Fehler beim Laden der Daten. Bitte Seite neu laden.');
+        alert('Error loading data. Please reload the page.');
         return;
     }
 
-    // Tab-Navigation initialisieren
+    // Initialize tab navigation
     initTabs();
 
-    // Visualisierungen initialisieren
+    // Initialize visualizations
     if (typeof initTimeSeriesChart === 'function') initTimeSeriesChart();
     if (typeof initRecoveryChart === 'function') initRecoveryChart();
     if (typeof initSankeyChart === 'function') initSankeyChart();
@@ -182,7 +182,7 @@ async function init() {
     if (typeof initSectorsChart === 'function') initSectorsChart();
     if (typeof initLinkagesChart === 'function') initLinkagesChart();
 
-    console.log('Initialisierung abgeschlossen.');
+    console.log('Initialization complete.');
 }
 
 /**
@@ -191,11 +191,11 @@ async function init() {
 function formatMio(value) {
     if (value === null || value === undefined || isNaN(value)) return '-';
     if (Math.abs(value) >= 1e6) {
-        return (value / 1e6).toFixed(1) + ' Bio. EUR';
+        return (value / 1e6).toFixed(1) + ' tn EUR';
     } else if (Math.abs(value) >= 1e3) {
-        return (value / 1e3).toFixed(1) + ' Mrd. EUR';
+        return (value / 1e3).toFixed(1) + ' bn EUR';
     }
-    return value.toFixed(1) + ' Mio. EUR';
+    return value.toFixed(1) + ' m EUR';
 }
 
 // Export formatting function

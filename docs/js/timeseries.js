@@ -1,15 +1,15 @@
 /**
- * FIGARO-NAM Explorer - Zeitreihen-Visualisierung
- * Multi-Line Chart mit Krisen-Markern
+ * FIGARO-NAM Explorer - Time Series Visualization
+ * Multi-Line Chart with Crisis Markers
  */
 
 let tsChart = null;
 let tsTooltip = null;
 let selectedCountries = ['DE'];
-let selectedAggregate = 'hh_konsum';
+let selectedAggregate = 'hh_consumption';
 
 /**
- * Laender-Checkboxen initialisieren
+ * Initialize country checkboxes
  */
 function initCountryCheckboxes() {
     const container = document.getElementById('ts-laender');
@@ -17,9 +17,9 @@ function initCountryCheckboxes() {
 
     container.innerHTML = '';
 
-    // Nur Laender mit Daten anzeigen
-    const aggregateData = DATA.timeSeries.aggregate['hh_konsum'] || {};
-    const countriesWithData = DATA.timeSeries.laender.filter(code =>
+    // Only show countries with data
+    const aggregateData = DATA.timeSeries.aggregates['hh_consumption'] || {};
+    const countriesWithData = DATA.timeSeries.countries.filter(code =>
         aggregateData[code] && aggregateData[code].length > 0
     );
 
@@ -40,17 +40,17 @@ function initCountryCheckboxes() {
             updateTimeSeriesChart();
         });
 
-        const name = DATA.timeSeries.laender_namen[code] || code;
+        const name = DATA.timeSeries.country_names[code] || code;
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(name));
         container.appendChild(label);
     });
 
-    // Hinweis wenn nur ein Land verfuegbar
+    // Note if only one country available
     if (countriesWithData.length === 1) {
         const hint = document.createElement('span');
         hint.className = 'data-hint';
-        hint.textContent = ' (nur DE-Daten verfuegbar)';
+        hint.textContent = ' (only DE data available)';
         hint.style.fontSize = '0.8em';
         hint.style.color = '#7f8c8d';
         container.appendChild(hint);
@@ -58,18 +58,18 @@ function initCountryCheckboxes() {
 }
 
 /**
- * Zeitreihen-Chart initialisieren
+ * Initialize time series chart
  */
 function initTimeSeriesChart() {
     if (!DATA.timeSeries) return;
 
-    // Tooltip erstellen
+    // Create tooltip
     tsTooltip = createTooltip();
 
-    // Laender-Checkboxen
+    // Country checkboxes
     initCountryCheckboxes();
 
-    // Aggregat-Dropdown
+    // Aggregate dropdown
     const aggregatSelect = document.getElementById('ts-aggregat');
     if (aggregatSelect) {
         aggregatSelect.addEventListener('change', () => {
@@ -78,12 +78,12 @@ function initTimeSeriesChart() {
         });
     }
 
-    // Chart zeichnen
+    // Draw chart
     updateTimeSeriesChart();
 }
 
 /**
- * Zeitreihen-Chart aktualisieren
+ * Update time series chart
  */
 function updateTimeSeriesChart() {
     if (!DATA.timeSeries) return;
@@ -96,26 +96,26 @@ function updateTimeSeriesChart() {
     const width = container.clientWidth - margin.left - margin.right;
     const height = container.clientHeight - margin.top - margin.bottom;
 
-    // Abbrechen wenn Container nicht sichtbar
+    // Abort if container not visible
     if (width <= 0 || height <= 0) return;
 
     const g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Daten vorbereiten
-    const jahre = DATA.timeSeries.jahre;
-    const aggregateData = DATA.timeSeries.aggregate[selectedAggregate];
+    // Prepare data
+    const years = DATA.timeSeries.years;
+    const aggregateData = DATA.timeSeries.aggregates[selectedAggregate];
 
     if (!aggregateData) {
         g.append('text')
             .attr('x', width / 2)
             .attr('y', height / 2)
             .attr('text-anchor', 'middle')
-            .text('Keine Daten verfuegbar');
+            .text('No data available');
         return;
     }
 
-    // Nur Laender mit Daten und ausgewaehlte
+    // Only countries with data and selected
     const validCountries = selectedCountries.filter(c => aggregateData[c] && aggregateData[c].length > 0);
 
     if (validCountries.length === 0) {
@@ -123,13 +123,13 @@ function updateTimeSeriesChart() {
             .attr('x', width / 2)
             .attr('y', height / 2)
             .attr('text-anchor', 'middle')
-            .text('Bitte mindestens ein Land auswaehlen');
+            .text('Please select at least one country');
         return;
     }
 
-    // Skalen
+    // Scales
     const xScale = d3.scaleLinear()
-        .domain([d3.min(jahre), d3.max(jahre)])
+        .domain([d3.min(years), d3.max(years)])
         .range([0, width]);
 
     let allValues = [];
@@ -143,10 +143,10 @@ function updateTimeSeriesChart() {
         .domain([0, d3.max(allValues) * 1.1])
         .range([height, 0]);
 
-    // Achsen
+    // Axes
     const xAxis = d3.axisBottom(xScale)
         .tickFormat(d3.format('d'))
-        .ticks(jahre.length);
+        .ticks(years.length);
 
     const yAxis = d3.axisLeft(yScale)
         .tickFormat(d => formatNumber(d, 0));
@@ -160,7 +160,7 @@ function updateTimeSeriesChart() {
         .attr('class', 'axis y-axis')
         .call(yAxis);
 
-    // Y-Achsen-Label
+    // Y-axis label
     g.append('text')
         .attr('transform', 'rotate(-90)')
         .attr('y', -60)
@@ -168,12 +168,12 @@ function updateTimeSeriesChart() {
         .attr('text-anchor', 'middle')
         .style('font-size', '12px')
         .style('fill', '#7f8c8d')
-        .text('Mio. EUR');
+        .text('million EUR');
 
-    // Krisen-Marker
-    if (DATA.timeSeries.krisen_marker) {
-        DATA.timeSeries.krisen_marker.forEach(krise => {
-            const x = xScale(krise.jahr);
+    // Crisis markers
+    if (DATA.timeSeries.crisis_markers) {
+        DATA.timeSeries.crisis_markers.forEach(crisis => {
+            const x = xScale(crisis.year);
 
             g.append('line')
                 .attr('class', 'crisis-marker')
@@ -186,13 +186,13 @@ function updateTimeSeriesChart() {
                 .attr('class', 'crisis-label')
                 .attr('x', x + 5)
                 .attr('y', 15)
-                .text(krise.bezeichnung);
+                .text(crisis.label);
         });
     }
 
-    // Linien zeichnen
+    // Draw lines
     const line = d3.line()
-        .x((d, i) => xScale(jahre[i]))
+        .x((d, i) => xScale(years[i]))
         .y(d => yScale(d))
         .curve(d3.curveMonotoneX);
 
@@ -206,13 +206,13 @@ function updateTimeSeriesChart() {
             .attr('d', line)
             .style('stroke', COUNTRY_COLORS[country] || '#333');
 
-        // Punkte fuer Interaktion
+        // Points for interaction
         g.selectAll(`.dot-${country}`)
             .data(values)
             .enter()
             .append('circle')
             .attr('class', `dot-${country}`)
-            .attr('cx', (d, i) => xScale(jahre[i]))
+            .attr('cx', (d, i) => xScale(years[i]))
             .attr('cy', d => yScale(d))
             .attr('r', 4)
             .style('fill', COUNTRY_COLORS[country] || '#333')
@@ -221,8 +221,8 @@ function updateTimeSeriesChart() {
                 const i = values.indexOf(d);
                 d3.select(this).style('opacity', 1);
                 showTooltip(tsTooltip,
-                    `<strong>${DATA.timeSeries.laender_namen[country]}</strong><br/>
-                     ${jahre[i]}: ${formatNumber(d)} EUR`,
+                    `<strong>${DATA.timeSeries.country_names[country]}</strong><br/>
+                     ${years[i]}: ${formatNumber(d)} EUR`,
                     event);
             })
             .on('mouseout', function() {
@@ -231,7 +231,7 @@ function updateTimeSeriesChart() {
             });
     });
 
-    // Legende
+    // Legend
     const legend = g.append('g')
         .attr('class', 'legend')
         .attr('transform', `translate(${width + 10}, 0)`);
@@ -252,13 +252,13 @@ function updateTimeSeriesChart() {
             .attr('x', 25)
             .attr('y', 4)
             .style('font-size', '11px')
-            .text(DATA.timeSeries.laender_namen[country] || country);
+            .text(DATA.timeSeries.country_names[country] || country);
     });
 }
 
-// Fenster-Resize
+// Window resize
 window.addEventListener('resize', () => {
-    if (document.getElementById('zeitreihen').classList.contains('active')) {
+    if (document.getElementById('timeseries').classList.contains('active')) {
         updateTimeSeriesChart();
     }
 });

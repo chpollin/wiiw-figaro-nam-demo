@@ -1,165 +1,165 @@
 # Exploration Extension Plan
 
-Plan fuer die Erweiterung der Phase-2-Exploration mit zusaetzlichen Scripts.
+Plan for extending Phase 2 exploration with additional scripts.
 
 ---
 
-## Zielsetzung
+## Objective
 
-Die bestehenden 4 Scripts decken Basis-Exploration ab. Diese Erweiterung soll:
-1. Tiefere Einblicke in die Datenstruktur liefern
-2. Baseline-Referenzen fuer Strukturbruch-Interpretation schaffen
-3. Bisher ungenutzte Dimensionen erschliessen (Exporte, IO-Verflechtung)
+The existing 4 scripts cover base exploration. This extension aims to:
+1. Provide deeper insights into data structure
+2. Create baseline references for structural break interpretation
+3. Unlock previously unused dimensions (exports, IO linkages)
 
 ---
 
-## Neue Scripts
+## New Scripts
 
 ### 05_baseline_trend.py
 
-**Zweck:** Langfristigen Trend 2010-2018 als Referenz fuer COVID-Bewertung berechnen
+**Purpose:** Calculate long-term trend 2010-2018 as reference for COVID evaluation
 
-**Analyse:**
-- Durchschnittliches jaehrliches Wachstum (CAGR) pro Aggregat und Land
-- Trendlinie extrapolieren auf 2020
-- Abweichung COVID-Jahr vom Trend quantifizieren
+**Analysis:**
+- Average annual growth (CAGR) per aggregate and country
+- Extrapolate trend line to 2020
+- Quantify COVID year deviation from trend
 
 **Output:**
-- `outputs/tables/baseline_trends.csv` - CAGR pro Land/Aggregat
-- `outputs/tables/trend_deviation_2020.csv` - Ist vs. Trend
+- `outputs/tables/baseline_trends.csv` - CAGR per country/aggregate
+- `outputs/tables/trend_deviation_2020.csv` - Actual vs. trend
 - `outputs/figures/trend_deviation_chart.png`
 
-**Nutzen:** Aussage wie "DE HH-Konsum lag 2020 um X% unter dem langfristigen Trend"
+**Benefit:** Statement like "DE HH consumption was X% below long-term trend in 2020"
 
 ---
 
 ### 06_export_analysis.py
 
-**Zweck:** Exportstruktur analysieren (Spiegelbild zu Script 02 Importe)
+**Purpose:** Analyze export structure (mirror of Script 02 imports)
 
-**Analyse:**
-- Top Exportdestinationen pro Land
-- Exportierte Produkte nach Kategorie
-- Export/Import-Bilanz pro Partner
+**Analysis:**
+- Top export destinations per country
+- Exported products by category
+- Export/import balance by partner
 
 **Output:**
 - `outputs/tables/DE_exports_by_partner.csv`
 - `outputs/tables/DE_exports_by_product.csv`
 - `outputs/tables/trade_balance_by_partner.csv`
 
-**Nutzen:** Vollstaendiges Handelsbild, nicht nur Importseite
+**Benefit:** Complete trade picture, not just import side
 
 ---
 
 ### 07_negative_values.py
 
-**Zweck:** Die 204k negativen Werte kategorisieren und verstehen
+**Purpose:** Categorize and understand the 204k negative values
 
-**Analyse:**
-- Verteilung nach Set_i/Set_j Kategorien
-- Zeitliche Entwicklung
-- Laenderunterschiede
+**Analysis:**
+- Distribution by Set_i/Set_j categories
+- Temporal development
+- Country differences
 
 **Output:**
 - `outputs/tables/negative_values_by_category.csv`
 - `outputs/tables/negative_values_by_year.csv`
 
-**Nutzen:** Verstaendnis der Adjustments/Balancing Items im Datensatz
+**Benefit:** Understanding of adjustments/balancing items in dataset
 
 ---
 
 ### 08_io_linkages.py
 
-**Zweck:** Input-Output-Verflechtungen zwischen Sektoren analysieren
+**Purpose:** Analyze input-output linkages between sectors
 
-**Analyse:**
-- Welche Sektoren sind Hauptlieferanten/Hauptabnehmer?
-- Vorwaerts- und Rueckwaertsverflechtung
-- Top-10 intersektorale Stroeme
+**Analysis:**
+- Which sectors are main suppliers/buyers?
+- Forward and backward linkages
+- Top 10 intersectoral flows
 
 **Output:**
 - `outputs/tables/sector_linkages_matrix.csv`
 - `outputs/tables/top_intersectoral_flows.csv`
 - `outputs/figures/sector_linkages_heatmap.png`
 
-**Nutzen:** Zeigt wirtschaftliche Abhaengigkeiten zwischen Branchen
+**Benefit:** Shows economic dependencies between industries
 
 ---
 
-## Erweiterungen bestehender Scripts
+## Extensions to Existing Scripts
 
-### 03_temporal_analysis.py - Erweiterungen
+### 03_temporal_analysis.py - Extensions
 
-| Erweiterung | Beschreibung |
-|-------------|--------------|
-| Mehr Laender | Alle 8 Sample-Laender detailliert, nicht nur DE |
-| Recovery-Analyse | 2021 vs 2019 - vollstaendige Erholung? |
-| Volatilitaet | Standardabweichung der YoY-Aenderungen |
+| Extension | Description |
+|-----------|-------------|
+| More countries | All 8 sample countries detailed, not just DE |
+| Recovery analysis | 2021 vs 2019 - complete recovery? |
+| Volatility | Standard deviation of YoY changes |
 
-### 04_visualizations.py - Erweiterungen
+### 04_visualizations.py - Extensions
 
-| Erweiterung | Beschreibung |
-|-------------|--------------|
-| Trend-Abweichung | Visualisierung aus 05_baseline_trend |
-| IO-Heatmap | Sektorverflechtung aus 08_io_linkages |
-| Handelsbilanz | Export/Import-Vergleich aus 06_export_analysis |
-
----
-
-## Dokumentation Updates
-
-| Datei | Update |
-|-------|--------|
-| `scripts/README.md` | Neue Scripts dokumentieren |
-| `knowledge/research.md` | Phase 2 Findings erweitern |
-| `knowledge/journal.md` | Session 4 dokumentieren |
-| `knowledge/data.md` | Negative Values Erklaerung ergaenzen |
+| Extension | Description |
+|-----------|-------------|
+| Trend deviation | Visualization from 05_baseline_trend |
+| IO heatmap | Sector linkages from 08_io_linkages |
+| Trade balance | Export/import comparison from 06_export_analysis |
 
 ---
 
-## Priorisierung
+## Documentation Updates
 
-| Prioritaet | Script | Aufwand | Nutzen |
-|------------|--------|---------|--------|
-| 1 (Hoch) | 05_baseline_trend | Niedrig | Verbessert COVID-Interpretation |
-| 2 (Hoch) | 07_negative_values | Niedrig | Klaert Datenverstaendnis |
-| 3 (Mittel) | 06_export_analysis | Mittel | Komplettiert Handelsbild |
-| 4 (Mittel) | 08_io_linkages | Hoch | Zeigt Wirtschaftsstruktur |
+| File | Update |
+|------|--------|
+| `scripts/README.md` | Document new scripts |
+| `knowledge/research.md` | Extend Phase 2 findings |
+| `knowledge/journal.md` | Document Session 4 |
+| `knowledge/data.md` | Add negative values explanation |
 
 ---
 
-## Zeitplan
+## Prioritization
+
+| Priority | Script | Effort | Benefit |
+|----------|--------|--------|---------|
+| 1 (High) | 05_baseline_trend | Low | Improves COVID interpretation |
+| 2 (High) | 07_negative_values | Low | Clarifies data understanding |
+| 3 (Medium) | 06_export_analysis | Medium | Completes trade picture |
+| 4 (Medium) | 08_io_linkages | High | Shows economic structure |
+
+---
+
+## Timeline
 
 **Phase 2b: Extended Exploration**
 
 ```
-05_baseline_trend.py     -> Ausfuehren -> Dokumentieren
-07_negative_values.py    -> Ausfuehren -> Dokumentieren
-06_export_analysis.py    -> Ausfuehren -> Dokumentieren
-08_io_linkages.py        -> Ausfuehren -> Dokumentieren
-04_visualizations.py     -> Erweitern  -> Neue Grafiken
+05_baseline_trend.py     -> Execute -> Document
+07_negative_values.py    -> Execute -> Document
+06_export_analysis.py    -> Execute -> Document
+08_io_linkages.py        -> Execute -> Document
+04_visualizations.py     -> Extend  -> New figures
 ```
 
-Nach Abschluss: Commit und Update der Dokumentation
+After completion: Commit and update documentation
 
 ---
 
-## Abhaengigkeiten
+## Dependencies
 
 ```mermaid
 graph LR
-    05[05_baseline_trend] --> 04ext[04_visualizations erweitert]
+    05[05_baseline_trend] --> 04ext[04_visualizations extended]
     06[06_export_analysis] --> 04ext
-    07[07_negative_values] --> data[data.md Update]
+    07[07_negative_values] --> data[data.md update]
     08[08_io_linkages] --> 04ext
 ```
 
 ---
 
-## Erfolgskriterien
+## Success Criteria
 
-- [ ] Alle 4 neuen Scripts laufen fehlerfrei
-- [ ] Neue CSVs in `outputs/tables/`
-- [ ] Neue PNGs in `outputs/figures/`
-- [ ] README und Dokumentation aktualisiert
-- [ ] Commit mit vollstaendiger Beschreibung
+- [ ] All 4 new scripts run without errors
+- [ ] New CSVs in `outputs/tables/`
+- [ ] New PNGs in `outputs/figures/`
+- [ ] README and documentation updated
+- [ ] Commit with complete description

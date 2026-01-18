@@ -10,132 +10,132 @@ This journal documents the collaboration between Christopher Pollin and Claude C
 
 ## Session Log
 
-### 2026-01-16 (Session 7) - Agentic Research Run: Energiekrise vs COVID-Erholung
+### 2026-01-16 (Session 7) - Agentic Research Run: Energy Crisis vs COVID Recovery
 
-**Objective:** Vollstaendiger agentenbasierter Forschungsdurchlauf mit Custom Subagents
+**Objective:** Complete agent-based research run with custom subagents
 
-**Workflow-Setup:**
-- Erstellung von drei Custom Subagents (`.claude/agents/`):
-  - `analysis-agent.md` - Datenexploration, Hypothesenbildung
-  - `implementation-agent.md` - Code-Entwicklung, Visualisierung
-  - `synthesis-agent.md` - Paper-Erstellung
-- Erweiterung von `CLAUDE.md` mit vollstaendiger Workflow-Dokumentation
-- Anlage der Arbeitsordner-Struktur (`agents/`, `runs/`)
+**Workflow Setup:**
+- Creation of three custom subagents (`.claude/agents/`):
+  - `analysis-agent.md` - Data exploration, hypothesis formation
+  - `implementation-agent.md` - Code development, visualization
+  - `synthesis-agent.md` - Paper writing
+- Extension of `CLAUDE.md` with complete workflow documentation
+- Creation of working directory structure (`agents/`, `runs/`)
 
-**Forschungsfrage:**
-> Hat die Energiekrise 2022 die COVID-Erholung in Suedeuropa gebremst?
+**Research Question:**
+> Did the 2022 energy crisis slow COVID recovery in Southern Europe?
 
 **Phase 1 - Exploration:**
-- 5 Hypothesen formuliert (H1-H5)
-- Integrierte Hypothese H_int aus H1+H4+H5 entwickelt
-- Expert-in-the-Loop Entscheidung: Portugal ergaenzen, nominal+real analysieren
+- 5 hypotheses formulated (H1-H5)
+- Integrated hypothesis H_int developed from H1+H4+H5
+- Expert-in-the-loop decision: Add Portugal, analyze nominal+real
 
-**Phase 2 - Implementierung:**
-- Portugal-Daten aus Parquet extrahiert (`scripts/11_extract_portugal.py`)
-- Hauptanalyse-Skript erstellt (`scripts/12_hypothesis_h_int.py`)
-- HICP-Deflatoren (Eurostat) integriert fuer Real-Berechnung
-- 3 Tabellen + 3 Grafiken generiert
+**Phase 2 - Implementation:**
+- Portugal data extracted from Parquet (`scripts/11_extract_portugal.py`)
+- Main analysis script created (`scripts/12_hypothesis_h_int.py`)
+- HICP deflators (Eurostat) integrated for real calculation
+- 3 tables + 3 figures generated
 
-**Phase 3 - Synthese:**
-- Paper erstellt: `runs/run-2026-01-16-1430/paper/paper.md`
-- Visuelle Qualitaetspruefung durch User identifizierte Grafikfehler
-- Korrekturen: Dynamischer Titel, korrekter Zeitraum, vollstaendige Datenpunkte
+**Phase 3 - Synthesis:**
+- Paper created: `runs/run-2026-01-16-1430/paper/paper.md`
+- Visual quality check by user identified chart errors
+- Corrections: Dynamic title, correct time period, complete data points
 
-**Zentrale Befunde:**
+**Key Findings:**
 
-| Teilhypothese | Status | Kernbefund |
-|---------------|--------|------------|
-| H5: Basis-Effekt | BESTAETIGT | r = -0.52, tieferer Einbruch erklaert hoehere Erholungsraten |
-| H1a: Sued nominal staerker | WIDERLEGT | Nord 113.1 vs. Sued 110.0 |
-| H1b: Sued real schwaecher | NICHT BESTAETIGT | Praktisch gleich (99.6 vs. 99.5) |
-| H4: Sued hoehere Fiskalexpansion | WIDERLEGT | Nord +19.7% vs. Sued +14.3% |
+| Sub-hypothesis | Status | Core Finding |
+|----------------|--------|--------------|
+| H5: Base effect | CONFIRMED | r = -0.52, deeper drop explains higher recovery rates |
+| H1a: South nominal stronger | REFUTED | North 113.1 vs. South 110.0 |
+| H1b: South real weaker | NOT CONFIRMED | Practically equal (99.6 vs. 99.5) |
+| H4: South higher fiscal expansion | REFUTED | North +19.7% vs. South +14.3% |
 
-**Ueberraschende Erkenntnisse:**
-1. Nordeuropa zeigt staerkere nominale Erholung (Energiepreis-Inflation)
-2. Deutschland fuehrt bei Staatskonsum-Expansion (+21.2%)
-3. Reale Konvergenz beider Regionen auf ~99.5% des Vorkrisenniveaus
+**Surprising Insights:**
+1. Northern Europe shows stronger nominal recovery (energy price inflation)
+2. Germany leads in government consumption expansion (+21.2%)
+3. Real convergence of both regions at ~99.5% of pre-crisis level
 
-**Dateien erstellt:**
+**Files Created:**
 
-| Datei | Beschreibung |
-|-------|--------------|
+| File | Description |
+|------|-------------|
 | `.claude/agents/analysis-agent.md` | Subagent: Exploration |
 | `.claude/agents/implementation-agent.md` | Subagent: Code |
 | `.claude/agents/synthesis-agent.md` | Subagent: Paper |
-| `scripts/11_extract_portugal.py` | PT-Daten Extraktion |
-| `scripts/12_hypothesis_h_int.py` | Hauptanalyse H_int |
-| `outputs/tables/PT_time_series.csv` | Portugal Zeitreihe |
-| `outputs/tables/recovery_comparison.csv` | Erholungsvergleich |
-| `outputs/tables/basis_effect_analysis.csv` | Basis-Effekt |
-| `outputs/tables/fiscal_response.csv` | Fiskalische Reaktion |
-| `outputs/figures/basis_effect_scatter.png` | Streudiagramm |
-| `outputs/figures/recovery_nominal_vs_real.png` | Erholungsbalken |
-| `outputs/figures/fiscal_cushion.png` | Fiskal-Grafik |
-| `runs/run-2026-01-16-1430/` | Vollstaendiger Run |
-| `agents/analysis/hypotheses.md` | Hypothesendokumentation |
+| `scripts/11_extract_portugal.py` | PT data extraction |
+| `scripts/12_hypothesis_h_int.py` | Main analysis H_int |
+| `outputs/tables/PT_time_series.csv` | Portugal time series |
+| `outputs/tables/recovery_comparison.csv` | Recovery comparison |
+| `outputs/tables/basis_effect_analysis.csv` | Base effect |
+| `outputs/tables/fiscal_response.csv` | Fiscal response |
+| `outputs/figures/basis_effect_scatter.png` | Scatter plot |
+| `outputs/figures/recovery_nominal_vs_real.png` | Recovery bars |
+| `outputs/figures/fiscal_cushion.png` | Fiscal chart |
+| `runs/run-2026-01-16-1430/` | Complete run |
+| `agents/analysis/hypotheses.md` | Hypothesis documentation |
 
-**Methodische Learnings:**
-- Custom Subagents erfordern Session-Neustart zum Laden
-- Visuelle Qualitaetspruefung durch User essentiell
-- Dynamische Titel verhindern Diskrepanzen zwischen Daten und Beschriftung
+**Methodological Learnings:**
+- Custom subagents require session restart to load
+- Visual quality check by user essential
+- Dynamic titles prevent discrepancies between data and labels
 
 **Phase Status:**
-- Phase 3 (Human-in-the-Loop): Erster vollstaendiger Run abgeschlossen
-- Agentic Workflow demonstriert und dokumentiert
+- Phase 3 (Human-in-the-Loop): First complete run finished
+- Agentic workflow demonstrated and documented
 
 ---
 
-### 2026-01-15 (Session 6) - Dashboard Erweiterung & UI-Refactoring
+### 2026-01-15 (Session 6) - Dashboard Extension & UI Refactoring
 
-**Objective:** Fehlende Visualisierungen hinzufuegen und CSS/HTML verbessern
+**Objective:** Add missing visualizations and improve CSS/HTML
 
-**Neue Visualisierungen:**
+**New Visualizations:**
 
-1. **Erholung-Tab** (`docs/js/recovery.js`)
-   - Recovery-Indikator: Vergleich mit Pre-COVID Niveau (2019 = 0%)
-   - Balkendiagramm mit 8 Laendern, sortiert nach Erholung
-   - Dropdown fuer Vergleichszeitraum (2021/2022/2023 vs 2019)
-   - Forschungsfrage B3: Hat die Energiekrise 2022 die COVID-Erholung gebremst?
+1. **Recovery Tab** (`docs/js/recovery.js`)
+   - Recovery indicator: Comparison with pre-COVID level (2019 = 0%)
+   - Bar chart with 8 countries, sorted by recovery
+   - Dropdown for comparison period (2021/2022/2023 vs 2019)
+   - Research question B3: Did the 2022 energy crisis slow COVID recovery?
 
-2. **Kreislauf-Tab** (`docs/js/sankey.js`)
-   - Sankey-Diagramm fuer Wirtschaftskreislauf
-   - Flow: Einkommen (D11, B2) -> Volkseinkommen -> Verwendung (P3, P51G)
-   - Jahr-Auswahl: 2019/2020/2022
-   - Forschungsfrage A1: Wie fliesst Wertschoepfung?
+2. **Circular Flow Tab** (`docs/js/sankey.js`)
+   - Sankey diagram for economic circular flow
+   - Flow: Income (D11, B2) -> National Income -> Use (P3, P51G)
+   - Year selection: 2019/2020/2022
+   - Research question A1: How does value added flow?
 
-3. **Handel: IPR-Ansicht** (Erweiterung `docs/js/trade.js`)
-   - Neue Option: "Importe nach Sektor (IPR)"
-   - Zeigt Import-Intensitaet nach Produktgruppe
-   - Dynamisches Label: "Anzahl Partner" vs "Anzahl Sektoren"
+3. **Trade: IPR View** (Extension `docs/js/trade.js`)
+   - New option: "Imports by Sector (IPR)"
+   - Shows import intensity by product group
+   - Dynamic label: "Number of Partners" vs "Number of Sectors"
 
-**CSS-Refactoring** (`docs/css/style.css`):
-- CSS Custom Properties (Design Tokens) fuer Farben, Spacing, Typografie
-- Responsive Breakpoints bei 768px und 480px
-- Verbesserte Accessibility mit Focus-States
-- Laenderfarben als CSS-Variablen
+**CSS Refactoring** (`docs/css/style.css`):
+- CSS Custom Properties (Design Tokens) for colors, spacing, typography
+- Responsive breakpoints at 768px and 480px
+- Improved accessibility with focus states
+- Country colors as CSS variables
 
-**HTML-Refactoring** (`docs/index.html`):
-- Semantische Elemente: `<article>`, `<figure>`, `<aside>`
-- ARIA-Labels fuer bessere Accessibility
-- Meta-Tags fuer SEO
+**HTML Refactoring** (`docs/index.html`):
+- Semantic elements: `<article>`, `<figure>`, `<aside>`
+- ARIA labels for better accessibility
+- Meta tags for SEO
 
-**Kleine UI-Verbesserungen:**
-- Erholung: X-Achsen-Labels 45 Grad rotiert (bottom margin 60->100)
-- Sankey: Distincte Farben (income=#059669, distribution=#7c3aed, use=#dc2626)
-- Handel: Label wechselt dynamisch je nach Modus
+**Minor UI Improvements:**
+- Recovery: X-axis labels rotated 45 degrees (bottom margin 60->100)
+- Sankey: Distinct colors (income=#059669, distribution=#7c3aed, use=#dc2626)
+- Trade: Label changes dynamically based on mode
 
-**Neue Dateien:**
+**New Files:**
 
-| Datei | Beschreibung |
-|-------|--------------|
-| `docs/js/recovery.js` | Recovery-Indikator Chart |
-| `docs/js/sankey.js` | Sankey-Diagramm |
-| `docs/data/sankey.json` | Kreislauf-Daten (3 Jahre) |
+| File | Description |
+|------|-------------|
+| `docs/js/recovery.js` | Recovery indicator chart |
+| `docs/js/sankey.js` | Sankey diagram |
+| `docs/data/sankey.json` | Circular flow data (3 years) |
 
-**Aktualisierte JSON-Groessen:**
+**Updated JSON Sizes:**
 
-| Datei | Groesse |
-|-------|---------|
+| File | Size |
+|------|------|
 | `time_series.json` | 15.0 KB |
 | `trade_partners.json` | 8.0 KB |
 | `sectors.json` | 21.9 KB |
@@ -145,8 +145,8 @@ This journal documents the collaboration between Christopher Pollin and Claude C
 | **Total** | **~57 KB** |
 
 **Phase Status:**
-- Phase 3 (Human-in-the-Loop): Dashboard erweitert auf 6 Tabs
-- Forschungsfragen-Abdeckung verbessert
+- Phase 3 (Human-in-the-Loop): Dashboard extended to 6 tabs
+- Research question coverage improved
 
 ---
 
@@ -184,7 +184,7 @@ This journal documents the collaboration between Christopher Pollin and Claude C
 3. **D3.js Visualizations (v7)**
    - Responsive SVG charts
    - Interactive tooltips
-   - Crisis markers (COVID 2020, Energiekrise 2022)
+   - Crisis markers (COVID 2020, Energy Crisis 2022)
    - Country color palette for multi-line comparison
 
 **Bug Fixes:**
@@ -267,7 +267,7 @@ This journal documents the collaboration between Christopher Pollin and Claude C
 - Implemented 4 new exploration scripts (05-08)
 - Executed all 4 scripts successfully
 - Fixed export analysis: FIGARO records exports in partner country data (m=exporter)
-- Extended glossary with ESA 2010 codes, FIGARO methodik, empirische Referenzwerte
+- Extended glossary with ESA 2010 codes, FIGARO methodology, empirical reference values
 - Updated research.md with Phase 2a/2b structure
 
 **Script Execution Results:**
@@ -338,18 +338,18 @@ COVID-19 Impact (2019-2020):
 | NL | -6.4% | +3.7% |
 | PL | -4.7% | +4.4% |
 
-Sektorale Asymmetrie (Germany):
-- Verlierer: N79 Travel -56%, H51 Airlines -46%, I Hotels -32%
-- Gewinner: Q86 Healthcare +22%, K66 Financial +14%, H53 Postal +11%
+Sectoral Asymmetry (Germany):
+- Losers: N79 Travel -56%, H51 Airlines -46%, I Hotels -32%
+- Winners: Q86 Healthcare +22%, K66 Financial +14%, H53 Postal +11%
 
 Energy Crisis (2021-2022):
-- Nominale HH-Konsumanstiege 10-19% (Inflationseffekt, nicht real)
+- Nominal HH consumption increases 10-19% (inflation effect, not real)
 - GR +19%, AT/PL +17%, NL +16%, ES +16%
 
 **Technical Learnings:**
-- PyArrow Hive-partitions: Filter-Werte muessen zum Spaltentyp passen
-- 70 Mio Zeilen performant mit partition pruning
-- Seaborn diverging palette fuer pos/neg Visualisierung
+- PyArrow Hive partitions: Filter values must match column type
+- 70 million rows performant with partition pruning
+- Seaborn diverging palette for pos/neg visualization
 
 **Files Created/Modified:**
 - `scripts/02_top_flows.py` - Fixed int filter
@@ -357,12 +357,12 @@ Energy Crisis (2021-2022):
 - `scripts/04_visualizations.py` - New visualization pipeline
 - `outputs/tables/*.csv` - 14 data tables
 - `outputs/figures/*.png` - 4 visualizations
-- `knowledge/ESA 2010 und FIGARO Referenzdokumentation.md` - Domain knowledge
+- `knowledge/ESA 2010 and FIGARO Reference Documentation.md` - Domain knowledge
 
 **Knowledge Gap Status:**
 | Topic | Status |
 |-------|--------|
-| ESA 2010 Codes (D, B, P) | Closed - see Referenzdoku |
+| ESA 2010 Codes (D, B, P) | Closed - see Reference Documentation |
 | Import dependency metrics | Closed - IPR, VS, FVASH documented |
 | FIGARO vs WIOD vs EXIOBASE | Closed - comparison table |
 | Core vs Periphery EU | Open - political definition |

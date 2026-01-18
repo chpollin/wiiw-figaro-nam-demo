@@ -1,43 +1,43 @@
-# Validierungsbericht: Hypothese H_int
+# Validation Report: Hypothesis H_int
 
 **Run:** run-2026-01-16-1430
-**Datum:** 2026-01-16
-**Status:** Analyse abgeschlossen
+**Date:** 2026-01-16
+**Status:** Analysis completed
 
 ---
 
-## 1. Hypothese
+## 1. Hypothesis
 
-> Suedeuropaeische Laender (ES, IT, GR, PT) zeigen 2022 eine staerkere nominale, aber schwaeachere reale Erholung als Nordeuropa (DE, AT, NL), wobei der Unterschied teilweise durch hoehere Staatskonsum-Expansion abgefedert wird. Der scheinbar staerkere nominale Rebound ist primaer ein Basis-Effekt des tieferen COVID-Einbruchs 2020.
+> Southern European countries (ES, IT, GR, PT) show stronger nominal but weaker real recovery in 2022 than Northern Europe (DE, AT, NL), with the difference partially cushioned by higher government consumption expansion. The apparently stronger nominal rebound is primarily a base effect of the deeper COVID drop in 2020.
 
 ---
 
-## 2. Datenquellen und Annahmen
+## 2. Data Sources and Assumptions
 
-### 2.1 FIGARO-NAM Daten
+### 2.1 FIGARO-NAM Data
 
-| Aspekt | Details |
+| Aspect | Details |
 |--------|---------|
-| Quelle | Eurostat FIGARO-NAM, via David Zenz (wiiw) |
-| Format | Apache Parquet, Hive-partitioniert |
-| Zeitraum | 2010-2023 |
-| Laender | DE, AT, NL (Nord); ES, IT, GR, PT (Sued); FR, PL (Vergleich) |
-| Variablen | P3_S14 (HH-Konsum), P3_S13 (Gov-Konsum), P51G (Investitionen) |
-| Einheit | Millionen EUR (nominal) |
+| Source | Eurostat FIGARO-NAM, via David Zenz (wiiw) |
+| Format | Apache Parquet, Hive-partitioned |
+| Period | 2010-2023 |
+| Countries | DE, AT, NL (North); ES, IT, GR, PT (South); FR, PL (Comparison) |
+| Variables | P3_S14 (HH consumption), P3_S13 (Gov consumption), P51G (Investment) |
+| Unit | Million EUR (nominal) |
 
-### 2.2 HICP-Deflator
+### 2.2 HICP Deflator
 
-| Aspekt | Details |
+| Aspect | Details |
 |--------|---------|
-| Quelle | Eurostat prc_hicp_aind (Harmonisierter Verbraucherpreisindex) |
-| Basisjahr | 2015=100 (Eurostat-Standard) |
-| Rebasierung | Auf 2019=100 umgerechnet fuer Analyse |
-| Stand | Januar 2024 Extrakt |
+| Source | Eurostat prc_hicp_aind (Harmonized Index of Consumer Prices) |
+| Base year | 2015=100 (Eurostat standard) |
+| Rebasing | Converted to 2019=100 for analysis |
+| Version | January 2024 extract |
 
-**HICP-Werte verwendet (2015=100):**
+**HICP values used (2015=100):**
 
-| Land | 2019 | 2020 | 2021 | 2022 | 2023 |
-|------|------|------|------|------|------|
+| Country | 2019 | 2020 | 2021 | 2022 | 2023 |
+|---------|------|------|------|------|------|
 | DE | 107.4 | 107.9 | 111.3 | 120.3 | 127.5 |
 | AT | 108.4 | 109.9 | 113.0 | 122.5 | 131.8 |
 | NL | 108.9 | 110.3 | 113.2 | 126.4 | 131.1 |
@@ -50,146 +50,146 @@
 
 ---
 
-## 3. Plausibilitaetspruefung
+## 3. Plausibility Check
 
-### 3.1 COVID-Einbruch 2020
+### 3.1 COVID Drop 2020
 
-| Land | Berechnet | Eurostat-Referenz | Plausibel? |
-|------|-----------|-------------------|------------|
-| ES | -17.0% | -12.4% (real) | Ja, nominal hoeher durch Deflation |
-| IT | -12.3% | -10.8% (real) | Ja |
-| GR | -16.1% | -7.8% (real) | Nominal hoeher als real erwartet |
-| PT | -12.3% | -6.9% (real) | Ja, Tourismus-Abhaengigkeit |
-| DE | -7.1% | -4.9% (real) | Ja |
-| AT | -10.1% | -8.5% (real) | Ja |
-| NL | -6.4% | -6.4% (real) | Exakt |
+| Country | Calculated | Eurostat Reference | Plausible? |
+|---------|-----------|-------------------|------------|
+| ES | -17.0% | -12.4% (real) | Yes, nominal higher due to deflation |
+| IT | -12.3% | -10.8% (real) | Yes |
+| GR | -16.1% | -7.8% (real) | Nominal higher than real expected |
+| PT | -12.3% | -6.9% (real) | Yes, tourism dependency |
+| DE | -7.1% | -4.9% (real) | Yes |
+| AT | -10.1% | -8.5% (real) | Yes |
+| NL | -6.4% | -6.4% (real) | Exact |
 
-**Bewertung:** Die nominalen Einbrueche sind konsistent mit bekannten Mustern. Suedeuropa mit Tourismus-Abhaengigkeit staerker betroffen.
+**Assessment:** Nominal drops are consistent with known patterns. Southern Europe with tourism dependency more affected.
 
-### 3.2 Erholung 2020-2022
+### 3.2 Recovery 2020-2022
 
-Die berechneten nominalen Erholungsraten (Sued: +28.6%, Nord: +22.7%) sind plausibel angesichts:
-- Nachholeffekte nach Lockdowns
-- Inflationaere Preissteigerungen 2021-2022
-- Tourismus-Erholung in Suedeuropa
+The calculated nominal recovery rates (South: +28.6%, North: +22.7%) are plausible given:
+- Catch-up effects after lockdowns
+- Inflationary price increases 2021-2022
+- Tourism recovery in Southern Europe
 
-### 3.3 Realer Index 2022
+### 3.3 Real Index 2022
 
-| Region | Nominal Index | Real Index | Differenz |
-|--------|---------------|------------|-----------|
-| Sued | 110.0 | 99.6 | +10.4 |
-| Nord | 113.1 | 99.5 | +13.6 |
+| Region | Nominal Index | Real Index | Difference |
+|--------|---------------|------------|------------|
+| South | 110.0 | 99.6 | +10.4 |
+| North | 113.1 | 99.5 | +13.6 |
 
-Die hoehere Nominal-Real-Differenz im Norden (DE, AT, NL) reflektiert die staerkere Energiepreisinflation 2022 in diesen Laendern.
-
----
-
-## 4. Kernergebnisse
-
-### 4.1 Basis-Effekt (H5) - BESTAETIGT
-
-| Metrik | Wert |
-|--------|------|
-| Korrelation Einbruch vs. Erholung | r = -0.523 |
-| p-Wert | 0.1486 |
-| Interpretation | Moderater negativer Zusammenhang |
-
-- Suedeuropa: Tieferer Einbruch (-14.4%) fuehrt zu staerkerer nominaler Erholung (+28.6%)
-- Nordeuropa: Geringerer Einbruch (-7.9%) mit moderaterer Erholung (+22.7%)
-- **Befund:** Basis-Effekt erklaert einen wesentlichen Teil der nominalen Divergenz
-
-### 4.2 Nominale vs. Reale Erholung (H1a, H1b) - NICHT BESTAETIGT
-
-| Erwartung | Beobachtung |
-|-----------|-------------|
-| Sued nominal staerker | Nord nominal staerker (113.1 vs. 110.0) |
-| Sued real schwaecher | Praktisch identisch (99.6 vs. 99.5) |
-
-**Ueberraschung:** Entgegen der Hypothese zeigt Nordeuropa eine staerkere nominale Erholung. Real konvergieren beide Regionen auf aehnliches Niveau.
-
-### 4.3 Fiskalische Abfederung (H4) - NICHT BESTAETIGT
-
-| Region | Gov-Wachstum 2019-2022 |
-|--------|------------------------|
-| Sued | +14.3% |
-| Nord | +19.7% |
-
-- **Ueberraschung:** Nordeuropa expandierte Staatskonsum staerker als Suedeuropa
-- Deutschland: +21.2% Gov-Wachstum (hoechster Wert)
-- Korrelation Gov-Wachstum vs. HH-Stabilitaet: r = 0.201 (schwach positiv)
+The higher nominal-real difference in the North (DE, AT, NL) reflects the stronger energy price inflation in 2022 in these countries.
 
 ---
 
-## 5. Bekannte Einschraenkungen
+## 4. Core Results
 
-### 5.1 Methodische Limitationen
+### 4.1 Base Effect (H5) - CONFIRMED
 
-| Einschraenkung | Auswirkung | Mitigation |
-|----------------|------------|------------|
-| Nominale Daten | Inflationseffekte verzerren Vergleiche | HICP-Deflation angewendet |
-| Aggregierte Konsumvariable | Keine Unterscheidung Gueterarten | Interpretationsvorsicht |
-| HICP als Deflator | Nicht perfekt fuer Konsum-Deflation | Standard-Methodik, akzeptabel |
-| Kleine Stichprobe (n=9) | Statistische Signifikanz begrenzt | Ergaenzende regionale Analyse |
+| Metric | Value |
+|--------|-------|
+| Correlation drop vs. recovery | r = -0.523 |
+| p-value | 0.1486 |
+| Interpretation | Moderate negative relationship |
 
-### 5.2 Datenqualitaet
+- Southern Europe: Deeper drop (-14.4%) leads to stronger nominal recovery (+28.6%)
+- Northern Europe: Smaller drop (-7.9%) with more moderate recovery (+22.7%)
+- **Finding:** Base effect explains a substantial part of the nominal divergence
 
-| Aspekt | Status |
+### 4.2 Nominal vs. Real Recovery (H1a, H1b) - NOT CONFIRMED
+
+| Expectation | Observation |
+|-------------|-------------|
+| South nominal stronger | North nominal stronger (113.1 vs. 110.0) |
+| South real weaker | Practically identical (99.6 vs. 99.5) |
+
+**Surprise:** Contrary to the hypothesis, Northern Europe shows stronger nominal recovery. Real values converge to similar levels.
+
+### 4.3 Fiscal Cushioning (H4) - NOT CONFIRMED
+
+| Region | Gov Growth 2019-2022 |
+|--------|---------------------|
+| South | +14.3% |
+| North | +19.7% |
+
+- **Surprise:** Northern Europe expanded government consumption more than Southern Europe
+- Germany: +21.2% Gov growth (highest value)
+- Correlation gov growth vs. HH stability: r = 0.201 (weak positive)
+
+---
+
+## 5. Known Limitations
+
+### 5.1 Methodological Limitations
+
+| Limitation | Impact | Mitigation |
+|------------|--------|------------|
+| Nominal data | Inflation effects distort comparisons | HICP deflation applied |
+| Aggregated consumption variable | No distinction of goods types | Interpretation caution |
+| HICP as deflator | Not perfect for consumption deflation | Standard methodology, acceptable |
+| Small sample (n=9) | Limited statistical significance | Supplementary regional analysis |
+
+### 5.2 Data Quality
+
+| Aspect | Status |
 |--------|--------|
-| Vollstaendigkeit | Alle Jahre 2010-2023 vorhanden |
-| Konsistenz | Zeitreihen konsistent, keine Brueche |
-| Aktualitaet | Daten bis 2023 |
+| Completeness | All years 2010-2023 present |
+| Consistency | Time series consistent, no breaks |
+| Timeliness | Data through 2023 |
 
-### 5.3 Interpretationsvorbehalte
+### 5.3 Interpretation Caveats
 
-1. **Sektorale Heterogenitaet:** Tourismus-lastige Sektoren in Suedeuropa erklaeren tieferen Einbruch, aber auch staerkere Erholung
-2. **Fiskal-Timing:** Die Gov-Konsum-Expansion erfolgte mit unterschiedlichem Timing; 2020-sofortige Reaktion vs. 2021-2022 Nachholeffekte
-3. **Strukturelle Unterschiede:** Nordeuropas hoehere absolute Niveaus bedeuten, dass prozentuale Vergleiche relative Effekte abbilden
-
----
-
-## 6. Gesamtbewertung
-
-| Teilhypothese | Status | Evidenz |
-|---------------|--------|---------|
-| H5: Basis-Effekt | BESTAETIGT | r = -0.52, Sued tieferer Einbruch |
-| H1a: Sued nominal staerker | WIDERLEGT | Nord 113.1 vs. Sued 110.0 |
-| H1b: Sued real schwaecher | NICHT BESTAETIGT | Praktisch gleich (99.6 vs. 99.5) |
-| H4: Sued hoehere Fiskalexpansion | WIDERLEGT | Nord +19.7% vs. Sued +14.3% |
-
-### Schlussfolgerung
-
-**Die integrierte Hypothese H_int ist TEILWEISE BESTAETIGT:**
-
-1. **Bestaetigt:** Der Basis-Effekt ist evident - tieferer COVID-Einbruch korreliert mit staerkerer nominaler Erholung (r = -0.52)
-
-2. **Widerlegt:** Die Annahme, Suedeuropa zeige eine staerkere nominale Erholung, trifft nicht zu. Nordeuropa weist 2022 hoehere nominale Indizes auf (113.1 vs. 110.0)
-
-3. **Widerlegt:** Die fiskalische Abfederung war in Nordeuropa staerker, nicht in Suedeuropa
-
-4. **Neutral:** Real haben beide Regionen praktisch identische Erholungsniveaus erreicht (Sued 99.6, Nord 99.5)
-
-### Unerwartete Befunde
-
-- **Nordeuropas Fiskalexpansion:** Insbesondere Deutschland (+21.2%) zeigte die hoechste Staatskonsum-Expansion, wider Erwarten
-- **Reale Konvergenz:** Trotz unterschiedlicher nominaler Pfade konvergieren beide Regionen real auf aehnliches Niveau
-- **Polens Outperformance:** Mit +21.9% netto (2019-2022) zeigt Polen die staerkste Erholung, gefolgt von NL (+18.2%)
+1. **Sectoral Heterogeneity:** Tourism-heavy sectors in Southern Europe explain deeper drop but also stronger recovery
+2. **Fiscal Timing:** Gov consumption expansion occurred with different timing; 2020-immediate response vs. 2021-2022 catch-up effects
+3. **Structural Differences:** Northern Europe's higher absolute levels mean percentage comparisons show relative effects
 
 ---
 
-## 7. Dateien
+## 6. Overall Assessment
 
-| Datei | Beschreibung |
-|-------|--------------|
-| `scripts/11_extract_portugal.py` | Portugal-Datenextraktion |
-| `scripts/12_hypothesis_h_int.py` | Hauptanalyse H_int |
-| `outputs/tables/PT_time_series.csv` | Portugal Zeitreihe |
-| `outputs/tables/basis_effect_analysis.csv` | Basis-Effekt Analyse |
-| `outputs/tables/recovery_comparison.csv` | Erholungsindizes |
-| `outputs/tables/fiscal_response.csv` | Fiskalische Reaktion |
-| `outputs/figures/basis_effect_scatter.png` | Streudiagramm Basis-Effekt |
-| `outputs/figures/recovery_nominal_vs_real.png` | Balkendiagramm Erholung |
-| `outputs/figures/fiscal_cushion.png` | Grafik Fiskalische Abfederung |
+| Sub-hypothesis | Status | Evidence |
+|----------------|--------|----------|
+| H5: Base effect | CONFIRMED | r = -0.52, South deeper drop |
+| H1a: South nominal stronger | REFUTED | North 113.1 vs. South 110.0 |
+| H1b: South real weaker | NOT CONFIRMED | Practically equal (99.6 vs. 99.5) |
+| H4: South higher fiscal expansion | REFUTED | North +19.7% vs. South +14.3% |
+
+### Conclusion
+
+**The integrated hypothesis H_int is PARTIALLY CONFIRMED:**
+
+1. **Confirmed:** The base effect is evident - deeper COVID drop correlates with stronger nominal recovery (r = -0.52)
+
+2. **Refuted:** The assumption that Southern Europe shows stronger nominal recovery is not true. Northern Europe has higher nominal indices in 2022 (113.1 vs. 110.0)
+
+3. **Refuted:** Fiscal cushioning was stronger in Northern Europe, not Southern Europe
+
+4. **Neutral:** Real values have reached practically identical recovery levels (South 99.6, North 99.5)
+
+### Unexpected Findings
+
+- **Northern Europe's Fiscal Expansion:** Germany in particular (+21.2%) showed the highest government consumption expansion, contrary to expectations
+- **Real Convergence:** Despite different nominal paths, both regions converge to similar real levels
+- **Poland's Outperformance:** With +21.9% net (2019-2022), Poland shows the strongest recovery, followed by NL (+18.2%)
 
 ---
 
-*Erstellt: 2026-01-16 | Run: run-2026-01-16-1430*
+## 7. Files
+
+| File | Description |
+|------|-------------|
+| `scripts/11_extract_portugal.py` | Portugal data extraction |
+| `scripts/12_hypothesis_h_int.py` | Main analysis H_int |
+| `outputs/tables/PT_time_series.csv` | Portugal time series |
+| `outputs/tables/basis_effect_analysis.csv` | Base effect analysis |
+| `outputs/tables/recovery_comparison.csv` | Recovery indices |
+| `outputs/tables/fiscal_response.csv` | Fiscal response |
+| `outputs/figures/basis_effect_scatter.png` | Scatter plot base effect |
+| `outputs/figures/recovery_nominal_vs_real.png` | Bar chart recovery |
+| `outputs/figures/fiscal_cushion.png` | Fiscal cushioning chart |
+
+---
+
+*Created: 2026-01-16 | Run: run-2026-01-16-1430*
