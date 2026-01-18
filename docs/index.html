@@ -7,8 +7,8 @@
     <meta name="author" content="wiiw - Vienna Institute for International Economic Studies">
     <title>FIGARO-NAM Explorer | EU National Accounts</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js" integrity="sha384-sF7JCGEFLfE2KNS4xgqQhfNaOBCHf2KuPReT0j9oP9A8pY+r7zAAZ7P5Q6+RfQtU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js" integrity="sha384-mMWRkxHp6NvdaKQoMJpEHAUQdrBEWqLXSc0nJGpVlY3vOOuJ8rXz4Q9gqD3Qi1hS" crossorigin="anonymous"></script>
 </head>
 <body>
     <header role="banner">
@@ -124,6 +124,12 @@
         <article id="trade" class="tab-content" role="tabpanel" aria-labelledby="tab-trade">
             <div class="controls">
                 <div class="control-group">
+                    <label for="trade-country">Country</label>
+                    <select id="trade-country">
+                        <option value="DE">Germany</option>
+                    </select>
+                </div>
+                <div class="control-group">
                     <label for="trade-mode">View</label>
                     <select id="trade-mode">
                         <option value="exports">Exports by Partner</option>
@@ -142,13 +148,19 @@
                 <svg id="chart-handel"></svg>
             </figure>
             <aside class="chart-info">
-                <p><strong>Research Question D1:</strong> Which sectors show the highest import dependency in Germany?</p>
+                <p><strong>Research Question D1:</strong> Which sectors show the highest import dependency in each country?</p>
             </aside>
         </article>
 
         <!-- Sectors Tab -->
         <article id="sectors" class="tab-content" role="tabpanel" aria-labelledby="tab-sectors">
             <div class="controls">
+                <div class="control-group">
+                    <label for="sectors-country">Country</label>
+                    <select id="sectors-country">
+                        <option value="DE">Germany</option>
+                    </select>
+                </div>
                 <div class="control-group">
                     <label id="year-buttons-label">Year (YoY Change)</label>
                     <div class="button-group" role="group" aria-labelledby="year-buttons-label">
@@ -177,6 +189,12 @@
         <article id="linkages" class="tab-content" role="tabpanel" aria-labelledby="tab-linkages">
             <div class="controls">
                 <div class="control-group">
+                    <label for="linkages-country">Country</label>
+                    <select id="linkages-country">
+                        <option value="DE">Germany</option>
+                    </select>
+                </div>
+                <div class="control-group">
                     <label for="linkage-mode">Linkage Type</label>
                     <select id="linkage-mode">
                         <option value="backward">Backward Linkages (Inputs)</option>
@@ -189,7 +207,7 @@
                 <svg id="chart-verflechtung"></svg>
             </figure>
             <aside class="chart-info">
-                <p><strong>Research Question A1:</strong> How are sectors in Germany interconnected?</p>
+                <p><strong>Research Question A1:</strong> How are sectors interconnected in each country?</p>
             </aside>
         </article>
     </main>

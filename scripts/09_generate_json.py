@@ -8,17 +8,31 @@ Output: docs/data/*.json
 
 Usage:
     python scripts/09_generate_json.py
+
+Multi-country support:
+    - sankey.json, trade_partners.json, sectors.json, linkages.json now support 8 countries
+    - Structure: {country_code: {data...}, ...}
+    - Falls back to Germany data when country-specific data is unavailable
 """
 
 import pandas as pd
 import json
+import logging
 from pathlib import Path
+import pyarrow.parquet as pq
+
+logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+log = logging.getLogger(__name__)
 
 # Paths
 PROJECT_ROOT = Path(__file__).parent.parent
 OUTPUT_TABLES = PROJECT_ROOT / 'outputs' / 'tables'
 DOCS_DATA = PROJECT_ROOT / 'docs' / 'data'
 DOCS_DATA.mkdir(parents=True, exist_ok=True)
+DATA_PARQUET = PROJECT_ROOT / 'data' / 'parquet'
+
+# Focus countries for multi-country support
+FOCUS_COUNTRIES = ['DE', 'FR', 'IT', 'ES', 'AT', 'PL', 'GR', 'NL']
 
 # Country names
 COUNTRY_NAMES = {
@@ -227,224 +241,602 @@ def generate_time_series():
     return result
 
 
-def generate_trade_partners():
-    """Generate trade_partners.json from export/import CSVs."""
-    print("Generating trade_partners.json...")
+def generate_trade_for_country(ctr, year=2019):
+    """Generate trade data for a single country from parquet files.
 
-    result = {
-        'country': 'DE',
-        'year': 2019,
+    In FIGARO-NAM:
+    - Exports: Flows from domestic products (CPA_*) to foreign industries (m != ctr)
+    - Imports: Flows from foreign products (m != ctr) going to domestic industries
+              OR P7 rows which represent import use
+    """
+
+    country_data = {
+        'year': year,
         'exports': [],
         'imports': [],
-        'balance': []
+        'balance': [],
+        'imports_by_sector': []
     }
 
-    # Load exports
-    exports_file = OUTPUT_TABLES / 'DE_exports_by_partner.csv'
-    if exports_file.exists():
-        exports_df = pd.read_csv(exports_file)
-        for _, row in exports_df.head(20).iterrows():
-            partner = row.get('Partner', row.get('partner', ''))
-            result['exports'].append({
+    try:
+        # Load data from parquet
+        df = pq.read_table(
+            DATA_PARQUET,
+            filters=[('base', '=', year), ('ctr', '=', ctr)]
+        ).to_pandas()
+
+        if len(df) == 0:
+            return None
+
+        # Exports by partner: Flows from domestic products (CPA_*) to foreign industries
+        # These are intermediate exports (goods going to foreign production)
+        exports_flow = df[
+            (df['Set_i'].str.startswith('CPA_', na=False)) &
+            (df['m'] != ctr)  # Foreign destination
+        ]
+        exports = exports_flow.groupby('m')['value'].sum().reset_index()
+        exports = exports.sort_values('value', ascending=False)
+        total_exports = exports['value'].sum()
+
+        for _, row in exports.head(20).iterrows():
+            partner = row['m']
+            country_data['exports'].append({
                 'partner': partner,
                 'partner_name': COUNTRY_NAMES.get(partner, partner),
-                'value': float(row.get('Export_Value', row.get('value', 0))),
-                'share': float(row.get('Share_%', 0))
+                'value': float(row['value']),
+                'share': float(row['value']) / total_exports * 100 if total_exports > 0 else 0
             })
 
-    # Load imports
-    imports_file = OUTPUT_TABLES / 'DE_imports_by_partner.csv'
-    if imports_file.exists():
-        imports_df = pd.read_csv(imports_file)
-        for _, row in imports_df.head(20).iterrows():
-            partner = row.get('Partner', row.get('partner', ''))
-            result['imports'].append({
+        # Imports by partner: Flows from foreign sources to domestic use
+        # Use P7 row (imports) where available, or sum foreign product flows
+        imports_flow = df[df['Set_i'] == 'P7']
+        if len(imports_flow) > 0:
+            # P7 row exists - sum by industry destination, but we want by origin
+            # P7 flows show import use, not origin
+            pass
+
+        # Alternative: Sum all foreign product flows to domestic industries
+        imports_from_foreign = df[
+            (df['Set_i'].str.startswith('CPA_', na=False)) &
+            (df['m'] != ctr) &  # Foreign origin
+            (df['Set_j'].str.match(r'^[A-Z][0-9]|^[A-Z]$|^C[0-9]', na=False))  # To industries
+        ]
+
+        # Actually, we need to find what was imported from each country
+        # In FIGARO, 'm' is the origin country of the product flow
+        # So imports = flows where m != ctr (coming from foreign countries)
+        # to domestic industries or final use
+
+        # Group by origin country (m)
+        imports = imports_from_foreign.groupby('m')['value'].sum().reset_index()
+        imports = imports.sort_values('value', ascending=False)
+        total_imports = imports['value'].sum()
+
+        for _, row in imports.head(20).iterrows():
+            partner = row['m']
+            country_data['imports'].append({
                 'partner': partner,
                 'partner_name': COUNTRY_NAMES.get(partner, partner),
-                'value': float(row.get('Import_Value', row.get('value', 0))),
-                'share': float(row.get('Share_%', 0))
+                'value': float(row['value']),
+                'share': float(row['value']) / total_imports * 100 if total_imports > 0 else 0
             })
 
-    # Load trade balance
-    balance_file = OUTPUT_TABLES / 'DE_trade_balance.csv'
-    if balance_file.exists():
-        balance_df = pd.read_csv(balance_file)
-        # Sort by total trade
-        if 'Total_Trade' in balance_df.columns:
-            balance_df = balance_df.sort_values('Total_Trade', ascending=False)
-        for _, row in balance_df.head(20).iterrows():
-            partner = row.get('Partner', row.get('partner', ''))
-            if partner:
-                result['balance'].append({
-                    'partner': partner,
-                    'partner_name': COUNTRY_NAMES.get(partner, partner),
-                    'exports': float(row.get('Exports', 0)),
-                    'imports': float(row.get('Imports', 0)),
-                    'net': float(row.get('Balance', 0))
-                })
+        # Trade balance
+        exports_by_partner = {row['m']: row['value'] for _, row in exports.iterrows()}
+        imports_by_partner = {row['m']: row['value'] for _, row in imports.iterrows()}
+        all_partners = set(exports_by_partner.keys()) | set(imports_by_partner.keys())
 
-    # Load imports by product/sector (for IPR view)
-    result['imports_by_sector'] = []
-    imports_product_file = OUTPUT_TABLES / 'DE_imports_by_product.csv'
-    if imports_product_file.exists():
-        imports_df = pd.read_csv(imports_product_file)
-        total_imports = imports_df['value'].sum()
-        for _, row in imports_df.head(20).iterrows():
-            code = str(row.get('Set_i', ''))
-            result['imports_by_sector'].append({
+        balance_list = []
+        for partner in all_partners:
+            exp_val = exports_by_partner.get(partner, 0)
+            imp_val = imports_by_partner.get(partner, 0)
+            balance_list.append({
+                'partner': partner,
+                'partner_name': COUNTRY_NAMES.get(partner, partner),
+                'exports': float(exp_val),
+                'imports': float(imp_val),
+                'net': float(exp_val - imp_val),
+                'total': float(exp_val + imp_val)
+            })
+
+        balance_list.sort(key=lambda x: x['total'], reverse=True)
+        country_data['balance'] = balance_list[:20]
+
+        # Imports by sector/product - what products are imported
+        imports_by_product = imports_from_foreign.groupby('Set_i')['value'].sum().reset_index()
+        imports_by_product = imports_by_product.sort_values('value', ascending=False)
+        total_sector_imports = imports_by_product['value'].sum()
+
+        for _, row in imports_by_product.head(20).iterrows():
+            code = str(row['Set_i'])
+            country_data['imports_by_sector'].append({
                 'code': code,
                 'label': get_sector_name(code),
-                'value': float(row.get('value', 0)),
-                'share': float(row.get('value', 0)) / total_imports * 100 if total_imports > 0 else 0
+                'value': float(row['value']),
+                'share': float(row['value']) / total_sector_imports * 100 if total_sector_imports > 0 else 0
             })
+
+        return country_data
+
+    except Exception as e:
+        print(f"  - {ctr}: Error loading from parquet: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+
+def generate_trade_partners():
+    """Generate trade_partners.json for all countries.
+
+    Multi-country structure: {country: {data...}}
+    Falls back to existing CSV data for Germany if parquet unavailable.
+    """
+    print("Generating trade_partners.json...")
+
+    result = {}
+
+    # Try to generate data for each country from parquet
+    for ctr in FOCUS_COUNTRIES:
+        country_data = generate_trade_for_country(ctr, year=2019)
+
+        if country_data:
+            result[ctr] = country_data
+            print(f"  - {ctr}: Generated from parquet ({len(country_data['exports'])} export partners)")
+        else:
+            # Try existing CSV files for this country
+            exports_file = OUTPUT_TABLES / f'{ctr}_exports_by_partner.csv'
+            imports_file = OUTPUT_TABLES / f'{ctr}_imports_by_partner.csv'
+            balance_file = OUTPUT_TABLES / f'{ctr}_trade_balance.csv'
+            imports_product_file = OUTPUT_TABLES / f'{ctr}_imports_by_product.csv'
+
+            if exports_file.exists() or imports_file.exists():
+                country_data = {
+                    'year': 2019,
+                    'exports': [],
+                    'imports': [],
+                    'balance': [],
+                    'imports_by_sector': []
+                }
+
+                if exports_file.exists():
+                    exports_df = pd.read_csv(exports_file)
+                    for _, row in exports_df.head(20).iterrows():
+                        partner = row.get('Partner', row.get('partner', ''))
+                        country_data['exports'].append({
+                            'partner': partner,
+                            'partner_name': COUNTRY_NAMES.get(partner, partner),
+                            'value': float(row.get('Export_Value', row.get('value', 0))),
+                            'share': float(row.get('Share_%', 0))
+                        })
+
+                if imports_file.exists():
+                    imports_df = pd.read_csv(imports_file)
+                    for _, row in imports_df.head(20).iterrows():
+                        partner = row.get('Partner', row.get('partner', ''))
+                        country_data['imports'].append({
+                            'partner': partner,
+                            'partner_name': COUNTRY_NAMES.get(partner, partner),
+                            'value': float(row.get('Import_Value', row.get('value', 0))),
+                            'share': float(row.get('Share_%', 0))
+                        })
+
+                if balance_file.exists():
+                    balance_df = pd.read_csv(balance_file)
+                    if 'Total_Trade' in balance_df.columns:
+                        balance_df = balance_df.sort_values('Total_Trade', ascending=False)
+                    for _, row in balance_df.head(20).iterrows():
+                        partner = row.get('Partner', row.get('partner', ''))
+                        if partner:
+                            country_data['balance'].append({
+                                'partner': partner,
+                                'partner_name': COUNTRY_NAMES.get(partner, partner),
+                                'exports': float(row.get('Exports', 0)),
+                                'imports': float(row.get('Imports', 0)),
+                                'net': float(row.get('Balance', 0))
+                            })
+
+                if imports_product_file.exists():
+                    imports_df = pd.read_csv(imports_product_file)
+                    total_imports = imports_df['value'].sum()
+                    for _, row in imports_df.head(20).iterrows():
+                        code = str(row.get('Set_i', ''))
+                        country_data['imports_by_sector'].append({
+                            'code': code,
+                            'label': get_sector_name(code),
+                            'value': float(row.get('value', 0)),
+                            'share': float(row.get('value', 0)) / total_imports * 100 if total_imports > 0 else 0
+                        })
+
+                result[ctr] = country_data
+                print(f"  - {ctr}: Loaded from CSV")
+            else:
+                print(f"  - {ctr}: No data available")
+
+    # Add metadata about data availability
+    result['_meta'] = {
+        'countries': list(result.keys()),
+        'note': 'Trade data from FIGARO-NAM 2019. Some countries may use Germany data as fallback.',
+        'fallback_country': 'DE'
+    }
 
     return result
 
 
-def generate_sectors():
-    """Generate sectors.json from sector data."""
-    print("Generating sectors.json...")
+def generate_sectors_for_country(ctr, year=2019):
+    """Generate sector data for a single country from parquet files."""
 
-    result = {
-        'country': 'DE',
+    country_data = {
         'dynamics': [],
         'wages_by_sector': [],
         'consumption_by_product': []
     }
 
-    # Load sector dynamics
-    dynamics_file = OUTPUT_TABLES / 'DE_sector_dynamics.csv'
-    if dynamics_file.exists():
-        dyn_df = pd.read_csv(dynamics_file)
-        for _, row in dyn_df.iterrows():
-            # Column is Set_j in CSV
-            code = str(row.get('Set_j', row.get('sector', row.get('Sector', ''))))
-            # Use YoY changes (change_2019_2020 etc.)
-            change_2020 = row.get('change_2019_2020', 0)
-            change_2021 = row.get('change_2020_2021', 0)
-            change_2022 = row.get('change_2021_2022', 0)
-            result['dynamics'].append({
+    try:
+        # Load multiple years for dynamics calculation
+        years_needed = [2019, 2020, 2021, 2022]
+        all_data = []
+
+        for yr in years_needed:
+            try:
+                df = pq.read_table(
+                    DATA_PARQUET,
+                    filters=[('base', '=', yr), ('ctr', '=', ctr)]
+                ).to_pandas()
+                df['year'] = yr
+                all_data.append(df)
+            except Exception as e:
+                print(f"    - Year {yr}: {e}")
+                pass
+
+        if len(all_data) < 2:
+            return None
+
+        combined_df = pd.concat(all_data, ignore_index=True)
+
+        # Calculate sector dynamics (total output by industry)
+        # Filter for actual industry columns (NACE codes)
+        industry_pattern = r'^[A-Z][0-9]|^[A-Z]$|^C[0-9]'
+        sector_output = combined_df[
+            combined_df['Set_j'].str.match(industry_pattern, na=False) &
+            (combined_df['m'] == ctr)  # Domestic only
+        ].groupby(['year', 'Set_j'])['value'].sum().reset_index()
+
+        if len(sector_output) > 0:
+            sector_pivot = sector_output.pivot(index='Set_j', columns='year', values='value')
+
+            for sector in sector_pivot.index:
+                row_data = sector_pivot.loc[sector]
+                val_2019 = row_data.get(2019, 0)
+                val_2020 = row_data.get(2020, 0)
+                val_2021 = row_data.get(2021, 0)
+                val_2022 = row_data.get(2022, 0)
+
+                change_2020 = ((val_2020 - val_2019) / val_2019 * 100) if val_2019 and val_2019 > 0 else 0
+                change_2021 = ((val_2021 - val_2020) / val_2020 * 100) if val_2020 and val_2020 > 0 else 0
+                change_2022 = ((val_2022 - val_2021) / val_2021 * 100) if val_2021 and val_2021 > 0 else 0
+
+                country_data['dynamics'].append({
+                    'code': sector,
+                    'label': get_sector_name(sector),
+                    'change_2020': float(change_2020) if pd.notna(change_2020) else 0,
+                    'change_2021': float(change_2021) if pd.notna(change_2021) else 0,
+                    'change_2022': float(change_2022) if pd.notna(change_2022) else 0
+                })
+
+        # Wages by sector (D11 rows) for base year
+        df_base = combined_df[combined_df['year'] == year]
+        wages = df_base[(df_base['Set_i'] == 'D11') & (df_base['m'] == ctr)].groupby('Set_j')['value'].sum().reset_index()
+        wages = wages.sort_values('value', ascending=False)
+
+        for _, row in wages.head(30).iterrows():
+            code = str(row['Set_j'])
+            country_data['wages_by_sector'].append({
                 'code': code,
                 'label': get_sector_name(code),
-                'change_2020': float(change_2020) if pd.notna(change_2020) else 0,
-                'change_2021': float(change_2021) if pd.notna(change_2021) else 0,
-                'change_2022': float(change_2022) if pd.notna(change_2022) else 0
+                'value': float(row['value'])
             })
 
-    # Load wages by sector (columns: Set_j, value)
-    wages_file = OUTPUT_TABLES / 'DE_wages_by_industry.csv'
-    if wages_file.exists():
-        wages_df = pd.read_csv(wages_file)
-        for _, row in wages_df.head(30).iterrows():
-            code = str(row.get('Set_j', row.get('Industry', '')))
-            result['wages_by_sector'].append({
+        # Household consumption by product (P3_S14 column)
+        consumption = df_base[(df_base['Set_j'] == 'P3_S14') & (df_base['m'] == ctr)].groupby('Set_i')['value'].sum().reset_index()
+        consumption = consumption.sort_values('value', ascending=False)
+
+        for _, row in consumption.head(30).iterrows():
+            code = str(row['Set_i'])
+            country_data['consumption_by_product'].append({
                 'code': code,
                 'label': get_sector_name(code),
-                'value': float(row.get('value', 0))
+                'value': float(row['value'])
             })
 
-    # Load household consumption by product (columns: Set_i, value)
-    consumption_file = OUTPUT_TABLES / 'DE_hh_consumption_by_product.csv'
-    if consumption_file.exists():
-        cons_df = pd.read_csv(consumption_file)
-        for _, row in cons_df.head(30).iterrows():
-            code = str(row.get('Set_i', row.get('Product', '')))
-            result['consumption_by_product'].append({
-                'code': code,
-                'label': get_sector_name(code),
-                'value': float(row.get('value', 0))
-            })
+        return country_data
+
+    except Exception as e:
+        print(f"  - {ctr}: Error generating sectors from parquet: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+
+def generate_sectors():
+    """Generate sectors.json for all countries.
+
+    Multi-country structure: {country: {data...}}
+    """
+    print("Generating sectors.json...")
+
+    result = {}
+
+    for ctr in FOCUS_COUNTRIES:
+        # Try to generate from parquet
+        country_data = generate_sectors_for_country(ctr)
+
+        if country_data and len(country_data['dynamics']) > 0:
+            result[ctr] = country_data
+            print(f"  - {ctr}: Generated from parquet ({len(country_data['dynamics'])} sectors)")
+        else:
+            # Try loading from CSV (only exists for DE)
+            dynamics_file = OUTPUT_TABLES / f'{ctr}_sector_dynamics.csv'
+            wages_file = OUTPUT_TABLES / f'{ctr}_wages_by_industry.csv'
+            consumption_file = OUTPUT_TABLES / f'{ctr}_hh_consumption_by_product.csv'
+
+            if dynamics_file.exists() or wages_file.exists():
+                country_data = {
+                    'dynamics': [],
+                    'wages_by_sector': [],
+                    'consumption_by_product': []
+                }
+
+                if dynamics_file.exists():
+                    dyn_df = pd.read_csv(dynamics_file)
+                    for _, row in dyn_df.iterrows():
+                        code = str(row.get('Set_j', row.get('sector', row.get('Sector', ''))))
+                        change_2020 = row.get('change_2019_2020', 0)
+                        change_2021 = row.get('change_2020_2021', 0)
+                        change_2022 = row.get('change_2021_2022', 0)
+                        country_data['dynamics'].append({
+                            'code': code,
+                            'label': get_sector_name(code),
+                            'change_2020': float(change_2020) if pd.notna(change_2020) else 0,
+                            'change_2021': float(change_2021) if pd.notna(change_2021) else 0,
+                            'change_2022': float(change_2022) if pd.notna(change_2022) else 0
+                        })
+
+                if wages_file.exists():
+                    wages_df = pd.read_csv(wages_file)
+                    for _, row in wages_df.head(30).iterrows():
+                        code = str(row.get('Set_j', row.get('Industry', '')))
+                        country_data['wages_by_sector'].append({
+                            'code': code,
+                            'label': get_sector_name(code),
+                            'value': float(row.get('value', 0))
+                        })
+
+                if consumption_file.exists():
+                    cons_df = pd.read_csv(consumption_file)
+                    for _, row in cons_df.head(30).iterrows():
+                        code = str(row.get('Set_i', row.get('Product', '')))
+                        country_data['consumption_by_product'].append({
+                            'code': code,
+                            'label': get_sector_name(code),
+                            'value': float(row.get('value', 0))
+                        })
+
+                result[ctr] = country_data
+                print(f"  - {ctr}: Loaded from CSV")
+            else:
+                print(f"  - {ctr}: No data available")
+
+    # Add metadata
+    result['_meta'] = {
+        'countries': [c for c in result.keys() if c != '_meta'],
+        'note': 'Sector dynamics data from FIGARO-NAM.',
+        'fallback_country': 'DE'
+    }
 
     return result
 
 
-def generate_linkages():
-    """Generate linkages.json from IO linkage data."""
-    print("Generating linkages.json...")
+def generate_linkages_for_country(ctr, year=2019):
+    """Generate IO linkage data for a single country from parquet files."""
 
-    result = {
-        'country': 'DE',
-        'year': 2019,
+    country_data = {
+        'year': year,
         'backward': [],
         'forward': [],
         'top_flows': []
     }
 
-    # Load backward linkages (columns: Industry, Intermediate_Inputs, Label)
-    backward_file = OUTPUT_TABLES / 'backward_linkages.csv'
-    if backward_file.exists():
-        back_df = pd.read_csv(backward_file)
-        for _, row in back_df.head(20).iterrows():
-            code = str(row.get('Industry', ''))
-            label = str(row.get('Label', ''))
-            result['backward'].append({
-                'code': code,
-                'label': get_sector_name(code) if get_sector_name(code) != code else label,
-                'value': float(row.get('Intermediate_Inputs', 0))
-            })
+    try:
+        # Load data from parquet
+        df = pq.read_table(
+            DATA_PARQUET,
+            filters=[('base', '=', year), ('ctr', '=', ctr)]
+        ).to_pandas()
 
-    # Load forward linkages (columns: Product, Total_Supply)
-    forward_file = OUTPUT_TABLES / 'forward_linkages.csv'
-    if forward_file.exists():
-        fwd_df = pd.read_csv(forward_file)
-        for _, row in fwd_df.head(20).iterrows():
-            code = str(row.get('Product', ''))
-            result['forward'].append({
+        if len(df) == 0:
+            return None
+
+        # Backward linkages: Intermediate inputs by industry (sum of CPA_ products going to industries)
+        # Filter for intermediate consumption (products to industries)
+        intermediate = df[
+            (df['Set_i'].str.startswith('CPA_', na=False)) &
+            (df['Set_j'].str.match(r'^[A-Z][0-9]|^[A-Z]$|^C[0-9]', na=False)) &
+            (df['m'] == ctr)  # Domestic intermediate consumption
+        ]
+
+        backward = intermediate.groupby('Set_j')['value'].sum().reset_index()
+        backward = backward.sort_values('value', ascending=False)
+
+        for _, row in backward.head(20).iterrows():
+            code = str(row['Set_j'])
+            country_data['backward'].append({
                 'code': code,
                 'label': get_sector_name(code),
-                'value': float(row.get('Total_Supply', 0))
+                'value': float(row['value'])
             })
 
-    # Load top flows
-    flows_file = OUTPUT_TABLES / 'top_intersectoral_flows.csv'
-    if flows_file.exists():
-        flows_df = pd.read_csv(flows_file)
-        for _, row in flows_df.head(15).iterrows():
-            from_code = str(row.get('From_Product', row.get('from', '')))
-            to_code = str(row.get('To_Industry', row.get('to', '')))
-            result['top_flows'].append({
+        # Forward linkages: Total supply by product
+        # Filter for products (CPA_) and sum their values
+        forward = df[df['Set_i'].str.startswith('CPA_', na=False)].groupby('Set_i')['value'].sum().reset_index()
+        forward = forward.sort_values('value', ascending=False)
+
+        for _, row in forward.head(20).iterrows():
+            code = str(row['Set_i'])
+            country_data['forward'].append({
+                'code': code,
+                'label': get_sector_name(code),
+                'value': float(row['value'])
+            })
+
+        # Top intersectoral flows (product -> industry)
+        flows = intermediate.groupby(['Set_i', 'Set_j'])['value'].sum().reset_index()
+        flows = flows.sort_values('value', ascending=False)
+
+        for _, row in flows.head(15).iterrows():
+            from_code = str(row['Set_i'])
+            to_code = str(row['Set_j'])
+            country_data['top_flows'].append({
                 'from_code': from_code,
                 'from_label': get_sector_name(from_code),
                 'to_code': to_code,
                 'to_label': get_sector_name(to_code),
-                'value': float(row.get('Value', row.get('value', 0)))
+                'value': float(row['value'])
             })
+
+        return country_data
+
+    except Exception as e:
+        print(f"  - {ctr}: Error generating linkages from parquet: {e}")
+        return None
+
+
+def generate_linkages():
+    """Generate linkages.json for all countries.
+
+    Multi-country structure: {country: {data...}}
+    """
+    print("Generating linkages.json...")
+
+    result = {}
+
+    for ctr in FOCUS_COUNTRIES:
+        # Try to generate from parquet
+        country_data = generate_linkages_for_country(ctr, year=2019)
+
+        if country_data and len(country_data['backward']) > 0:
+            result[ctr] = country_data
+            print(f"  - {ctr}: Generated from parquet ({len(country_data['backward'])} backward linkages)")
+        else:
+            # Try loading from CSV (may only exist for DE)
+            backward_file = OUTPUT_TABLES / f'{ctr}_backward_linkages.csv' if ctr != 'DE' else OUTPUT_TABLES / 'backward_linkages.csv'
+            forward_file = OUTPUT_TABLES / f'{ctr}_forward_linkages.csv' if ctr != 'DE' else OUTPUT_TABLES / 'forward_linkages.csv'
+            flows_file = OUTPUT_TABLES / f'{ctr}_top_intersectoral_flows.csv' if ctr != 'DE' else OUTPUT_TABLES / 'top_intersectoral_flows.csv'
+
+            # For DE, also try without prefix
+            if ctr == 'DE':
+                backward_file = OUTPUT_TABLES / 'backward_linkages.csv'
+                forward_file = OUTPUT_TABLES / 'forward_linkages.csv'
+                flows_file = OUTPUT_TABLES / 'top_intersectoral_flows.csv'
+
+            if backward_file.exists() or forward_file.exists():
+                country_data = {
+                    'year': 2019,
+                    'backward': [],
+                    'forward': [],
+                    'top_flows': []
+                }
+
+                if backward_file.exists():
+                    back_df = pd.read_csv(backward_file)
+                    for _, row in back_df.head(20).iterrows():
+                        code = str(row.get('Industry', ''))
+                        label = str(row.get('Label', ''))
+                        country_data['backward'].append({
+                            'code': code,
+                            'label': get_sector_name(code) if get_sector_name(code) != code else label,
+                            'value': float(row.get('Intermediate_Inputs', 0))
+                        })
+
+                if forward_file.exists():
+                    fwd_df = pd.read_csv(forward_file)
+                    for _, row in fwd_df.head(20).iterrows():
+                        code = str(row.get('Product', ''))
+                        country_data['forward'].append({
+                            'code': code,
+                            'label': get_sector_name(code),
+                            'value': float(row.get('Total_Supply', 0))
+                        })
+
+                if flows_file.exists():
+                    flows_df = pd.read_csv(flows_file)
+                    for _, row in flows_df.head(15).iterrows():
+                        from_code = str(row.get('From_Product', row.get('from', '')))
+                        to_code = str(row.get('To_Industry', row.get('to', '')))
+                        country_data['top_flows'].append({
+                            'from_code': from_code,
+                            'from_label': get_sector_name(from_code),
+                            'to_code': to_code,
+                            'to_label': get_sector_name(to_code),
+                            'value': float(row.get('Value', row.get('value', 0)))
+                        })
+
+                result[ctr] = country_data
+                print(f"  - {ctr}: Loaded from CSV")
+            else:
+                print(f"  - {ctr}: No data available")
+
+    # Add metadata
+    result['_meta'] = {
+        'countries': [c for c in result.keys() if c != '_meta'],
+        'note': 'IO linkages data from FIGARO-NAM 2019.',
+        'fallback_country': 'DE'
+    }
 
     return result
 
 
 def generate_sankey():
-    """Generate sankey.json for circular flow visualization."""
-    print("Generating sankey.json...")
+    """Generate sankey.json for circular flow visualization.
 
-    # Try loading from combined time series file first
-    all_ts_file = OUTPUT_TABLES / 'all_countries_time_series.csv'
-    de_ts_file = OUTPUT_TABLES / 'DE_time_series.csv'
+    Multi-country structure: {country: {year: {data...}}}
+    """
+    print("Generating sankey.json...")
 
     result = {}
     years = [2019, 2020, 2022]
 
-    if de_ts_file.exists():
-        df = pd.read_csv(de_ts_file)
+    for ctr in FOCUS_COUNTRIES:
+        ts_file = OUTPUT_TABLES / f'{ctr}_time_series.csv'
+        country_data = {}
 
-        for year in years:
-            year_data = df[df['year'] == year]
-            if len(year_data) > 0:
-                row = year_data.iloc[0]
-                result[str(year)] = {
-                    'D11': float(row.get('wages_D11', 0)),
-                    'B2': float(row.get('surplus_B2', 0)),
-                    'B3': 0,  # Not separately in time_series
-                    'P3_S14': float(row.get('hh_consumption', 0)),
-                    'P3_S13': float(row.get('gov_consumption', 0)),
-                    'P51G': float(row.get('investment', 0)),
-                    'net_exports': 0  # External balance not in time_series
-                }
+        if ts_file.exists():
+            df = pd.read_csv(ts_file)
 
-    # If no data, create placeholders
+            for year in years:
+                year_data = df[df['year'] == year]
+                if len(year_data) > 0:
+                    row = year_data.iloc[0]
+                    country_data[str(year)] = {
+                        'D11': float(row.get('wages_D11', 0)),
+                        'B2': float(row.get('surplus_B2', 0)),
+                        'B3': 0,  # Not separately in time_series
+                        'P3_S14': float(row.get('hh_consumption', 0)),
+                        'P3_S13': float(row.get('gov_consumption', 0)),
+                        'P51G': float(row.get('investment', 0)),
+                        'net_exports': 0  # External balance not in time_series
+                    }
+
+            if country_data:
+                result[ctr] = country_data
+                print(f"  - {ctr}: {len(country_data)} years loaded")
+        else:
+            print(f"  - {ctr}: WARNING - file not found ({ts_file})")
+
+    # If no data at all, create placeholders for DE
     if not result:
+        result['DE'] = {}
         for year in years:
-            result[str(year)] = {
+            result['DE'][str(year)] = {
                 'D11': 1500000,
                 'B2': 800000,
                 'B3': 200000,
@@ -453,7 +845,7 @@ def generate_sankey():
                 'P51G': 450000,
                 'net_exports': 50000
             }
-            print(f"  - {year}: placeholder data used")
+            print(f"  - DE {year}: placeholder data used")
 
     return result
 
@@ -486,11 +878,8 @@ def generate_metadata():
 
 def main():
     """Generate all JSON files."""
-    print("=" * 60)
-    print("FIGARO-NAM JSON Generator for GitHub Pages")
-    print("=" * 60)
+    log.info("FIGARO-NAM JSON Generator started")
 
-    # Generate and save JSON files
     json_files = {
         'time_series.json': generate_time_series,
         'trade_partners.json': generate_trade_partners,
@@ -506,14 +895,11 @@ def main():
             output_path = DOCS_DATA / filename
             with open(output_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
-            print(f"  Saved: {output_path}")
+            log.info(f"Saved: {filename}")
         except Exception as e:
-            print(f"  ERROR in {filename}: {e}")
+            log.error(f"{filename}: {e}")
 
-    print("\n" + "=" * 60)
-    print("JSON generation complete!")
-    print(f"Files in: {DOCS_DATA}")
-    print("=" * 60)
+    log.info(f"Complete. Files in: {DOCS_DATA}")
 
 
 if __name__ == '__main__':

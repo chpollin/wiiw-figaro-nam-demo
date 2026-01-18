@@ -89,8 +89,8 @@ Check `knowledge/research.md` for the current phase status:
 | Phase | Status |
 |-------|--------|
 | 1. Inspect/Understand | Complete |
-| 2. Explore | Pending |
-| 3. Human-in-the-Loop | Pending |
+| 2. Explore | Complete |
+| 3. Human-in-the-Loop | In Progress |
 | 4. Plan | Pending |
 | 5. Execute | Pending |
 | 6. Summary | Pending |

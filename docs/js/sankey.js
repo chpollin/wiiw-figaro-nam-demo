@@ -4,13 +4,29 @@
  *
  * Flow: Production -> Income -> Final Use
  *       (Industries)  (D-Codes)  (P-Codes)
+ *
+ * Multi-country support: Data structure is {country: {year: {data}}}
  */
 
 (function() {
     'use strict';
 
     let svg, g, width, height;
+    let selectedCountry = 'DE';
     const margin = { top: 30, right: 150, bottom: 30, left: 30 };
+
+    // Focus countries
+    const FOCUS_COUNTRIES = ['DE', 'FR', 'IT', 'ES', 'AT', 'PL', 'GR', 'NL'];
+    const COUNTRY_NAMES = {
+        'DE': 'Germany',
+        'FR': 'France',
+        'IT': 'Italy',
+        'ES': 'Spain',
+        'AT': 'Austria',
+        'PL': 'Poland',
+        'GR': 'Greece',
+        'NL': 'Netherlands'
+    };
 
     // Color palette for flow stages - distinct colors for better readability
     const stageColors = {
@@ -36,6 +52,28 @@
             .attr('transform', `translate(${margin.left},${margin.top})`);
     }
 
+    function populateCountryDropdown() {
+        const countrySelect = document.getElementById('sankey-country');
+        if (!countrySelect) return;
+
+        // Clear existing options
+        countrySelect.innerHTML = '';
+
+        // Get available countries from data
+        const sankeyData = window.APP_DATA && window.APP_DATA.sankey;
+        const availableCountries = sankeyData ? Object.keys(sankeyData).filter(k => k !== '_meta') : FOCUS_COUNTRIES;
+
+        // Add options for each country
+        FOCUS_COUNTRIES.forEach(ctr => {
+            const option = document.createElement('option');
+            option.value = ctr;
+            option.textContent = COUNTRY_NAMES[ctr] || ctr;
+            option.disabled = !availableCountries.includes(ctr);
+            if (ctr === selectedCountry) option.selected = true;
+            countrySelect.appendChild(option);
+        });
+    }
+
     function updateSankeyChart() {
         if (!window.APP_DATA || !window.APP_DATA.sankey) {
             showPlaceholder();
@@ -43,9 +81,28 @@
         }
 
         const sankeyData = window.APP_DATA.sankey;
+        const countrySelect = document.getElementById('sankey-country');
         const year = document.getElementById('sankey-year').value;
 
-        const yearData = sankeyData[year];
+        // Get selected country
+        selectedCountry = countrySelect ? countrySelect.value : 'DE';
+
+        // Get country data - new structure is {country: {year: {data}}}
+        let countryData = sankeyData[selectedCountry];
+
+        // Fallback to DE if country not available
+        if (!countryData && sankeyData['DE']) {
+            countryData = sankeyData['DE'];
+            console.log(`Sankey: Using Germany data as fallback for ${selectedCountry}`);
+        }
+
+        // Handle old structure (direct year keys without country)
+        if (!countryData && sankeyData[year]) {
+            // Old structure: {year: {data}}
+            countryData = sankeyData;
+        }
+
+        const yearData = countryData ? countryData[year] : null;
         if (!yearData) {
             showPlaceholder();
             return;
@@ -262,8 +319,15 @@
         }
     });
 
+    // Initialize function that populates dropdown and draws chart
+    function initSankeyChartFull() {
+        populateCountryDropdown();
+        initSankeyChart();
+    }
+
     // Export for app.js
-    window.initSankeyChart = initSankeyChart;
+    window.initSankeyChart = initSankeyChartFull;
     window.updateSankeyChart = updateSankeyChart;
+    window.populateSankeyCountries = populateCountryDropdown;
 
 })();

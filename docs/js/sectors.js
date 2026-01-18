@@ -1,11 +1,75 @@
 /**
  * FIGARO-NAM Explorer - Sector Dynamics
  * Diverging bar chart for YoY changes
+ *
+ * Multi-country support: Data structure is {country: {data}}
  */
 
 let sectorsTooltip = null;
 let selectedYear = '2020';
 let sectorSort = 'change';
+let sectorsCountry = 'DE';
+
+// Focus countries
+const SECTORS_FOCUS_COUNTRIES = ['DE', 'FR', 'IT', 'ES', 'AT', 'PL', 'GR', 'NL'];
+const SECTORS_COUNTRY_NAMES = {
+    'DE': 'Germany',
+    'FR': 'France',
+    'IT': 'Italy',
+    'ES': 'Spain',
+    'AT': 'Austria',
+    'PL': 'Poland',
+    'GR': 'Greece',
+    'NL': 'Netherlands'
+};
+
+/**
+ * Populate country dropdown for sectors
+ */
+function populateSectorsCountryDropdown() {
+    const countrySelect = document.getElementById('sectors-country');
+    if (!countrySelect) return;
+
+    // Clear existing options
+    countrySelect.innerHTML = '';
+
+    // Get available countries from data
+    const sectorsData = DATA && DATA.sectors;
+    const availableCountries = sectorsData ? Object.keys(sectorsData).filter(k => k !== '_meta' && k !== 'country') : SECTORS_FOCUS_COUNTRIES;
+
+    // Add options for each country
+    SECTORS_FOCUS_COUNTRIES.forEach(ctr => {
+        const option = document.createElement('option');
+        option.value = ctr;
+        option.textContent = SECTORS_COUNTRY_NAMES[ctr] || ctr;
+        option.disabled = !availableCountries.includes(ctr);
+        if (ctr === sectorsCountry) option.selected = true;
+        countrySelect.appendChild(option);
+    });
+}
+
+/**
+ * Get country-specific sectors data
+ */
+function getSectorsCountryData() {
+    if (!DATA.sectors) return null;
+
+    // New structure: {country: {data}}
+    let countryData = DATA.sectors[sectorsCountry];
+
+    // Fallback to DE if country not available
+    if (!countryData && DATA.sectors['DE']) {
+        countryData = DATA.sectors['DE'];
+        console.log(`Sectors: Using Germany data as fallback for ${sectorsCountry}`);
+    }
+
+    // Handle old structure (direct data without country key)
+    if (!countryData && DATA.sectors.dynamics) {
+        countryData = DATA.sectors;
+    }
+
+    return countryData;
+}
 
 /**
  * Initialize sectors chart
@@ -13,8 +77,20 @@ let sectorSort = 'change';
 function initSectorsChart() {
     if (!DATA.sectors) return;
 
+    // Populate country dropdown
+    populateSectorsCountryDropdown();
+
     // Create tooltip
     sectorsTooltip = createTooltip();
+
+    // Country dropdown
+    const countrySelect = document.getElementById('sectors-country');
+    if (countrySelect) {
+        countrySelect.addEventListener('change', () => {
+            sectorsCountry = countrySelect.value;
+            updateSectorsChart();
+        });
+    }
 
     // Year buttons
     const yearBtns = document.querySelectorAll('.year-btn');
@@ -44,7 +120,8 @@ function initSectorsChart() {
  * Update sectors chart
  */
 function updateSectorsChart() {
-    if (!DATA.sectors || !DATA.sectors.dynamics) return;
+    const countryData = getSectorsCountryData();
+    if (!countryData || !countryData.dynamics) return;
 
     const svg = d3.select('#chart-sektoren');
     svg.selectAll('*').remove();
@@ -62,7 +139,7 @@ function updateSectorsChart() {
 
     // Prepare data - change for selected year
     const changeKey = `change_${selectedYear}`;
-    let data = DATA.sectors.dynamics
+    let data = countryData.dynamics
         .filter(d => d.code && d.code !== '' && !d.code.startsWith('B8'))  // No balance items
         .map(d => ({
             code: d.code,
@@ -98,13 +175,14 @@ function updateSectorsChart() {
     const titleYear = selectedYear === '2020' ? '2019-2020 (COVID)' :
                       selectedYear === '2021' ? '2020-2021 (Recovery)' :
                       '2021-2022 (Energy Crisis)';
+    const countryName = SECTORS_COUNTRY_NAMES[sectorsCountry] || sectorsCountry;
     g.append('text')
         .attr('x', width / 2)
         .attr('y', -20)
         .attr('text-anchor', 'middle')
         .style('font-size', '14px')
         .style('font-weight', '600')
-        .text(`Sector Change ${titleYear} (Germany, YoY %)`);
+        .text(`Sector Change ${titleYear} (${countryName}, YoY %)`);
 
     // Scales
     const yScale = d3.scaleBand()

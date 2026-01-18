@@ -1,11 +1,52 @@
 /**
  * FIGARO-NAM Explorer - Trade Partners Visualization
  * Horizontal bar chart for exports/imports/balance
+ *
+ * Multi-country support: Data structure is {country: {data}}
  */
 
 let tradeTooltip = null;
 let tradeMode = 'exports';
 let tradeTopN = 15;
+let tradeCountry = 'DE';
+
+// Focus countries
+const TRADE_FOCUS_COUNTRIES = ['DE', 'FR', 'IT', 'ES', 'AT', 'PL', 'GR', 'NL'];
+const TRADE_COUNTRY_NAMES = {
+    'DE': 'Germany',
+    'FR': 'France',
+    'IT': 'Italy',
+    'ES': 'Spain',
+    'AT': 'Austria',
+    'PL': 'Poland',
+    'GR': 'Greece',
+    'NL': 'Netherlands'
+};
+
+/**
+ * Populate country dropdown for trade
+ */
+function populateTradeCountryDropdown() {
+    const countrySelect = document.getElementById('trade-country');
+    if (!countrySelect) return;
+
+    // Clear existing options
+    countrySelect.innerHTML = '';
+
+    // Get available countries from data
+    const tradeData = DATA && DATA.trade;
+    const availableCountries = tradeData ? Object.keys(tradeData).filter(k => k !== '_meta' && k !== 'country') : TRADE_FOCUS_COUNTRIES;
+
+    // Add options for each country
+    TRADE_FOCUS_COUNTRIES.forEach(ctr => {
+        const option = document.createElement('option');
+        option.value = ctr;
+        option.textContent = TRADE_COUNTRY_NAMES[ctr] || ctr;
+        option.disabled = !availableCountries.includes(ctr);
+        if (ctr === tradeCountry) option.selected = true;
+        countrySelect.appendChild(option);
+    });
+}
 
 /**
  * Initialize trade chart
@@ -13,8 +54,20 @@ let tradeTopN = 15;
 function initTradeChart() {
     if (!DATA.trade) return;
 
+    // Populate country dropdown
+    populateTradeCountryDropdown();
+
     // Create tooltip
     tradeTooltip = createTooltip();
+
+    // Country dropdown
+    const countrySelect = document.getElementById('trade-country');
+    if (countrySelect) {
+        countrySelect.addEventListener('change', () => {
+            tradeCountry = countrySelect.value;
+            updateTradeChart();
+        });
+    }
 
     // Mode dropdown
     const modeSelect = document.getElementById('trade-mode');
@@ -42,6 +95,29 @@ function initTradeChart() {
 }
 
 /**
+ * Get country-specific trade data
+ */
+function getTradeCountryData() {
+    if (!DATA.trade) return null;
+
+    // New structure: {country: {data}}
+    let countryData = DATA.trade[tradeCountry];
+
+    // Fallback to DE if country not available
+    if (!countryData && DATA.trade['DE']) {
+        countryData = DATA.trade['DE'];
+        console.log(`Trade: Using Germany data as fallback for ${tradeCountry}`);
+    }
+
+    // Handle old structure (direct data without country key)
+    if (!countryData && DATA.trade.exports) {
+        countryData = DATA.trade;
+    }
+
+    return countryData;
+}
+
+/**
  * Update trade chart
  */
 function updateTradeChart() {
@@ -61,22 +137,36 @@ function updateTradeChart() {
     const g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
+    // Get country-specific data
+    const countryData = getTradeCountryData();
+    if (!countryData) {
+        g.append('text')
+            .attr('x', width / 2)
+            .attr('y', height / 2)
+            .attr('text-anchor', 'middle')
+            .text('No data available for ' + (TRADE_COUNTRY_NAMES[tradeCountry] || tradeCountry));
+        return;
+    }
+
+    const countryName = TRADE_COUNTRY_NAMES[tradeCountry] || tradeCountry;
+    const year = countryData.year || 2019;
+
     // Data based on mode
     let data = [];
     let title = '';
 
     if (tradeMode === 'exports') {
-        data = DATA.trade.exports.slice(0, tradeTopN);
-        title = 'Exports by Trade Partner (Germany 2019)';
+        data = countryData.exports ? countryData.exports.slice(0, tradeTopN) : [];
+        title = `Exports by Trade Partner (${countryName} ${year})`;
     } else if (tradeMode === 'imports') {
-        data = DATA.trade.imports.slice(0, tradeTopN);
-        title = 'Imports by Trade Partner (Germany 2019)';
+        data = countryData.imports ? countryData.imports.slice(0, tradeTopN) : [];
+        title = `Imports by Trade Partner (${countryName} ${year})`;
     } else if (tradeMode === 'balance') {
-        data = DATA.trade.balance.slice(0, tradeTopN);
-        title = 'Trade Balance by Partner (Germany 2019)';
+        data = countryData.balance ? countryData.balance.slice(0, tradeTopN) : [];
+        title = `Trade Balance by Partner (${countryName} ${year})`;
     } else if (tradeMode === 'sectors') {
-        data = DATA.trade.imports_by_sector ? DATA.trade.imports_by_sector.slice(0, tradeTopN) : [];
-        title = 'Imports by Product Group - Import Intensity (Germany 2019)';
+        data = countryData.imports_by_sector ? countryData.imports_by_sector.slice(0, tradeTopN) : [];
+        title = `Imports by Product Group - Import Intensity (${countryName} ${year})`;
     }
 
     if (data.length === 0) {

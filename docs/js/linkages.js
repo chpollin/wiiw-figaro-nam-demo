@@ -1,10 +1,74 @@
 /**
  * FIGARO-NAM Explorer - IO Linkages Visualization
  * Bar chart for backward/forward linkages
+ *
+ * Multi-country support: Data structure is {country: {data}}
  */
 
 let linkagesTooltip = null;
 let linkageMode = 'backward';
+let linkagesCountry = 'DE';
+
+// Focus countries
+const LINKAGES_FOCUS_COUNTRIES = ['DE', 'FR', 'IT', 'ES', 'AT', 'PL', 'GR', 'NL'];
+const LINKAGES_COUNTRY_NAMES = {
+    'DE': 'Germany',
+    'FR': 'France',
+    'IT': 'Italy',
+    'ES': 'Spain',
+    'AT': 'Austria',
+    'PL': 'Poland',
+    'GR': 'Greece',
+    'NL': 'Netherlands'
+};
+
+/**
+ * Populate country dropdown for linkages
+ */
+function populateLinkagesCountryDropdown() {
+    const countrySelect = document.getElementById('linkages-country');
+    if (!countrySelect) return;
+
+    // Clear existing options
+    countrySelect.innerHTML = '';
+
+    // Get available countries from data
+    const linkagesData = DATA && DATA.linkages;
+    const availableCountries = linkagesData ? Object.keys(linkagesData).filter(k => k !== '_meta' && k !== 'country') : LINKAGES_FOCUS_COUNTRIES;
+
+    // Add options for each country
+    LINKAGES_FOCUS_COUNTRIES.forEach(ctr => {
+        const option = document.createElement('option');
+        option.value = ctr;
+        option.textContent = LINKAGES_COUNTRY_NAMES[ctr] || ctr;
+        option.disabled = !availableCountries.includes(ctr);
+        if (ctr === linkagesCountry) option.selected = true;
+        countrySelect.appendChild(option);
+    });
+}
+
+/**
+ * Get country-specific linkages data
+ */
+function getLinkagesCountryData() {
+    if (!DATA.linkages) return null;
+
+    // New structure: {country: {data}}
+    let countryData = DATA.linkages[linkagesCountry];
+
+    // Fallback to DE if country not available
+    if (!countryData && DATA.linkages['DE']) {
+        countryData = DATA.linkages['DE'];
+        console.log(`Linkages: Using Germany data as fallback for ${linkagesCountry}`);
+    }
+
+    // Handle old structure (direct data without country key)
+    if (!countryData && DATA.linkages.backward) {
+        countryData = DATA.linkages;
+    }
+
+    return countryData;
+}
 
 /**
  * Initialize linkages chart
@@ -12,8 +76,20 @@ let linkageMode = 'backward';
 function initLinkagesChart() {
     if (!DATA.linkages) return;
 
+    // Populate country dropdown
+    populateLinkagesCountryDropdown();
+
     // Create tooltip
     linkagesTooltip = createTooltip();
+
+    // Country dropdown
+    const countrySelect = document.getElementById('linkages-country');
+    if (countrySelect) {
+        countrySelect.addEventListener('change', () => {
+            linkagesCountry = countrySelect.value;
+            updateLinkagesChart();
+        });
+    }
 
     // Mode dropdown
     const modeSelect = document.getElementById('linkage-mode');
@@ -32,7 +108,8 @@ function initLinkagesChart() {
  * Update linkages chart
  */
 function updateLinkagesChart() {
-    if (!DATA.linkages) return;
+    const countryData = getLinkagesCountryData();
+    if (!countryData) return;
 
     const svg = d3.select('#chart-verflechtung');
     svg.selectAll('*').remove();
@@ -48,22 +125,25 @@ function updateLinkagesChart() {
     const g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
+    const countryName = LINKAGES_COUNTRY_NAMES[linkagesCountry] || linkagesCountry;
+    const year = countryData.year || 2019;
+
     // Data based on mode
     let data = [];
     let title = '';
     let xLabel = '';
 
     if (linkageMode === 'backward') {
-        data = DATA.linkages.backward || [];
-        title = 'Backward Linkages: Which industries purchase the most intermediate inputs?';
+        data = countryData.backward || [];
+        title = `Backward Linkages: Which industries purchase the most intermediate inputs? (${countryName} ${year})`;
         xLabel = 'Intermediate Inputs (million EUR)';
     } else if (linkageMode === 'forward') {
-        data = DATA.linkages.forward || [];
-        title = 'Forward Linkages: Which products supply the most to other sectors?';
+        data = countryData.forward || [];
+        title = `Forward Linkages: Which products supply the most to other sectors? (${countryName} ${year})`;
         xLabel = 'Total Supply (million EUR)';
     } else if (linkageMode === 'flows') {
-        data = DATA.linkages.top_flows || [];
-        title = 'Top Intersectoral Flows (Product -> Industry)';
+        data = countryData.top_flows || [];
+        title = `Top Intersectoral Flows (${countryName} ${year})`;
         xLabel = 'Flow (million EUR)';
     }
 
